@@ -1,5 +1,10 @@
-# EOS-Stripe-Wallet
+# EOS-Wallet-Integrations
+- EOS-Stripe-Wallet (skinny wallet)
 Simple, intuitive, secure and "stripe" like embeddable widget for an universal crypto wallet built on the Byzantine API Gateway.  This fee-less wallet lowers the barriers for small businesses in accepting EOS and other crypto currencies.
+- EOS-Full-Wallet (fat wallet)
+Comprehensive EOS full wallet to enable all EOS related on-chain functionality such as account creation, voting, delegating, undelegating, buy/sell RAM, transfer and staking.
+- EOS-Airdrop-Utility (wallet++)
+Utility tool to simplify the process of Airdrops for token launchers. Provides a CLI interface and a web-interface to wizardify a sequential set of Q&A to create token-contract, deploy, issue tokens and airdrops. This utility also estimates RAM and stake requirement based on the tokenomics for EOS vs Token ratios.
 
 # Technical Synopsis
 - Uses the Byzantine API Gateway, to abstract away on-chain integrations. Currently supports EOS and support for TRON, ADA, LISK, ETH, XLM and more DPOS ecosystems is in the works.
@@ -15,7 +20,6 @@ Simple, intuitive, secure and "stripe" like embeddable widget for an universal c
 
 # Build
 - EOS Stripe Wallet
-
 ```sh
 //Codes
 git clone https://github.com/Byzantine-Works/EOS-Stripe-Wallet
@@ -28,7 +32,7 @@ curl -o https://github.com/Byzantine-Works/EOS-Stripe-Wallet/walletembed.js?
 
 
 # Design
-
+- EOS Stripe Wallet
 The high-level design shown below provides an unified interface for all on-chain EOS operations. 
  - The key components are the API itself, which encapsulates the EOS-chain methods and nuances using eosjs and ecc. 
  - It uses a cryptographic nonce to secure customers from replay attacks. 
