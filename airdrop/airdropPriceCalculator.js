@@ -25,20 +25,31 @@ const askQuestions = () => {
       {
         type: "list",
         name: "MIN_EOS_HELD",
-        message: "What is the Minimum of number of EOS held within accounts you want to Airdrop to?",
+        message: "What is the Minimum of number of EOS held for accounts you want to Airdrop to?",
         choices: ["0", "10", "100", "1000", "10000"],
       },
       {
         type: "list",
         name: "MAX_EOS_HELD",
-        message: "What is the Maximum of number of EOS held within accounts you want to Airdrop to?",
+        message: "What is the Maximum of number of EOS held for accounts you want to Airdrop to?",
         choices: ["0", "10", "100", "1000", "10000", "No Max"],
       }
   ];
   return inquirer.prompt(questions);
 };
 
-const getPriceEstimate = (snapshot, minEosHeld, maxEosHeld) => {
+const snapshot0 = require("./airdrop-snapshots/genesis-snapshot.json")
+const snapshot1 = require("./airdrop-snapshots/snapshot-10-01-2018.json")
+const snapshot2 = require("./airdrop-snapshots/snapshot-10-05-2018.json")
+/* Retrieve by running: csv2json ./airdrop-tools/20181001_account_snapshot.csv ./airdrop-tools/snapshot-10-01-2018.json */
+// const snapshotFilter = require("./snapshotFilter.js") // May need to build seperate functions depending on snapshot used
+const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
+  // Filter through accounts that fit input parameters
+  // Return Array with all accounts within the threshold
+  console.log("Snapshot Account Size: ", snapshot.length)
+}
+
+const getPriceEstimate = (filteredSnapshotData, minEosHeld, maxEosHeld) => {
   // Snapshot Data Parsing here
   // Find Number of accounts
 
@@ -75,13 +86,13 @@ const runAirdrop = async () => {
       MIN_EOS_HELD,
       MAX_EOS_HELD,
   } = answers;
-  
   console.log('TOKEN_NAME Is: ' + TOKEN_NAME)
   console.log('AIRDROP_RATIO Is: ' + AIRDROP_RATIO)
   console.log('MIN_EOS_HELD Is: ' + MIN_EOS_HELD)
   console.log('MIN_EOS_HELD Is: ' + MAX_TOKEN_SUPPLY)
   
-  // const PRICE_ESTIMATE = getPriceEstimate(snapshot, MIN_EOS_HELD, MAX_EOS_HELD)
+  snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD)
+  // const PRICE_ESTIMATE = getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
   // success(PRICE_ESTIMATE);
 
   airdropGenerator(TOKEN_NAME, AIRDROP_RATIO);
