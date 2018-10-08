@@ -60,12 +60,18 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
       filtered.push(snapshotCopy[i]);
     }
   }
-  console.log("Snapshot Account Size: ", snapshot.length)
-  console.log("Filtered Account Size: ", filtered.length)
+  console.log("Snapshot Number of Accounts: ", snapshot.length)
+  console.log("Filtered Number of Accounts: ", filtered.length)
   // Return Array with all accounts within the threshold
 }
 
-
+const getRamPrice = () => {
+  axios.get('http://api.byzanti.ne:8902/getRamPrice')
+    .then(response => {
+      console.log('Ram Price Is: ')
+      console.log(response.data)
+    })
+}
 
 const getPriceEstimate = (filteredSnapshotData, minEosHeld, maxEosHeld) => {
   // Snapshot Data Parsing here
@@ -114,7 +120,7 @@ const runAirdrop = async () => {
   
   // snapshotFilter(snapshot1);
   snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
-
+  getRamPrice()
   // const PRICE_ESTIMATE = getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
   // success(PRICE_ESTIMATE);
 
