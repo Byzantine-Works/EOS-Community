@@ -1,6 +1,8 @@
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const figlet = require("figlet");
+const request = require("request");
+const axios = require('axios');
 
 const init = () => {
   console.log('Airdrop Price Calculator initialzed')
@@ -32,7 +34,7 @@ const askQuestions = () => {
         type: "list",
         name: "MAX_EOS_HELD",
         message: "What is the Maximum of number of EOS held for accounts you want to Airdrop to?",
-        choices: ["0", "10", "100", "1000", "10000", "No Max"],
+        choices: ["No Max", "1", "10", "100", "1000", "10000", "100000", "1000000"],
       }
   ];
   return inquirer.prompt(questions);
@@ -43,11 +45,27 @@ const snapshot1 = require("./airdrop-snapshots/snapshot-10-01-2018.json")
 const snapshot2 = require("./airdrop-snapshots/snapshot-10-05-2018.json")
 /* Retrieve by running: csv2json ./airdrop-tools/20181001_account_snapshot.csv ./airdrop-tools/snapshot-10-01-2018.json */
 // const snapshotFilter = require("./snapshotFilter.js") // May need to build seperate functions depending on snapshot used
+
 const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   // Filter through accounts that fit input parameters
-  // Return Array with all accounts within the threshold
+  var snapshotCopy = snapshot.slice(0);
+  if (isNaN(maxEosHeld)) {
+    maxEosHeld = 1000000000;
+    console.log('No Maximum EOS Value')
+  }
+  console.log(`Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS`);
+  var filtered = [];
+  for (let i=0; i<snapshotCopy.length; i++) {
+    if (snapshotCopy[i]['total_eos'] >= minEosHeld && snapshotCopy[i]['total_eos'] <= maxEosHeld) {
+      filtered.push(snapshotCopy[i]);
+    }
+  }
   console.log("Snapshot Account Size: ", snapshot.length)
+  console.log("Filtered Account Size: ", filtered.length)
+  // Return Array with all accounts within the threshold
 }
+
+
 
 const getPriceEstimate = (filteredSnapshotData, minEosHeld, maxEosHeld) => {
   // Snapshot Data Parsing here
@@ -79,6 +97,8 @@ const success = priceEstimate => {
 const runAirdrop = async () => {
   init();
   const answers = await askQuestions();
+  // console.log(answers);
+  // console.log(typeof answers)
   const {
       TOKEN_NAME,
       AIRDROP_RATIO,
@@ -89,9 +109,12 @@ const runAirdrop = async () => {
   console.log('TOKEN_NAME Is: ' + TOKEN_NAME)
   console.log('AIRDROP_RATIO Is: ' + AIRDROP_RATIO)
   console.log('MIN_EOS_HELD Is: ' + MIN_EOS_HELD)
-  console.log('MIN_EOS_HELD Is: ' + MAX_TOKEN_SUPPLY)
+  console.log('MAX_EOS_HELD Is: ' + MAX_EOS_HELD)
+  console.log('MAX_TOKEN_SUPPLY Is: ' + MAX_TOKEN_SUPPLY)
   
-  snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD)
+  // snapshotFilter(snapshot1);
+  snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
+
   // const PRICE_ESTIMATE = getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
   // success(PRICE_ESTIMATE);
 
