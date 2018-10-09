@@ -5,7 +5,7 @@ const request = require("request");
 const axios = require('axios');
 
 const init = () => {
-  console.log('Airdrop Price Calculator initialzed')
+  console.log('Airdrop Price Calculator initialzed\n')
 };
 
 const askQuestions = () => {
@@ -17,7 +17,7 @@ const askQuestions = () => {
       {
         name: "AIRDROP_RATIO",
         type: "input",
-        message: "What is the Airdrop Ratio? (Enter a Number or Decimal):"
+        message: "Airdrop Ratio - How many tokens to give per 1 EOS? (Enter a Number or Decimal):"
       },
       {
         name: "MAX_TOKEN_SUPPLY",
@@ -28,7 +28,7 @@ const askQuestions = () => {
         type: "list",
         name: "MIN_EOS_HELD",
         message: "What is the Minimum of number of EOS held for accounts you want to Airdrop to?",
-        choices: ["0", "10", "100", "1000", "10000"],
+        choices: ["0", "1", "10", "100", "1000", "10000"],
       },
       {
         type: "list",
@@ -40,9 +40,9 @@ const askQuestions = () => {
   return inquirer.prompt(questions);
 };
 
-const snapshot0 = require("./airdrop-snapshots/genesis-snapshot.json")
+// const snapshot0 = require("./airdrop-snapshots/genesis-snapshot.json")
 const snapshot1 = require("./airdrop-snapshots/snapshot-10-01-2018.json")
-const snapshot2 = require("./airdrop-snapshots/snapshot-10-05-2018.json")
+// const snapshot2 = require("./airdrop-snapshots/snapshot-10-05-2018.json")
 /* Retrieve by running: csv2json ./airdrop-tools/20181001_account_snapshot.csv ./airdrop-tools/snapshot-10-01-2018.json */
 // const snapshotFilter = require("./snapshotFilter.js") // May need to build seperate functions depending on snapshot used
 
@@ -53,7 +53,11 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
     maxEosHeld = 1000000000;
     console.log('No Maximum EOS Value')
   }
-  console.log(`Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS`);
+  if (isNaN(minEosHeld)) {
+    minEosHeld = 0;
+    console.log('No Minimum EOS Value')
+  }
+  console.log(`Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS\n`);
   var filtered = [];
   for (let i=0; i<snapshotCopy.length; i++) {
     if (snapshotCopy[i]['total_eos'] >= minEosHeld && snapshotCopy[i]['total_eos'] <= maxEosHeld) {
@@ -71,9 +75,9 @@ const getRamPrice = async () => {
     .then(response => {
       console.log('1) Axios Ram Price Is: ', response.data)
       return response.data
-    }).catch(
+    }).catch(error => {
       console.log('Error Fetching Ram Price')
-    )
+    })
     console.log('2) Final getRamPrice: ', RAM_PRICE)
     return RAM_PRICE
     
@@ -81,24 +85,34 @@ const getRamPrice = async () => {
 }
 
 const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) => {
-  // Snapshot Data Parsing here
-  // Find Number of accounts
+  // Filtered / Parsed Snapshot Data input here
+
   const RAM_PRICE = await getRamPrice()
   console.log("3) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
   var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
   var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
   
-  var numberOfAccounts = 132192                 // Estimated based on genesis for now
-  var ramPrice_EosPerByte = 0.11381643/1000     // 0.11381643 EOS/kb for now
-  var UsdPerEos = 5.61                          // Current Price
+  var numberOfAccounts = filteredSnapshotData.length         // 132192 Estimated based on genesis for now
+  var ramPrice_EosPerByte = 0.11381643/1000                  // 0.11381643 EOS/kb for now
+  var UsdPerEos = 5.61                                        // Current Price
   
-  var ramRequiredKb = numberOfAccounts * 0.242       //242 Bytes Required per account
+  var ramRequiredKb = numberOfAccounts * 0.142  //142 Bytes Required per account
   
   console.log('Starting Price Estimates Calculations ~~~~~~')
   var priceEstimate_Eos = ramRequiredKb * ramPrice_EosPerKb;
   var priceEstimate_Usd = ramRequiredKb * ramPrice_UsdPerKb;
-
-  return priceEstimate_Eos
+  priceEstimate_Eos = Math.floor(priceEstimate_Eos * 10000) / 10000 // Truncating to 4 digits
+  priceEstimate_Usd = Math.floor(priceEstimate_Usd * 100) / 100;    // Truncating to 2 digits
+  
+  console.log(`
+  #################################
+  Number of Accounts: ${numberOfAccounts}
+  RAM Required (kb): ${ramRequiredKb}
+  Price Estimate EOS: ${priceEstimate_Eos}
+  Price Estimate USD: $${priceEstimate_Usd}
+  #################################
+  `)
+  return priceEstimate_Usd
 }
 
 const airdropGenerator = (tokenName, airdropRatio, maxTokenSupply, minEosHeld, maxEosHeld) => {
@@ -108,27 +122,38 @@ const airdropGenerator = (tokenName, airdropRatio, maxTokenSupply, minEosHeld, m
 
 
 
-const success = priceEstimate => {
-  console.log('~~~~~~ The cost of the Airdrop will be : ' + (priceEstimate));
+const success = (priceEstimate) => {
+  console.log(`~~~~~~ The estimated cost of the Airdrop with these settings will be : $${priceEstimate} USD`);
 };
 
 const runAirdrop = async () => {
   init();
-  const answers = await askQuestions();
-  // console.log(answers);
-  // console.log(typeof answers)
+  
+  const answers = { // Sample Answers (for quick testing)
+    TOKEN_NAME: 'testcoin',
+    AIRDROP_RATIO: '5',
+    MAX_TOKEN_SUPPLY: '1000000',
+    MIN_EOS_HELD: '1',
+    MAX_EOS_HELD: 'No Max',
+  }
+  // const answers = await askQuestions();
   const {
-      TOKEN_NAME,
-      AIRDROP_RATIO,
-      MAX_TOKEN_SUPPLY,
-      MIN_EOS_HELD,
-      MAX_EOS_HELD,
+    TOKEN_NAME,
+    AIRDROP_RATIO,
+    MAX_TOKEN_SUPPLY,
+    MIN_EOS_HELD,
+    MAX_EOS_HELD,
   } = answers;
-  console.log('TOKEN_NAME Is: ' + TOKEN_NAME)
-  console.log('AIRDROP_RATIO Is: ' + AIRDROP_RATIO)
-  console.log('MIN_EOS_HELD Is: ' + MIN_EOS_HELD)
-  console.log('MAX_EOS_HELD Is: ' + MAX_EOS_HELD)
-  console.log('MAX_TOKEN_SUPPLY Is: ' + MAX_TOKEN_SUPPLY + '\n\n')
+
+  for (var key in answers) {
+    console.log(key.toString() + " --- " + answers[key].toString())
+  } console.log('\n')
+
+  // console.log('TOKEN_NAME Is: ' + TOKEN_NAME)
+  // console.log('AIRDROP_RATIO Is: ' + AIRDROP_RATIO)
+  // console.log('MIN_EOS_HELD Is: ' + MIN_EOS_HELD)
+  // console.log('MAX_EOS_HELD Is: ' + MAX_EOS_HELD)
+  // console.log('MAX_TOKEN_SUPPLY Is: ' + MAX_TOKEN_SUPPLY + '\n\n')
   
   // snapshotFilter(snapshot1);
   const filteredSnapshotData = snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
