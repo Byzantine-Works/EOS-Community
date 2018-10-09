@@ -5,7 +5,7 @@ const request = require("request");
 const axios = require('axios');
 
 const init = () => {
-  console.log('Airdrop Price Calculator initialzed\n')
+  console.log('Airdrop Price Calculator initialzed...\n')
 };
 
 const askQuestions = () => {
@@ -64,8 +64,8 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
       filtered.push(snapshotCopy[i]);
     }
   }
-  console.log("Snapshot Number of Accounts: ", snapshot.length)
-  console.log("Filtered Number of Accounts: ", filtered.length)
+  console.log(chalk.blue("Snapshot Number of Accounts: "), snapshot.length)
+  console.log(chalk.blue("Filtered Number of Accounts: "), filtered.length)
   // Return Array with all accounts within the threshold
   return filtered
 }
@@ -98,20 +98,20 @@ const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) =>
   
   var ramRequiredKb = numberOfAccounts * 0.142  //142 Bytes Required per account
   
-  console.log('Starting Price Estimates Calculations ~~~~~~')
+  console.log('Starting Price Estimate Calculations...')
   var priceEstimate_Eos = ramRequiredKb * ramPrice_EosPerKb;
   var priceEstimate_Usd = ramRequiredKb * ramPrice_UsdPerKb;
   priceEstimate_Eos = Math.floor(priceEstimate_Eos * 10000) / 10000 // Truncating to 4 digits
   priceEstimate_Usd = Math.floor(priceEstimate_Usd * 100) / 100;    // Truncating to 2 digits
   
-  console.log(`
+  console.log(chalk.bold.blue(
+  `
   #################################
-  Number of Accounts: ${numberOfAccounts}
-  RAM Required (kb): ${ramRequiredKb}
-  Price Estimate EOS: ${priceEstimate_Eos}
-  Price Estimate USD: $${priceEstimate_Usd}
-  #################################
-  `)
+  Number of Accounts: ${numberOfAccounts}       
+  RAM Required (kb): ${ramRequiredKb}     
+  Price Estimate EOS: ${priceEstimate_Eos}    
+  Price Estimate USD: $${priceEstimate_Usd}    
+  #################################` + '\n'))
   return priceEstimate_Usd
 }
 
@@ -123,7 +123,7 @@ const airdropGenerator = (tokenName, airdropRatio, maxTokenSupply, minEosHeld, m
 
 
 const success = (priceEstimate) => {
-  console.log(`~~~~~~ The estimated cost of the Airdrop with these settings will be : $${priceEstimate} USD`);
+  console.log(`The estimated cost of the Airdrop with these settings will be : ` + chalk.bold.blue('$'+priceEstimate) + ` USD`);
 };
 
 const runAirdrop = async () => {
@@ -146,15 +146,9 @@ const runAirdrop = async () => {
   } = answers;
 
   for (var key in answers) {
-    console.log(key.toString() + " --- " + answers[key].toString())
+    console.log(chalk.blue(key.toString()) + " --- " + answers[key].toString())
   } console.log('\n')
 
-  // console.log('TOKEN_NAME Is: ' + TOKEN_NAME)
-  // console.log('AIRDROP_RATIO Is: ' + AIRDROP_RATIO)
-  // console.log('MIN_EOS_HELD Is: ' + MIN_EOS_HELD)
-  // console.log('MAX_EOS_HELD Is: ' + MAX_EOS_HELD)
-  // console.log('MAX_TOKEN_SUPPLY Is: ' + MAX_TOKEN_SUPPLY + '\n\n')
-  
   // snapshotFilter(snapshot1);
   const filteredSnapshotData = snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
   const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
