@@ -63,28 +63,40 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   console.log("Snapshot Number of Accounts: ", snapshot.length)
   console.log("Filtered Number of Accounts: ", filtered.length)
   // Return Array with all accounts within the threshold
+  return filtered
 }
 
-const getRamPrice = () => {
-  axios.get('http://api.byzanti.ne:8902/getRamPrice')
+const getRamPrice = async () => {
+  var RAM_PRICE = await axios.get('http://api.byzanti.ne:8902/getRamPrice')
     .then(response => {
-      console.log('Ram Price Is: ')
-      console.log(response.data)
-    })
+      console.log('1) Axios Ram Price Is: ', response.data)
+      return response.data
+    }).catch(
+      console.log('Error Fetching Ram Price')
+    )
+    console.log('2) Final getRamPrice: ', RAM_PRICE)
+    return RAM_PRICE
+    
+
 }
 
-const getPriceEstimate = (filteredSnapshotData, minEosHeld, maxEosHeld) => {
+const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) => {
   // Snapshot Data Parsing here
   // Find Number of accounts
-
+  const RAM_PRICE = await getRamPrice()
+  console.log("3) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
+  var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
+  var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
+  
   var numberOfAccounts = 132192                 // Estimated based on genesis for now
   var ramPrice_EosPerByte = 0.11381643/1000     // 0.11381643 EOS/kb for now
   var UsdPerEos = 5.61                          // Current Price
-
-  var ramRequired = numberOfAccounts * 242       //Ram Required in Bytes
-
-  var priceEstimate_Eos = ramRequired * ramPrice_EosPerByte;
-  var priceEstimate_Usd = priceEstimate_Eos * UsdPerEos;
+  
+  var ramRequiredKb = numberOfAccounts * 0.242       //242 Bytes Required per account
+  
+  console.log('Starting Price Estimates Calculations ~~~~~~')
+  var priceEstimate_Eos = ramRequiredKb * ramPrice_EosPerKb;
+  var priceEstimate_Usd = ramRequiredKb * ramPrice_UsdPerKb;
 
   return priceEstimate_Eos
 }
@@ -97,7 +109,7 @@ const airdropGenerator = (tokenName, airdropRatio, maxTokenSupply, minEosHeld, m
 
 
 const success = priceEstimate => {
-  console.log('The cost of the Airdrop will be : ' + (priceEstimate));
+  console.log('~~~~~~ The cost of the Airdrop will be : ' + (priceEstimate));
 };
 
 const runAirdrop = async () => {
@@ -116,13 +128,12 @@ const runAirdrop = async () => {
   console.log('AIRDROP_RATIO Is: ' + AIRDROP_RATIO)
   console.log('MIN_EOS_HELD Is: ' + MIN_EOS_HELD)
   console.log('MAX_EOS_HELD Is: ' + MAX_EOS_HELD)
-  console.log('MAX_TOKEN_SUPPLY Is: ' + MAX_TOKEN_SUPPLY)
+  console.log('MAX_TOKEN_SUPPLY Is: ' + MAX_TOKEN_SUPPLY + '\n\n')
   
   // snapshotFilter(snapshot1);
-  snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
-  getRamPrice()
-  // const PRICE_ESTIMATE = getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
-  // success(PRICE_ESTIMATE);
+  const filteredSnapshotData = snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
+  const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
+  success(PRICE_ESTIMATE);
 
   airdropGenerator(TOKEN_NAME, AIRDROP_RATIO);
 };
