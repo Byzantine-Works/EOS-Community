@@ -71,7 +71,7 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
 }
 
 const getRamPrice = async () => {
-  var RAM_PRICE = await axios.get('http://api.byzanti.ne:8902/getRamPrice')
+  var RAM_PRICE = await axios.get('http://api.byzanti.ne:8902/getRamPrice?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
     .then(response => {
       console.log('1) Axios Ram Price Is: ', response.data)
       return response.data
