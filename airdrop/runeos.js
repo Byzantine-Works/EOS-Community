@@ -1,17 +1,17 @@
 Eos = require('eosjs')
 
 // Testing with server
-const express = require('express')
-const bodyParser = require('body-parser');
-const path = require('path');
-const app = express();
-const PORT = 9001;
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './eosjs.html'));
-});
+// const express = require('express')
+// const bodyParser = require('body-parser');
+// const path = require('path');
+// const app = express();
+// const PORT = 9001;
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+// app.get('/', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, './eosjs.html'));
+// });
 
 
 const chain = {
@@ -26,7 +26,7 @@ const keyProvider = '5KMg2WbZXpkrXcFTpxt6SbwYw9RQGawGsibfYYLy6ydMZZqKFkq'
 
 
 // Default configuration
-defaultConfig = {
+const defaultConfig = {
   chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f', // 32 byte (64 char) hex string
   keyProvider: ['5KMg2WbZXpkrXcFTpxt6SbwYw9RQGawGsibfYYLy6ydMZZqKFkq'], // WIF string or array of keys..
   httpEndpoint: 'http://54.183.9.138:8888/',
@@ -34,8 +34,7 @@ defaultConfig = {
   broadcast: true,
   verbose: false, // API activity
   sign: true
-}
- 
+} 
 const mainnetConfig = {
   keyProvider: '5KMg2WbZXpkrXcFTpxt6SbwYw9RQGawGsibfYYLy6ydMZZqKFkq', // Dummy Jungle Key
   httpsEndpoint: 'http://eos.greymass.com/',
@@ -54,8 +53,8 @@ const jungleConfig = {
 // Connect to a testnet or mainnet
 // eos = Eos({httpEndpoint, chainId, keyProvider})
 // eos = Eos(jungleConfig);
-// eos = Eos(mainnetConfig);
-eos = Eos(jungleConfig);
+eos = Eos(mainnetConfig);
+// eos = Eos(jungleConfig);
 
 // Victors Config
 // const eos = Eos({
@@ -75,13 +74,27 @@ options = {
 }
 
 const run = async function () {
+  console.log(json.stringify(eos))
   // var info = await eos.getInfo({}) 
   // eos.getBlock(1)
   // var info = await eos.getBlock({block_num_or_id: 1})
   // console.log('info', info)
   // await eos.getInfo({})
-  eos.transfer('junglefoxfox', 'junglefoxtwo', '1.0000 TEST', '', options)
-
+  // eos.transfer('junglefoxfox', 'junglefoxtwo', '1.0000 TEST', '', options)
 }
 run()
 
+
+
+// // Creating and Issuing Tokens
+/* await eos.transaction('myaccount', myaccount => {
+
+  // Create the initial token with its max supply
+  // const options = {authorization: 'myaccount'} // default
+  myaccount.create('myaccount', '10000000.000 TEST')//, options)
+
+  // Issue some of the max supply for circulation into an arbitrary account
+  myaccount.issue('myaccount', '10000.000 TEST', 'issue')
+})
+const balance = await eos.getCurrencyBalance('myaccount', 'myaccount', 'TEST')
+console.log('Currency Balance', balance) */
