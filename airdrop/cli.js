@@ -78,8 +78,19 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   console.log(chalk.blue("Snapshot Number of Accounts: "), snapshot.length)
   console.log(chalk.blue("Filtered Number of Accounts: "), filtered.length,'\n')
   // Return Array with all accounts within the threshold
-  console.log(filtered)
+  // console.log(filtered)
   return filtered
+}
+
+const formatOutput = (filtered, airdropRatio, maxTokenSupply) => {
+  var arr = []; 
+  for (let i=0; i<filtered.length; i++) {
+    arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + filtered[i]['total_eos']*airdropRatio )
+  }
+  var str = arr.join('\n')
+  // console.log('formatted output: ', str)
+  // console.log('Output Lines Length : ', str.split(/\r\n|\r|\n/).length)
+  return str
 }
 
 const getRamPrice = async () => {
@@ -141,22 +152,26 @@ const success = (priceEstimate) => {
 const runAirdrop = async () => {
   init();
   
-  // const answers = { // Sample Answers (for quick testing)
-  //   TOKEN_NAME: 'testcoin',
-  //   AIRDROP_RATIO: '5',
-  //   MAX_TOKEN_SUPPLY: '1000000',
-  //   MIN_EOS_HELD: '1',
-  //   MAX_EOS_HELD: 'No Max',
-  // }
-  const answers = await askQuestions();
-  const {
-    TOKEN_NAME,
-    AIRDROP_RATIO,
-    MAX_TOKEN_SUPPLY,
-    MIN_EOS_HELD,
-    MAX_EOS_HELD,
-  } = answers;
+  // Sample Answers (for quick testing)
+  const answers = ''
+  const TOKEN_NAME= 'testcoin';
+  const AIRDROP_RATIO= '5';
+  const MAX_TOKEN_SUPPLY= '1000000';
+  const MIN_EOS_HELD= '100';
+  const MAX_EOS_HELD= '1000000';
+  
 
+  // const answers = await askQuestions();
+  // const {
+  //   TOKEN_NAME,
+  //   AIRDROP_RATIO,
+  //   MAX_TOKEN_SUPPLY,
+  //   MIN_EOS_HELD,
+  //   MAX_EOS_HELD,
+  // } = answers;
+  
+
+  
   console.log('\n User Selected Inputs:')
   for (var key in answers) {
     console.log(chalk.blue(key.toString()) + " --- " + chalk.red(answers[key].toString()))
@@ -164,6 +179,7 @@ const runAirdrop = async () => {
 
   // snapshotFilter(snapshot1);
   const filteredSnapshotData = snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
+  const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO, MAX_TOKEN_SUPPLY);
   const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
   success(PRICE_ESTIMATE);
 
