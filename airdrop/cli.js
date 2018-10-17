@@ -5,6 +5,16 @@ const request = require("request");
 const axios = require('axios');
 
 const init = () => {
+    console.log(
+        chalk.blue(
+            figlet.textSync("Airdrop Price Calculator", {
+                font: "Standard",
+                horizontalLayout: "default",
+                verticalLayout: "default"
+            })
+        )
+    );
+
   console.log('Airdrop Price Calculator initialzed...\n')
 };
 
@@ -40,10 +50,11 @@ const askQuestions = () => {
   return inquirer.prompt(questions);
 };
 
-// const snapshot0 = require("./airdrop-snapshots/genesis-snapshot.json")
-const snapshot1 = require("./airdrop-snapshots/snapshot-10-01-2018.json")
+// const snapshot1csv = require("./airdrop-snapshots/snapshot-10-01-2018.json")
+const snapshot1 = require("./airdrop-snapshots/genesis-snapshot-fitted.json")
+// const snapshot1 = require("./airdrop-snapshots/snapshot-10-01-2018.json")
 // const snapshot2 = require("./airdrop-snapshots/snapshot-10-05-2018.json")
-/* Retrieve by running: csv2json ./airdrop-tools/20181001_account_snapshot.csv ./airdrop-tools/snapshot-10-01-2018.json */
+/* Retrieve by running: csv2json ./airdrop-snapshots/20181001_account_snapshot.csv ./airdrop-snapshots/snapshot-10-01-2018.json */
 // const snapshotFilter = require("./snapshotFilter.js") // May need to build seperate functions depending on snapshot used
 
 const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
@@ -57,7 +68,7 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
     minEosHeld = 0;
     console.log('No Minimum EOS Value')
   }
-  console.log(`Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS\n`);
+  console.log(`Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS...\n`);
   var filtered = [];
   for (let i=0; i<snapshotCopy.length; i++) {
     if (snapshotCopy[i]['total_eos'] >= minEosHeld && snapshotCopy[i]['total_eos'] <= maxEosHeld) {
@@ -65,20 +76,21 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
     }
   }
   console.log(chalk.blue("Snapshot Number of Accounts: "), snapshot.length)
-  console.log(chalk.blue("Filtered Number of Accounts: "), filtered.length)
+  console.log(chalk.blue("Filtered Number of Accounts: "), filtered.length,'\n')
   // Return Array with all accounts within the threshold
+  console.log(filtered)
   return filtered
 }
 
 const getRamPrice = async () => {
   var RAM_PRICE = await axios.get('http://api.byzanti.ne:8902/getRamPrice?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
     .then(response => {
-      console.log('1) Axios Ram Price Is: ', response.data)
+      // console.log('1)) Axios Ram Price Is: ', response.data)
       return response.data
     }).catch(error => {
       console.log('Error Fetching Ram Price')
     })
-    console.log('2) Final getRamPrice: ', RAM_PRICE)
+    // console.log('2)) Final getRamPrice: ', RAM_PRICE)
     return RAM_PRICE
     
 
@@ -88,7 +100,7 @@ const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) =>
   // Filtered / Parsed Snapshot Data input here
 
   const RAM_PRICE = await getRamPrice()
-  console.log("3) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
+  console.log("3)) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
   var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
   var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
   
@@ -129,14 +141,14 @@ const success = (priceEstimate) => {
 const runAirdrop = async () => {
   init();
   
-  const answers = { // Sample Answers (for quick testing)
-    TOKEN_NAME: 'testcoin',
-    AIRDROP_RATIO: '5',
-    MAX_TOKEN_SUPPLY: '1000000',
-    MIN_EOS_HELD: '1',
-    MAX_EOS_HELD: 'No Max',
-  }
-  // const answers = await askQuestions();
+  // const answers = { // Sample Answers (for quick testing)
+  //   TOKEN_NAME: 'testcoin',
+  //   AIRDROP_RATIO: '5',
+  //   MAX_TOKEN_SUPPLY: '1000000',
+  //   MIN_EOS_HELD: '1',
+  //   MAX_EOS_HELD: 'No Max',
+  // }
+  const answers = await askQuestions();
   const {
     TOKEN_NAME,
     AIRDROP_RATIO,
@@ -145,8 +157,9 @@ const runAirdrop = async () => {
     MAX_EOS_HELD,
   } = answers;
 
+  console.log('\n User Selected Inputs:')
   for (var key in answers) {
-    console.log(chalk.blue(key.toString()) + " --- " + answers[key].toString())
+    console.log(chalk.blue(key.toString()) + " --- " + chalk.red(answers[key].toString()))
   } console.log('\n')
 
   // snapshotFilter(snapshot1);
