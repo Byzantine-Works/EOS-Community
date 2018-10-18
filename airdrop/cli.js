@@ -145,7 +145,6 @@ const airdropGenerator = (tokenName, airdropRatio, maxTokenSupply, minEosHeld, m
 };
 
 
-
 const success = (priceEstimate) => {
   console.log(`The estimated cost of the Airdrop with these settings will be : ` + chalk.bold.blue('$'+priceEstimate) + ` USD`);
 };
@@ -167,7 +166,8 @@ const runShell = async () => {
   // console.log(cattext['stdout'])
     
   // Testing jungle cleos on linux machine (through alias)
-  // shell.exec('jcleos get info');
+  shell.exec('jcleos get info');
+  shell.exec('jcleos get table junglefoxfox junglefoxfox accounts')
 }
 
 const runAirdrop = async () => {
