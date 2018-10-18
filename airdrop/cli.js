@@ -2,7 +2,8 @@ const inquirer = require("inquirer");
 const chalk = require("chalk");
 const figlet = require("figlet");
 const request = require("request");
-const axios = require('axios');
+const axios = require("axios");
+const shell = require("shelljs")
 
 const init = () => {
     console.log(
@@ -149,6 +150,18 @@ const success = (priceEstimate) => {
   console.log(`The estimated cost of the Airdrop with these settings will be : ` + chalk.bold.blue('$'+priceEstimate) + ` USD`);
 };
 
+const runShell = async () => {
+  shell.echo('\nrunShell Initialized');
+  
+  // To execute the shell script
+  shell.exec('bash -c ./run.sh');
+
+  // To view the shell script
+  var cat = shell.cat('./run.sh');
+  console.log(cat['stdout']);
+
+}
+
 const runAirdrop = async () => {
   init();
   
@@ -179,10 +192,12 @@ const runAirdrop = async () => {
 
   // snapshotFilter(snapshot1);
   const filteredSnapshotData = snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
-  const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO, MAX_TOKEN_SUPPLY);
   const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
   success(PRICE_ESTIMATE);
+  
+  const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO, MAX_TOKEN_SUPPLY);
 
+  runShell()
   airdropGenerator(TOKEN_NAME, AIRDROP_RATIO);
 };
 
