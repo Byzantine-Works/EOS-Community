@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ISSUER_ACCOUNT="junglefoxfox"
-TOKEN_SYMBOL="AIRONE"
+TOKEN_SYMBOL="AIRTHREE"
 MAX_TOKEN_SUPPLY="9100200300.000"
 INITIAL_TOKEN_SUPPLY="1000000.000"
 # SNAPSHOT_FILE="formattedAirdrop.csv"
@@ -9,7 +9,7 @@ INITIAL_TOKEN_SUPPLY="1000000.000"
 echo "Creating token..."
 CREATED=$(cleos -u http://193.93.219.219:8888/ get table $ISSUER_ACCOUNT $TOKEN_SYMBOL stat | grep $TOKEN_SYMBOL)
 if [[ -z $CREATED ]]; then
-    echo "Creating token: $TOKEN_SYMBOL, under account: $ISSUER_ACCOUNT, with a max supply of: $MAX_TOKEN_SUPPLY..."
+    echo "Creating token: \"$TOKEN_SYMBOL\", with a max supply of: \"$MAX_TOKEN_SUPPLY\", under account: \"$ISSUER_ACCOUNT\"..."
     cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT create "[\"$ISSUER_ACCOUNT\", \"$MAX_TOKEN_SUPPLY $TOKEN_SYMBOL\"]" -p $ISSUER_ACCOUNT@active
 else
     echo "Token with \"$TOKEN_SYMBOL\" symbol already exits -- Skipping Create."
@@ -17,7 +17,7 @@ fi
 
 ISSUANCE=$(cleos -u http://193.93.219.219:8888/ get table $ISSUER_ACCOUNT $ISSUER_ACCOUNT accounts | grep $TOKEN_SYMBOL)
 if [[ -z $ISSUANCE ]]; then
-    echo "Issuing initial supply of: $INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL to account \"$ISSUER_ACCOUNT\"..."
+    echo "Issuing initial supply of: \"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\" to account \"$ISSUER_ACCOUNT\"..."
     cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT issue "[\"$ISSUER_ACCOUNT\", \"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\", \"initial supply\"]" -p $ISSUER_ACCOUNT@active
 else
     echo "Token already issued to \"$ISSUER_ACCOUNT\" -- Skipping issue"
