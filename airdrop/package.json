@@ -1,0 +1,19 @@
+{
+  "name": "airdrop",
+  "version": "1.0.0",
+  "description": "EOS Airdrop Tool",
+  "main": "cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "chalk": "^2.4.1",
+    "figlet": "^1.2.1",
+    "inquirer": "^6.2.0",
+    "request": "^2.88.0",
+    "shelljs": "^0.8.2"
+  }
+}
