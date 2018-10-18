@@ -166,30 +166,30 @@ const runShell = async () => {
   // console.log(cattext['stdout'])
     
   // Testing jungle cleos on linux machine (through alias)
-  shell.exec('jcleos get info');
-  shell.exec('jcleos get table junglefoxfox junglefoxfox accounts')
+  shell.exec('cleos -u http://193.93.219.219:8888/ get info');
+  shell.exec('cleos -u http://193.93.219.219:8888/ get table junglefoxfox junglefoxfox accounts')
 }
 
 const runAirdrop = async () => {
   init();
   
-  // Sample Answers (for quick testing)
-  // const answers = ''
-  // const TOKEN_NAME= 'testcoin';
-  // const AIRDROP_RATIO= '5';
-  // const MAX_TOKEN_SUPPLY= '1000000';
-  // const MIN_EOS_HELD= '100';
-  // const MAX_EOS_HELD= '1000000';
+   // Sample Answers (for quick testing)
+  const answers = ''
+  const TOKEN_NAME= 'testcoin';
+  const AIRDROP_RATIO= '5';
+  const MAX_TOKEN_SUPPLY= '1000000';
+  const MIN_EOS_HELD= '100';
+  const MAX_EOS_HELD= '1000000';
   
 
-  const answers = await askQuestions();
-  const {
-    TOKEN_NAME,
-    AIRDROP_RATIO,
-    MAX_TOKEN_SUPPLY,
-    MIN_EOS_HELD,
-    MAX_EOS_HELD,
-  } = answers;
+  // const answers = await askQuestions();
+  // const {
+  //   TOKEN_NAME,
+  //   AIRDROP_RATIO,
+  //   MAX_TOKEN_SUPPLY,
+  //   MIN_EOS_HELD,
+  //   MAX_EOS_HELD,
+  // } = answers;
   
 
   
