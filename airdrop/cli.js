@@ -139,35 +139,37 @@ const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) =>
   return priceEstimate_Usd
 }
 
-const airdropGenerator = (tokenName, airdropRatio, maxTokenSupply, minEosHeld, maxEosHeld) => {
-  // Main Airdrop Logic Here
-
-};
-
-
 const success = (priceEstimate) => {
   console.log(`The estimated cost of the Airdrop with these settings will be : ` + chalk.bold.blue('$'+priceEstimate) + ` USD`);
 };
 
+const airdropGenerator = (formattedSnapshotData, tokenName, airdropRatio, maxTokenSupply, minEosHeld, maxEosHeld) => {
+  // Main Airdrop Logic Here
+  // Either Generate .sh file, or use shelljs? 
+};
+
+
+
+
 const runShell = async () => {
   shell.echo('\nrunShell Initialized');
   
-  // To execute the shell script
+  //// To execute the shell script
   console.log('\n~~~~~~~ executing shell script by line: ~~~~~~~');
   shell.exec('bash -c ./run.sh');
 
-  // To view the shell script
+  //// To view the shell script
   console.log('\n######## viewing shell source code by line: ########'); 
   var catshell = shell.cat('./run.sh');
   console.log(catshell['stdout']);
 
-  // To view the txt file
+  //// To view the txt file
   // var cattext = shell.cat('./test.txt')
   // console.log(cattext['stdout'])
     
-  // Testing jungle cleos on linux machine (through alias)
-  shell.exec('cleos -u http://193.93.219.219:8888/ get info');
-  shell.exec('cleos -u http://193.93.219.219:8888/ get table junglefoxfox junglefoxfox accounts')
+  //// Testing jungle cleos on linux machine (through alias)
+  // shell.exec('cleos -u http://193.93.219.219:8888/ get info');
+  // shell.exec('cleos -u http://193.93.219.219:8888/ get table junglefoxfox junglefoxfox accounts')
 }
 
 const runAirdrop = async () => {
@@ -204,9 +206,9 @@ const runAirdrop = async () => {
   success(PRICE_ESTIMATE);
   
   const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO, MAX_TOKEN_SUPPLY);
+  airdropGenerator(TOKEN_NAME, AIRDROP_RATIO);
 
   runShell()
-  airdropGenerator(TOKEN_NAME, AIRDROP_RATIO);
 };
 
 module.exports = runAirdrop();
