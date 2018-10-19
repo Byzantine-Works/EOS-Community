@@ -219,10 +219,9 @@ const runAirdrop = async () => {
     console.log(chalk.blue(key.toString()) + " --- " + chalk.red(answers[key].toString()))
   } console.log('\n')
 
-  const snapshotJson = await snapshotCsvToJson(csvFilePath)
-  // const filteredSnapshotData = await snapshotFilter(genesisSnapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // UNCOMMENT TO USE GENESIS SNAPSHOT
-  const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
-  const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
+  const snapshotJson = await snapshotCsvToJson(csvFilePath) // Csv to Json
+  const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // Filtering Accounts by user params
+  const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD) // Price Estimate Calculations
   success(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
