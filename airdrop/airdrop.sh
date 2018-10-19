@@ -12,7 +12,7 @@ if [[ -z $CREATED ]]; then
     echo "Creating token: \"$TOKEN_SYMBOL\", with a max supply of: \"$MAX_TOKEN_SUPPLY\", under account: \"$ISSUER_ACCOUNT\"..."
     cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT create "[\"$ISSUER_ACCOUNT\", \"$MAX_TOKEN_SUPPLY $TOKEN_SYMBOL\"]" -p $ISSUER_ACCOUNT@active
 else
-    echo "Token with \"$TOKEN_SYMBOL\" symbol already exits -- Skipping Create."
+    echo "Token \"$TOKEN_SYMBOL\" already exist -- Skipping Create."
 fi
 
 ISSUANCE=$(cleos -u http://193.93.219.219:8888/ get table $ISSUER_ACCOUNT $ISSUER_ACCOUNT accounts | grep $TOKEN_SYMBOL)

@@ -4,6 +4,11 @@ const figlet = require("figlet");
 const request = require("request");
 const axios = require("axios");
 const shell = require("shelljs")
+const csv = require("csvtojson")
+
+// Fitted Genesis Snapshot, or .csv file of daily EOS NewYork Snapshots
+const genesisSnapshotJson = require("./airdrop-snapshots/genesis-snapshot-fitted.json")
+const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv';
 
 const init = () => {
     console.log(
@@ -51,12 +56,18 @@ const askQuestions = () => {
   return inquirer.prompt(questions);
 };
 
-// const snapshot1csv = require("./airdrop-snapshots/snapshot-10-01-2018.json")
-const snapshot1 = require("./airdrop-snapshots/genesis-snapshot-fitted.json")
-// const snapshot1 = require("./airdrop-snapshots/snapshot-10-01-2018.json")
-// const snapshot2 = require("./airdrop-snapshots/snapshot-10-05-2018.json")
-/* Retrieve by running: csv2json ./airdrop-snapshots/20181001_account_snapshot.csv ./airdrop-snapshots/snapshot-10-01-2018.json */
-// const snapshotFilter = require("./snapshotFilter.js") // May need to build seperate functions depending on snapshot used
+const snapshotCsvToJson = async (csvFilePath) => {
+  var snapshotJson = await csv()
+  .fromFile(csvFilePath).then((jsonObj)=>{
+      console.log('Converting Csv to Json...')
+      return jsonObj
+      // console.log(jsonObj);
+      /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
+    })  
+    return snapshotJson;
+
+} 
+
 
 const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   // Filter through accounts that fit input parameters
@@ -175,15 +186,21 @@ const runShell = async () => {
 const runAirdrop = async () => {
   init();
   
-   // Sample Answers (for quick testing)
-  const answers = ''
+  /*    Sample Answers (for quick testing) */
   const TOKEN_NAME= 'testcoin';
   const AIRDROP_RATIO= '5';
   const MAX_TOKEN_SUPPLY= '1000000';
   const MIN_EOS_HELD= '100';
   const MAX_EOS_HELD= '1000000';
-  
+  const answers = {
+      TOKEN_NAME,
+      AIRDROP_RATIO,
+      MAX_TOKEN_SUPPLY,
+      MIN_EOS_HELD,
+      MAX_EOS_HELD,
+  }
 
+  
   // const answers = await askQuestions();
   // const {
   //   TOKEN_NAME,
@@ -200,11 +217,14 @@ const runAirdrop = async () => {
     console.log(chalk.blue(key.toString()) + " --- " + chalk.red(answers[key].toString()))
   } console.log('\n')
 
-  // snapshotFilter(snapshot1);
-  const filteredSnapshotData = snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
+  const snapshotJson = await snapshotCsvToJson(csvFilePath)
+
+  // const filteredSnapshotData = await snapshotFilter(genesisSnapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // UNCOMMENT TO USE GENESIS SNAPSHOT
+  const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
   const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
   success(PRICE_ESTIMATE);
   
+  /* Airdrop Portion */
   const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO, MAX_TOKEN_SUPPLY);
   airdropGenerator(TOKEN_NAME, AIRDROP_RATIO);
 
