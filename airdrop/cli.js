@@ -3,8 +3,9 @@ const chalk = require("chalk");
 const figlet = require("figlet");
 const request = require("request");
 const axios = require("axios");
-const shell = require("shelljs")
-const csv = require("csvtojson")
+const shell = require("shelljs");
+const csv = require("csvtojson");
+const fs = require('fs');
 const genesisSnapshotJson = require("./airdrop-snapshots/genesis-snapshot-fitted.json") // Fitted Genesis Snapshot, or .csv file of daily EOS NewYork Snapshots
 
 // const csvFilePath = './airdrop-snapshots/genesis-snapshot.csv';  // UNCOMMENT TO USE GENESIS SNAPSHOT
@@ -88,10 +89,13 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   console.log(`Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS...\n`);
   var filtered = [];
   for (let i=0; i<snapshotCopy.length; i++) {
-    if (snapshotCopy[i]['total_eos'] >= minEosHeld && snapshotCopy[i]['total_eos'] <= maxEosHeld) {
+    if ((parseInt(snapshotCopy[i]['total_eos']) >= minEosHeld) && (parseInt(snapshotCopy[i]['total_eos']) <= maxEosHeld)) {
       filtered.push(snapshotCopy[i]);
     }
   }
+  // console.log('Filtered: ', filtered)
+  // console.log('Min Eos Held', minEosHeld)
+  // console.log('Max Eos Held', maxEosHeld)
   console.log(chalk.blue("Snapshot Number of Accounts: "), snapshot.length)
   console.log(chalk.blue("Filtered Number of Accounts: "), filtered.length,'\n')
   // Return Array with all accounts within the threshold
@@ -99,15 +103,23 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   return filtered
 }
 
-const formatOutput = (filtered, airdropRatio, maxTokenSupply) => {
+const formatOutput = (filtered, airdropRatio) => {
   var arr = []; 
   for (let i=0; i<filtered.length; i++) {
     arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + filtered[i]['total_eos']*airdropRatio )
   }
   var str = arr.join('\n')
   // console.log('formatted output: ', str)
-  // console.log('Output Lines Length : ', str.split(/\r\n|\r|\n/).length)
+  console.log('Output Lines Length : ', str.split(/\r\n|\r|\n/).length)
   return str
+}
+
+const generateAirdropCsv = (formatted) => {
+  fs.writeFile('AirdropCsv.txt', formatted, (err) => {
+    if (err) throw err;
+    console.log('The file has been saved!');
+  });
+
 }
 
 const getRamPrice = async () => {
@@ -195,12 +207,14 @@ const runAirdrop = async () => {
   const TOKEN_NAME= 'testcoin';
   const AIRDROP_RATIO= '5';
   const MAX_TOKEN_SUPPLY= '1000000';
-  const MIN_EOS_HELD= '100';
-  const MAX_EOS_HELD= '1000000';
+  const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
+  const MIN_EOS_HELD= '1000';
+  const MAX_EOS_HELD= '9999999';
   const answers = {
       TOKEN_NAME,
       AIRDROP_RATIO,
       MAX_TOKEN_SUPPLY,
+      INITIAL_TOKEN_SUPPLY,
       MIN_EOS_HELD,
       MAX_EOS_HELD,
   }
@@ -213,6 +227,7 @@ const runAirdrop = async () => {
   //   MIN_EOS_HELD,
   //   MAX_EOS_HELD,
   // } = answers;
+  // const INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
     
   console.log('\n User Selected Inputs:')
   for (var key in answers) {
@@ -225,10 +240,11 @@ const runAirdrop = async () => {
   success(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
-  const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO, MAX_TOKEN_SUPPLY);
-  airdropGenerator(TOKEN_NAME, AIRDROP_RATIO);
+  const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO);
+  // generateAirdropCsv(formatted);
+  airdropGenerator(formatted, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
 
-  runShell()
+  // runShell()
 };
 
 module.exports = runAirdrop();
