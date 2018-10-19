@@ -93,9 +93,7 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
       filtered.push(snapshotCopy[i]);
     }
   }
-  // console.log('Filtered: ', filtered)
-  // console.log('Min Eos Held', minEosHeld)
-  // console.log('Max Eos Held', maxEosHeld)
+
   console.log(chalk.blue("Snapshot Number of Accounts: "), snapshot.length)
   console.log(chalk.blue("Filtered Number of Accounts: "), filtered.length,'\n')
   // Return Array with all accounts within the threshold
@@ -115,9 +113,9 @@ const formatOutput = (filtered, airdropRatio) => {
 }
 
 const generateAirdropCsv = (formatted) => {
-  fs.writeFile('AirdropCsv.txt', formatted, (err) => {
+  fs.writeFile('Airdrop.csv', formatted, (err) => {
     if (err) throw err;
-    console.log('The file has been saved!');
+    console.log('Airdrop.csv file has been saved!');
   });
 
 }
@@ -241,7 +239,7 @@ const runAirdrop = async () => {
   
   /* Airdrop Portion */
   const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO);
-  // generateAirdropCsv(formatted);
+  generateAirdropCsv(formatted);
   airdropGenerator(formatted, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
 
   // runShell()
