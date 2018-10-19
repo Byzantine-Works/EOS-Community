@@ -5,10 +5,10 @@ const request = require("request");
 const axios = require("axios");
 const shell = require("shelljs")
 const csv = require("csvtojson")
+const genesisSnapshotJson = require("./airdrop-snapshots/genesis-snapshot-fitted.json") // Fitted Genesis Snapshot, or .csv file of daily EOS NewYork Snapshots
 
-// Fitted Genesis Snapshot, or .csv file of daily EOS NewYork Snapshots
-const genesisSnapshotJson = require("./airdrop-snapshots/genesis-snapshot-fitted.json")
-const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv';
+// const csvFilePath = './airdrop-snapshots/genesis-snapshot.csv';  // UNCOMMENT TO USE GENESIS SNAPSHOT
+const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
 
 const init = () => {
     console.log(
@@ -57,14 +57,19 @@ const askQuestions = () => {
 };
 
 const snapshotCsvToJson = async (csvFilePath) => {
-  var snapshotJson = await csv()
-  .fromFile(csvFilePath).then((jsonObj)=>{
+  if (csvFilePath == './airdrop-snapshots/genesis-snapshot.csv') {
+    console.log('Converting Genesis Snapshot to Fitted Json...')
+    return genesisSnapshotJson
+  } else {
+    var snapshotJson = await csv()
+    .fromFile(csvFilePath).then((jsonObj)=>{
       console.log('Converting Csv to Json...')
       return jsonObj
       // console.log(jsonObj);
       /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
     })  
     return snapshotJson;
+  }
 
 } 
 
@@ -199,7 +204,6 @@ const runAirdrop = async () => {
       MIN_EOS_HELD,
       MAX_EOS_HELD,
   }
-
   
   // const answers = await askQuestions();
   // const {
@@ -209,16 +213,13 @@ const runAirdrop = async () => {
   //   MIN_EOS_HELD,
   //   MAX_EOS_HELD,
   // } = answers;
-  
-
-  
+    
   console.log('\n User Selected Inputs:')
   for (var key in answers) {
     console.log(chalk.blue(key.toString()) + " --- " + chalk.red(answers[key].toString()))
   } console.log('\n')
 
   const snapshotJson = await snapshotCsvToJson(csvFilePath)
-
   // const filteredSnapshotData = await snapshotFilter(genesisSnapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // UNCOMMENT TO USE GENESIS SNAPSHOT
   const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
   const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
