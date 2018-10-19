@@ -1,0 +1,122 @@
+body {
+    position: absolute;
+    height:100%;
+    width: 100%;
+    background-color: black;
+    color: white;
+    font-family: Courier;
+}
+
+canvas {
+    position: relative;
+    z-index: 100;
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+
+}
+
+.App {
+    height: 100%;
+    width: 100%;
+}
+
+
+.Dashboard {
+    height: 100%;
+    width: 100%;
+}
+
+.AccountResources {
+    padding: 15px;
+    border: solid;
+    border-radius: 8px;
+    border-color: white;
+}
+
+.ActionsCost {
+    padding: 15px;
+    border: solid;
+    border-radius: 8px;
+    border-color: white;
+    margin-top: 40px;
+}
+
+.GraphMonitor {
+    margin: auto;
+    transform: translateY(10%);
+    background-color: black;
+    color: white;
+    font-family: Courier;
+    width: 70%;
+    height: 70%;
+    border-radius: 8px;
+}
+.Params {
+    margin: 0 auto;
+    transform: translateY(50%);
+}
+
+input {
+    position: relative;
+    border: none;
+    background: rgb(134, 198, 221);
+    border: none;
+    border-radius: 10px;
+    top: -50%;
+}
+
+#estimate {
+    position: relative;
+    font-family: 'Courier New', Courier, monospace;
+    width: 100px;
+    margin: 50%;
+    margin-top: 10%; 
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    background-color: white;
+
+}
+
+.ContractBillContainer{
+    position: absolute;
+    line-height: 1.0;
+    transform: translateY(-10%);
+    color: white;
+    right: 5%;
+    border: solid;
+    border-color: white;
+    border-radius: 8px;
+    width: 17%;
+    height: 70%;
+
+}
+
+.ContractBillContainer div {
+    border: solid;
+    border-width: 1px;
+    margin: 20px;
+    border-color: white;
+    height: 60px;
+    border-radius: 8px;
+    color: white;
+
+}
+
+.ContractBillContainer div p {
+    color: rgb(255, 183, 49);
+
+}
+
+.chartjs-size-monitor{
+    height: 50px;
+    width: 100%;
+}
+
+#balanceVisual {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
