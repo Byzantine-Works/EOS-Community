@@ -237,6 +237,9 @@ const airdropGenerator = (formattedSnapshotData, accountName, tokenName, airdrop
 const runShell = async () => {
   shell.echo('\nrunShell Initialized');
   
+  console.log('changing permissions of runAirdrop.sh to 755 read-write-execute')
+  shell.exec('bash -c chmod 755 runAirdrop.sh');
+
   //// To execute the shell script
   console.log('\n~~~~~~~ executing shell script by line: ~~~~~~~');
   shell.exec('bash -c ./runAirdrop.sh');
@@ -260,7 +263,7 @@ const runAirdrop = async () => {
   
   /*    Sample Answers (for quick testing) */
   const ACCOUNT_NAME= 'junglefoxfox'
-  const TOKEN_NAME= 'testcoin';
+  const TOKEN_NAME= 'AIRFOUR';
   const AIRDROP_RATIO= '5';
   const MAX_TOKEN_SUPPLY= '1000000';
   const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
@@ -302,7 +305,7 @@ const runAirdrop = async () => {
   generateAirdropCsv(formatted);
   airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
 
-  // runShell()
+  runShell()
 };
 
 module.exports = runAirdrop();
