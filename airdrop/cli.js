@@ -239,11 +239,11 @@ const runShell = async () => {
   
   //// To execute the shell script
   console.log('\n~~~~~~~ executing shell script by line: ~~~~~~~');
-  shell.exec('bash -c ./run.sh');
+  shell.exec('bash -c ./runAirdrop.sh');
 
   //// To view the shell script
   console.log('\n######## viewing shell source code by line: ########'); 
-  var catshell = shell.cat('./run.sh');
+  var catshell = shell.cat('./runAirdrop.sh');
   console.log(catshell['stdout']);
 
   //// To view the txt file
