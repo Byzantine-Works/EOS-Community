@@ -159,10 +159,10 @@ const success = (priceEstimate) => {
 };
 
 
-const formatOutput = (filtered, airdropRatio) => {
+const formatOutput = (filtered, airdropRatio, precision) => {
   var arr = []; 
   for (let i=0; i<filtered.length; i++) {
-    arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + filtered[i]['total_eos']*airdropRatio )
+    arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + (filtered[i]['total_eos']*airdropRatio).toFixed(precision))
   }
   var str = arr.join('\n')
   // console.log('formatted output: ', str)
@@ -188,8 +188,8 @@ const airdropGenerator = async (formattedSnapshotData, accountName, tokenName, a
   ISSUER_ACCOUNT="${accountName}"
   TOKEN_SYMBOL="${tokenName}"
   AIRDROP_RATIO="${airdropRatio}"
-  MAX_TOKEN_SUPPLY="${maxTokenSupply}.000"
-  INITIAL_TOKEN_SUPPLY="${initialTokenSupply}.000"
+  MAX_TOKEN_SUPPLY="${maxTokenSupply}.0000"
+  INITIAL_TOKEN_SUPPLY="${initialTokenSupply}.0000"
   SNAPSHOT_FILE="airdrop.csv"
   
   echo "Creating token..."
@@ -304,7 +304,7 @@ const runAirdrop = async () => {
   await success(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
-  const formatted = await formatOutput(filteredSnapshotData, AIRDROP_RATIO);
+  const formatted = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
   await generateAirdropCsv(formatted);
   await airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
 
