@@ -170,8 +170,8 @@ const formatOutput = (filtered, airdropRatio) => {
   return str
 }
 
-const generateAirdropCsv = (formatted) => {
-  fs.writeFile('airdrop.csv', formatted, (err) => {
+const generateAirdropCsv = async (formatted) => {
+  await fs.writeFile('airdrop.csv', formatted, (err) => {
     if (err) throw err;
     console.log('airdrop.csv file has been saved!');
   });
@@ -179,7 +179,7 @@ const generateAirdropCsv = (formatted) => {
 }
 
 
-const airdropGenerator = (formattedSnapshotData, accountName, tokenName, airdropRatio, maxTokenSupply, initialTokenSupply) => {
+const airdropGenerator = async (formattedSnapshotData, accountName, tokenName, airdropRatio, maxTokenSupply, initialTokenSupply) => {
   // Main Airdrop Logic Here
   // Either Generate .sh file, or use shelljs? 
   const fullAirdropStr = `
@@ -195,30 +195,30 @@ const airdropGenerator = (formattedSnapshotData, accountName, tokenName, airdrop
   echo "Creating token..."
   CREATED=$(cleos -u http://193.93.219.219:8888/ get table $ISSUER_ACCOUNT $TOKEN_SYMBOL stat | grep $TOKEN_SYMBOL)
   if [[ -z $CREATED ]]; then
-      echo "Creating token: \"$TOKEN_SYMBOL\", with a max supply of: \"$MAX_TOKEN_SUPPLY\", under account: \"$ISSUER_ACCOUNT\"..."
-      echo cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT create "[\"$ISSUER_ACCOUNT\", \"$MAX_TOKEN_SUPPLY $TOKEN_SYMBOL\"]" -p $ISSUER_ACCOUNT@active
-      cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT create "[\"$ISSUER_ACCOUNT\", \"$MAX_TOKEN_SUPPLY $TOKEN_SYMBOL\"]" -p $ISSUER_ACCOUNT@active
+      echo "Creating token: \\"$TOKEN_SYMBOL\\", with a max supply of: \\"$MAX_TOKEN_SUPPLY\\", under account: \\"$ISSUER_ACCOUNT\\"..."
+      echo cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT create "[\\"$ISSUER_ACCOUNT\\", \\"$MAX_TOKEN_SUPPLY $TOKEN_SYMBOL\\"]" -p $ISSUER_ACCOUNT@active
+      cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT create "[\\"$ISSUER_ACCOUNT\\", \\"$MAX_TOKEN_SUPPLY $TOKEN_SYMBOL\\"]" -p $ISSUER_ACCOUNT@active
   else
-      echo "Token \"$TOKEN_SYMBOL\" already exist -- Skipping Create."
+      echo "Token \\"$TOKEN_SYMBOL\\" already exist -- Skipping Create."
   fi
   
   ISSUANCE=$(cleos -u http://193.93.219.219:8888/ get table $ISSUER_ACCOUNT $ISSUER_ACCOUNT accounts | grep $TOKEN_SYMBOL)
   if [[ -z $ISSUANCE ]]; then
-      echo "Issuing initial supply of: \"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\" to account \"$ISSUER_ACCOUNT\"..."
-      echo cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT issue "[\"$ISSUER_ACCOUNT\", \"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\", \"initial supply\"]" -p $ISSUER_ACCOUNT@active
-      cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT issue "[\"$ISSUER_ACCOUNT\", \"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\", \"initial supply\"]" -p $ISSUER_ACCOUNT@active
+      echo "Issuing initial supply of: \\"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\\" to account \\"$ISSUER_ACCOUNT\\"..."
+      echo cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT issue "[\\"$ISSUER_ACCOUNT\\", \\"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\\", \\"initial supply\\"]" -p $ISSUER_ACCOUNT@active
+      cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT issue "[\\"$ISSUER_ACCOUNT\\", \\"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\\", \\"initial supply\\"]" -p $ISSUER_ACCOUNT@active
   else
-      echo "Token already issued to \"$ISSUER_ACCOUNT\" -- Skipping issue"
+      echo "Token already issued to \\"$ISSUER_ACCOUNT\\" -- Skipping issue"
   fi
   
   for line in $(cat $SNAPSHOT_FILE); do
-      ACCOUNT=$(echo $line | tr "," "\n" | head -1)
-      AMOUNT=$(echo $line | tr "," "\n" | tail -1)
+      ACCOUNT=$(echo $line | tr "," "\\n" | head -1)
+      AMOUNT=$(echo $line | tr "," "\\n" | tail -1)
       CURRENT_BALANCE=$(cleos -u http://193.93.219.219:8888/ get table $ISSUER_ACCOUNT $ACCOUNT accounts | grep $TOKEN_SYMBOL) 
       if [[ -z $CURRENT_BALANCE ]]; then
           echo "Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
-          echo cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT transfer "[\"$ISSUER_ACCOUNT\", \"$ACCOUNT\", \"$AMOUNT $TOKEN_SYMBOL\", \"airdrop\"]" -p $ISSUER_ACCOUNT@active
-          cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT transfer "[\"$ISSUER_ACCOUNT\", \"$ACCOUNT\", \"$AMOUNT $TOKEN_SYMBOL\", \"airdrop\"]" -p $ISSUER_ACCOUNT@active
+          echo cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
+          cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
       else
           echo "Skipping $ACCOUNT"
       fi 
@@ -227,7 +227,7 @@ const airdropGenerator = (formattedSnapshotData, accountName, tokenName, airdrop
   
   
   `
-  fs.writeFile('runAirdrop.sh', fullAirdropStr, (err) => {
+  await fs.writeFile('runAirdrop.sh', fullAirdropStr, (err) => {
     if (err) throw err;
     console.log('runAirdrop.sh file has been saved! Ready to be ran in a cleos enabled terminal');
     console.log('Once you account is ready with sufficient RAM bought and CPU/Net Staked, please run ./runAirdrop.sh')
@@ -237,7 +237,7 @@ const airdropGenerator = (formattedSnapshotData, accountName, tokenName, airdrop
 
 
 
-const runShell = async () => {
+const runShell = () => {
   shell.echo('\nrunShell Initialized');
   
   console.log('changing permissions of runAirdrop.sh to 755 read-write-execute')
@@ -261,7 +261,7 @@ const runShell = async () => {
   // shell.exec('cleos -u http://193.93.219.219:8888/ get table junglefoxfox junglefoxfox accounts')
 }
 
-const runAirdrop = async () => {s
+const runAirdrop = async () => {
   init();
   
   /*    Sample Answers (for quick testing) */
@@ -301,14 +301,15 @@ const runAirdrop = async () => {s
   const snapshotJson = await snapshotCsvToJson(csvFilePath) // Csv to Json
   const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // Filtering Accounts by user params
   const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD) // Price Estimate Calculations
-  success(PRICE_ESTIMATE);
+  await success(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
-  const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO);
-  generateAirdropCsv(formatted);
-  airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
+  const formatted = await formatOutput(filteredSnapshotData, AIRDROP_RATIO);
+  await generateAirdropCsv(formatted);
+  await airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
 
-  runShell()
+  // setTimeout(runShell, )
+  await runShell()
 };
 
 module.exports = runAirdrop();
