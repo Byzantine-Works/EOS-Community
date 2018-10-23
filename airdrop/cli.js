@@ -3,7 +3,13 @@ const chalk = require("chalk");
 const figlet = require("figlet");
 const request = require("request");
 const axios = require("axios");
-const shell = require("shelljs")
+const shell = require("shelljs");
+const csv = require("csvtojson");
+const fs = require('fs');
+const genesisSnapshotJson = require("./airdrop-snapshots/genesis-snapshot-fitted.json") // Fitted Genesis Snapshot, or .csv file of daily EOS NewYork Snapshots
+
+const csvFilePath = './airdrop-snapshots/genesis-snapshot.csv';  // UNCOMMENT TO USE GENESIS SNAPSHOT
+// const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
 
 const init = () => {
     console.log(
@@ -20,7 +26,13 @@ const init = () => {
 };
 
 const askQuestions = () => {
-  const questions = [{
+  const questions = [
+      {
+        name: "ACCOUNT_NAME",
+        type: "input",
+        message: "Account Name? (Enter 12 character Account Name):"
+      },
+      {
           name: "TOKEN_NAME",
           type: "input",
           message: "Enter the name of Token?"
@@ -51,12 +63,23 @@ const askQuestions = () => {
   return inquirer.prompt(questions);
 };
 
-// const snapshot1csv = require("./airdrop-snapshots/snapshot-10-01-2018.json")
-const snapshot1 = require("./airdrop-snapshots/genesis-snapshot-fitted.json")
-// const snapshot1 = require("./airdrop-snapshots/snapshot-10-01-2018.json")
-// const snapshot2 = require("./airdrop-snapshots/snapshot-10-05-2018.json")
-/* Retrieve by running: csv2json ./airdrop-snapshots/20181001_account_snapshot.csv ./airdrop-snapshots/snapshot-10-01-2018.json */
-// const snapshotFilter = require("./snapshotFilter.js") // May need to build seperate functions depending on snapshot used
+const snapshotCsvToJson = async (csvFilePath) => {
+  if (csvFilePath == './airdrop-snapshots/genesis-snapshot.csv') {
+    console.log('Converting Genesis Snapshot to Fitted Json...')
+    return genesisSnapshotJson
+  } else {
+    var snapshotJson = await csv()
+    .fromFile(csvFilePath).then((jsonObj)=>{
+      console.log('Converting Csv to Json...')
+      return jsonObj
+      // console.log(jsonObj);
+      /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
+    })  
+    return snapshotJson;
+  }
+
+} 
+
 
 const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   // Filter through accounts that fit input parameters
@@ -72,10 +95,11 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   console.log(`Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS...\n`);
   var filtered = [];
   for (let i=0; i<snapshotCopy.length; i++) {
-    if (snapshotCopy[i]['total_eos'] >= minEosHeld && snapshotCopy[i]['total_eos'] <= maxEosHeld) {
+    if ((parseInt(snapshotCopy[i]['total_eos']) >= minEosHeld) && (parseInt(snapshotCopy[i]['total_eos']) <= maxEosHeld)) {
       filtered.push(snapshotCopy[i]);
     }
   }
+
   console.log(chalk.blue("Snapshot Number of Accounts: "), snapshot.length)
   console.log(chalk.blue("Filtered Number of Accounts: "), filtered.length,'\n')
   // Return Array with all accounts within the threshold
@@ -83,16 +107,7 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   return filtered
 }
 
-const formatOutput = (filtered, airdropRatio, maxTokenSupply) => {
-  var arr = []; 
-  for (let i=0; i<filtered.length; i++) {
-    arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + filtered[i]['total_eos']*airdropRatio )
-  }
-  var str = arr.join('\n')
-  // console.log('formatted output: ', str)
-  // console.log('Output Lines Length : ', str.split(/\r\n|\r|\n/).length)
-  return str
-}
+
 
 const getRamPrice = async () => {
   var RAM_PRICE = await axios.get('http://api.byzanti.ne:8902/getRamPrice?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
@@ -143,24 +158,98 @@ const success = (priceEstimate) => {
   console.log(`The estimated cost of the Airdrop with these settings will be : ` + chalk.bold.blue('$'+priceEstimate) + ` USD`);
 };
 
-const airdropGenerator = (formattedSnapshotData, tokenName, airdropRatio, maxTokenSupply, minEosHeld, maxEosHeld) => {
+
+const formatOutput = (filtered, airdropRatio, precision) => {
+  var arr = []; 
+  for (let i=0; i<filtered.length; i++) {
+    arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + (filtered[i]['total_eos']*airdropRatio).toFixed(precision))
+  }
+  var str = arr.join('\n')
+  // console.log('formatted output: ', str)
+  console.log('Output Lines Length : ', str.split(/\r\n|\r|\n/).length)
+  return str
+}
+
+const generateAirdropCsv = async (formatted) => {
+  await fs.writeFile('airdrop.csv', formatted, (err) => {
+    if (err) throw err;
+    console.log('airdrop.csv file has been saved!');
+  });
+
+}
+
+
+const airdropGenerator = async (formattedSnapshotData, accountName, tokenName, airdropRatio, maxTokenSupply, initialTokenSupply) => {
   // Main Airdrop Logic Here
   // Either Generate .sh file, or use shelljs? 
+  const fullAirdropStr = `
+  #!/bin/bash
+
+  ISSUER_ACCOUNT="${accountName}"
+  TOKEN_SYMBOL="${tokenName}"
+  AIRDROP_RATIO="${airdropRatio}"
+  MAX_TOKEN_SUPPLY="${maxTokenSupply}.0000"
+  INITIAL_TOKEN_SUPPLY="${initialTokenSupply}.0000"
+  SNAPSHOT_FILE="airdrop.csv"
+  
+  echo "Creating token..."
+  CREATED=$(cleos -u http://193.93.219.219:8888/ get table $ISSUER_ACCOUNT $TOKEN_SYMBOL stat | grep $TOKEN_SYMBOL)
+  if [[ -z $CREATED ]]; then
+      echo "Creating token: \\"$TOKEN_SYMBOL\\", with a max supply of: \\"$MAX_TOKEN_SUPPLY\\", under account: \\"$ISSUER_ACCOUNT\\"..."
+      echo cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT create "[\\"$ISSUER_ACCOUNT\\", \\"$MAX_TOKEN_SUPPLY $TOKEN_SYMBOL\\"]" -p $ISSUER_ACCOUNT@active
+      cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT create "[\\"$ISSUER_ACCOUNT\\", \\"$MAX_TOKEN_SUPPLY $TOKEN_SYMBOL\\"]" -p $ISSUER_ACCOUNT@active
+  else
+      echo "Token \\"$TOKEN_SYMBOL\\" already exist -- Skipping Create."
+  fi
+  
+  ISSUANCE=$(cleos -u http://193.93.219.219:8888/ get table $ISSUER_ACCOUNT $ISSUER_ACCOUNT accounts | grep $TOKEN_SYMBOL)
+  if [[ -z $ISSUANCE ]]; then
+      echo "Issuing initial supply of: \\"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\\" to account \\"$ISSUER_ACCOUNT\\"..."
+      echo cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT issue "[\\"$ISSUER_ACCOUNT\\", \\"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\\", \\"initial supply\\"]" -p $ISSUER_ACCOUNT@active
+      cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT issue "[\\"$ISSUER_ACCOUNT\\", \\"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\\", \\"initial supply\\"]" -p $ISSUER_ACCOUNT@active
+  else
+      echo "Token already issued to \\"$ISSUER_ACCOUNT\\" -- Skipping issue"
+  fi
+  
+  for line in $(cat $SNAPSHOT_FILE); do
+      ACCOUNT=$(echo $line | tr "," "\\n" | head -1)
+      AMOUNT=$(echo $line | tr "," "\\n" | tail -1)
+      CURRENT_BALANCE=$(cleos -u http://193.93.219.219:8888/ get table $ISSUER_ACCOUNT $ACCOUNT accounts | grep $TOKEN_SYMBOL) 
+      if [[ -z $CURRENT_BALANCE ]]; then
+          echo "Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
+          echo cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
+          cleos -u http://193.93.219.219:8888/ push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
+      else
+          echo "Skipping $ACCOUNT"
+      fi 
+  done
+  
+  
+  
+  `
+  await fs.writeFile('runAirdrop.sh', fullAirdropStr, (err) => {
+    if (err) throw err;
+    console.log('runAirdrop.sh file has been saved! Ready to be ran in a cleos enabled terminal');
+    console.log('Once you account is ready with sufficient RAM bought and CPU/Net Staked, please run ./runAirdrop.sh')
+  });
 };
 
 
 
 
-const runShell = async () => {
+const runShell = () => {
   shell.echo('\nrunShell Initialized');
   
+  console.log('changing permissions of runAirdrop.sh to 755 read-write-execute')
+  shell.exec('bash -c chmod 755 runAirdrop.sh');
+
   //// To execute the shell script
   console.log('\n~~~~~~~ executing shell script by line: ~~~~~~~');
-  shell.exec('bash -c ./run.sh');
+  shell.exec('bash -c ./runAirdrop.sh');
 
   //// To view the shell script
   console.log('\n######## viewing shell source code by line: ########'); 
-  var catshell = shell.cat('./run.sh');
+  var catshell = shell.cat('./runAirdrop.sh');
   console.log(catshell['stdout']);
 
   //// To view the txt file
@@ -175,40 +264,52 @@ const runShell = async () => {
 const runAirdrop = async () => {
   init();
   
-   // Sample Answers (for quick testing)
-  const answers = ''
-  const TOKEN_NAME= 'testcoin';
+  /*    Sample Answers (for quick testing) */
+  const ACCOUNT_NAME= 'junglefoxfox'
+  const TOKEN_NAME= 'AIRFOUR';
   const AIRDROP_RATIO= '5';
   const MAX_TOKEN_SUPPLY= '1000000';
-  const MIN_EOS_HELD= '100';
-  const MAX_EOS_HELD= '1000000';
+  const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
+  const MIN_EOS_HELD= '1000';
+  const MAX_EOS_HELD= '9999999';
+  const answers = {
+      ACCOUNT_NAME,
+      TOKEN_NAME,
+      AIRDROP_RATIO,
+      MAX_TOKEN_SUPPLY,
+      INITIAL_TOKEN_SUPPLY,
+      MIN_EOS_HELD,
+      MAX_EOS_HELD,
+  }
   
-
   // const answers = await askQuestions();
   // const {
+  //   ACCOUNT_NAME,
   //   TOKEN_NAME,
   //   AIRDROP_RATIO,
   //   MAX_TOKEN_SUPPLY,
   //   MIN_EOS_HELD,
   //   MAX_EOS_HELD,
   // } = answers;
-  
-
-  
+  // const INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
+    
   console.log('\n User Selected Inputs:')
   for (var key in answers) {
     console.log(chalk.blue(key.toString()) + " --- " + chalk.red(answers[key].toString()))
   } console.log('\n')
 
-  // snapshotFilter(snapshot1);
-  const filteredSnapshotData = snapshotFilter(snapshot1, MIN_EOS_HELD, MAX_EOS_HELD);
-  const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD)
-  success(PRICE_ESTIMATE);
+  const snapshotJson = await snapshotCsvToJson(csvFilePath) // Csv to Json
+  const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // Filtering Accounts by user params
+  const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD) // Price Estimate Calculations
+  await success(PRICE_ESTIMATE);
   
-  const formatted = formatOutput(filteredSnapshotData, AIRDROP_RATIO, MAX_TOKEN_SUPPLY);
-  airdropGenerator(TOKEN_NAME, AIRDROP_RATIO);
+  /* Airdrop Portion */
+  const formatted = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
+  await generateAirdropCsv(formatted);
+  await airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
 
-  runShell()
+  // setTimeout(runShell, )
+  await runShell()
 };
 
 module.exports = runAirdrop();
