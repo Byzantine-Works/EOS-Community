@@ -12,6 +12,8 @@ import CpuCost from '../Components/CpuCost.jsx';
 import RamCost from '../Components/RamCost.jsx';
 import NetCost from '../Components/NetCost.jsx';
 import { CSVLink, CSVDownload } from "react-csv";
+import Loader from 'react-spinners/GridLoader';
+import { css } from 'react-emotion';
 
 
 console.log(abi);
@@ -27,7 +29,7 @@ console.log(types);
 
 const eos = Eos({
     keyProvider: '5KjDGssHn6aYBs32NwWiGvh2Aa7FbRpu7RGXv9ToNgj8FyS1vyw',// private key
-    httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://54.183.9.138:8888',
+    httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://13.57.210.230:8888',
     chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
 
 })
@@ -54,7 +56,14 @@ const mapStateToProps = store => ({
     bill: store.bill,
     contractSize: store.contractSize,
     csvData: store.csvData,
-    deploymentRam: store.deploymentRam
+    deploymentRam: store.deploymentRam,
+    loading: store.loading,
+    cpuTotal: store.cpuTotal,
+    ramTotal: store.ramTotal,
+    netTotal: store.netTotal,
+    cpuRate: store.cpuRate,
+    netRate: store.netRate,
+    ramPrice: store.ramPrice
 
 
 })
@@ -64,7 +73,8 @@ const mapDispatchToProps = dispatch => ({
     loadDataAccount: data => dispatch(actions.loadDataAccount(data)),
     loadABI: data => dispatch(actions.loadABI(data)),
     loadWASM: data => dispatch(actions.loadWASM(data)),
-    estimateContract: data => dispatch(actions.estimateContract(data))
+    estimateContract: data => dispatch(actions.estimateContract(data)),
+    getResourcesPrice: () => dispatch(actions.getResourcesPrice())
 
 });
 
@@ -78,6 +88,16 @@ class Dashboard extends Component {
         this.pushTransaction = this.pushTransaction.bind(this);
         this.deployContract = this.deployContract.bind(this);
         this.generateCsv = this.generateCsv.bind(this);
+        this.estimate = this.estimate.bind(this);
+        this.conversion = this.conversion.bind(this);
+        this.test = this.test.bind(this);
+
+    }
+
+    async test () {
+        let table = await eos.getAccount('victorfaucon');
+        console.log(table); 
+
     }
 
 
@@ -86,16 +106,12 @@ class Dashboard extends Component {
         let wasm = this.props.wasm;
         let abi = this.props.abi;
         let wasmResp = await eos.setcode(account, 0, 0, wasm);
-        let ramBefore = await eos.getAccount(account);
         let abiResp = await eos.setabi(account, abi);
-        let ramAfter = await eos.getAccount(account);
-        this.props.updateState(["deploymentRam", ramAfter.ram_usage-ramBefore.ram_usage]);
-        console.log(ramBefore);
-        console.log(ramAfter);
+        this.props.updateState(["deploymentRam", this.props.contractSize*10.045]);
+
 
         console.log("abiResp:", abiResp);
         console.log("wasm response: ", wasmResp);
-        this.generateCsv(account);
 
     }
 
@@ -109,8 +125,8 @@ class Dashboard extends Component {
           text += possible.charAt(Math.floor(Math.random() * possible.length));
 
         try {
-        let account = await eosLibertyTest.getAccount(text);
-        this.pushTransaction()
+            await eosLibertyTest.getAccount(text);
+            this.pushTransaction()
         
         } catch(error) {
             check = true;
@@ -134,22 +150,48 @@ class Dashboard extends Component {
                   tr.delegatebw({
                     from: 'victor',
                     receiver: text,
-                    stake_net_quantity: '10.0000 EOS',
-                    stake_cpu_quantity: '10.0000 EOS',
+                    stake_net_quantity: '3.0000 EOS',
+                    stake_cpu_quantity: '3.0000 EOS',
                     transfer: 0
                   })
-            })
-        
-        console.log("account create: ", accCreate);
-        await this.deployContract(text);
+            });
+            console.log(accCreate)
+
+        let ramBefore = await eos.getAccount(text);
+        let respTransac = await eos.transfer({
+            from:'victor',
+            to:text,
+            quantity: '0.0002 EOS',
+            memo: 'first transaction'
+        });
+        let ramAfter = await eos.getAccount(text);
+        console.log(respTransac)
+
+        this.props.updateState(["deposit", {ramBefore: ramBefore, ramAfter: ramAfter, respTransac: respTransac}]);
+
+        ramBefore = await eos.getAccount(text);
+        respTransac = await eos.transfer({
+            from:'victor',
+            to:text,
+            quantity: '0.0002 EOS',
+            memo: 'first transaction'
+        });
+        ramAfter = await eos.getAccount(text);
+        console.log("ramAfter: ", ramAfter);
+
+
+        this.props.updateState(["withdraw", {ramBefore: ramBefore, ramAfter: ramAfter, respTransac: respTransac}]);
+        this.props.getResourcesPrice();
+
+        return text;
 
     }
 
-    async generateCsv(account) {
-        await this.props.estimateContract(account);
+    async generateCsv(bill) {
         let data = [{action: 'Deployment', ram: this.props.deploymentRam}]
         var [cpuT, ramT, netT] = [[], [], []];
         ramT.push(this.props.deploymentRam);
+        console.log("in generateCSV: ", this.props.bill);
         for(let action in this.props.bill) {
             let obj = {};
             obj.action = action;
@@ -175,6 +217,27 @@ class Dashboard extends Component {
 
     }
 
+    async estimate() {
+        this.props.updateState(["loading", true]);
+        let account = await this.pushTransaction();
+        await this.deployContract(account);
+        await this.props.estimateContract(account);
+        // this.props.updateState(["bill", bill]);
+        // await this.generateCsv(bill); 
+
+    }
+    async conversion (e){
+        console.log(e.target)
+        let price = this.props.ramPrice ? this.props.ramPrice : await this.props.getRamPrice();
+        let result = (val/1000)*price;
+        console.log("result: ", result);
+        return result;
+            
+
+
+    }
+
+    //({this.conversion(this.props.ramTotal)} EOS)
 
 
 
@@ -204,29 +267,46 @@ class Dashboard extends Component {
         ]
 
         let actionsCost = [
-                <span><p style={{display:'inline'}}>CPU</p><CpuCost style={{display:'inline'}} cpu={this.props.cpu} bill={this.props.bill} height={100}></CpuCost></span>,
-                <span>Net<NetCost net={this.props.net} bill={this.props.bill}></NetCost></span>,
-                <span>Ram<RamCost bill={this.props.bill} ram={this.props.ram}></RamCost></span>   
-        ]
+                <span>CPU: {(this.props.cpuTotal)/1000} ms ({(this.props.cpuTotal*this.props.cpuRate).toFixed(4)} EOS)<CpuCost style={{display:'inline'}} cpu={this.props.cpu} bill={this.props.bill} height={100}></CpuCost></span>,
+                <span>Net: {(this.props.netTotal)/1000} KB ({(this.props.netTotal*this.props.netRate).toFixed(4)} EOS)<NetCost net={this.props.net} bill={this.props.bill}></NetCost></span>,
+                <span>Ram: {(this.props.ramTotal)/1000} KB ({(this.props.ramTotal*this.props.ramPrice).toFixed(4)} EOS)<RamCost bill={this.props.bill} ram={this.props.ram}></RamCost></span>   
+        ];
+        const override = css`
+        border-color: red;
+        margin: 0 auto;
+        z-index: 5;`;
 
 
 
         return (
             <div className="Dashboard">
+                {/* <input id="account" onChange={this.props.loadDataAccount} placeholder="Account Name"></input><br></br> */}
                 <div className="GraphMonitor">
+                {/* <button onClick={this.test}>test</button> */}
                     {this.props.account ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}
+
+                        <div className="Params">
+                            <label className="Abi">ABI file: <input id="abi" type="file" placeholder="abi" onChange={this.readFile}></input></label><label className="Wasm">WASM file: <input id="wasm" type="file" placeholder="wasm" onChange={this.readFile}></input></label>
+                        </div>
+   
+                {this.props.abi && this.props.wasm ? <button id="estimate" onClick={this.estimate}>Estimate</button> : null}
                     {this.props.bill ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div>  : null}
+                    {this.props.csvData ? <CSVLink data={this.props.csvData} target="_blank" >Download Contract Bill</CSVLink> : null}
+                    <div className='sweet-loading'>
+                    <Loader
+                        className={override}
+                        sizeUnit={"px"}
+                        size={25}
+                        color={'white'}
+                        loading={this.props.loading} />
+
                 </div>
-                <span className="Params">
-                    <p>Account name</p><input id="account" onChange={this.props.loadDataAccount}></input><br></br>
-                    <input id="abi" type="file" placeholder="abi" onChange={this.readFile}></input><br></br>
-                    <input id="wasm" type="file" placeholder="wasm" onChange={this.readFile}></input>
-                {this.props.abi && this.props.wasm ? <button id="estimate" onClick={this.pushTransaction}>Estimate</button> : null}
-                </span>
+                </div>
+
                 {/* <button onClick={this.deployContract}>Deploy contract</button>
                 <button onClick={this.pushTransaction}>Push</button> */}
 
-                {this.props.csvData ? <CSVDownload data={this.props.csvData} target="_blank" >Download Bill</CSVDownload> : null}
+                
                 {/* <ContractBill bill={this.props.bill} abi={this.props.abi}></ContractBill> */}
             </div>
 

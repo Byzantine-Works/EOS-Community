@@ -41,7 +41,7 @@ canvas {
     border: solid;
     border-radius: 8px;
     border-color: white;
-    margin-top: 40px;
+    margin-top: -35%;
 }
 
 .GraphMonitor {
@@ -54,30 +54,80 @@ canvas {
     height: 70%;
     border-radius: 8px;
 }
-.Params {
-    margin: 0 auto;
-    transform: translateY(50%);
+
+#account {
+    position: relative;
+    top: 20px;
+    float: right;
+    right: 45px;
+    z-index: 10;
+    height: 25px;
+    width: 30%;
+    border-radius: 20px;
+    background-color: white;
+    padding: 5px;
+
+}
+// .Params {
+//     margin: 0 auto;
+//     transform: translateY(50%);
+// }
+
+// .Abi {
+//     position: relative;
+//     display: inline-block;
+// }
+.Wasm {
+    right: 0px;
+}
+
+
+label {
+    color: white;
+    position: fixed;
+    display: inline-block;
+    transform: translateY(30%);
 }
 
 input {
     position: relative;
+    display: inline-block;
     border: none;
+    transform: translateY(10%);
     background: rgb(134, 198, 221);
+    width: 200px;
     border: none;
     border-radius: 10px;
-    top: -50%;
+    overflow: hidden;
+    top: 50%;
+    &:focus {
+        outline: none;
+    }
+    &:active {
+        border: none;
+    }
 }
 
 #estimate {
     position: relative;
     font-family: 'Courier New', Courier, monospace;
     width: 100px;
-    margin: 50%;
-    margin-top: 10%; 
+    margin: 45%;
+    margin-top: 20%; 
     height: 40px;
     border: none;
     border-radius: 20px;
     background-color: white;
+    cursor: pointer;
+    &:focus {
+        outline: none;
+    
+    }
+    &:active {
+        border: none;
+        background-color: black;
+        color: white;
+    }
 
 }
 
@@ -119,4 +169,14 @@ input {
 #balanceVisual {
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
+}
+
+a { 
+    position: relative;
+    width:5%;
+    margin-left: 38%;
+    top: 20px;
+    text-decoration: none;
+    color: greenyellow;
+
 }

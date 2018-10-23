@@ -1,6 +1,7 @@
 export default class State {
     constructor(){ 
         this.account = false;
+        this.loading = false;
         this.bill = false;
         // {
         //     deposit: {

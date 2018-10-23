@@ -4,6 +4,7 @@ import config from './../config.json'
 import Eos from 'eosjs';
 import EosApi from 'eosjs-api';
 import lodash from 'lodash';
+
 // import fetch from 'node-fetch';
 // import { TextDecoder, TextEncoder } from 'text-encoding';
 // const defaultPrivateKey = "5KDJZqtbfyJZmrAx97C8WB2b2V92NBm2rVi7WMFVBFuGdb5dWwQ";
@@ -26,7 +27,7 @@ require('dotenv').config();
 
 const eos = Eos({
     keyProvider: '5KjDGssHn6aYBs32NwWiGvh2Aa7FbRpu7RGXv9ToNgj8FyS1vyw',// private key
-    httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://54.183.9.138:8888',
+    httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://13.57.210.230:8888',
     chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
 })
 
@@ -69,6 +70,31 @@ export const loadWASM = data => ({
 
 // Asynchronous actions 
 
+export const getResourcesPrice = () => {
+    return async dispatch => {
+        const eosMain = Eos({
+            keyProvider: '5KDJZqtbfyJZmrAx97C8WB2b2V92NBm2rVi7WMFVBFuGdb5dWwQ',// private key
+            httpEndpoint: 'https://proxy.eosnode.tools',
+            chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
+        })
+ 
+        let balance = await eosMain.getAccount('vicisnotvern');
+        console.log("balance vicisnotvern: ", balance);
+        await dispatch(updateState(["cpuRate", (balance.cpu_weight/balance.cpu_limit.max)/1000]));
+        await dispatch(updateState(["netRate", (balance.net_weight/balance.net_limit.max)/1000]));
+        let price = await axios('http://api.byzanti.ne:8902/getRamPrice?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
+        await dispatch(updateState(["ramPrice", (price.data.price_per_kb_eos)/1000]));
+    
+        //     console.log(e.target)
+        //     price = this.props.ramPrice ? this.props.ramPrice : await this.props.getRamPrice();
+        //     let result = (val/1000)*price;
+        //     console.log("result: ", result);
+        //     return result;
+
+        // return price.data.price_per_kb_eos;
+    }
+}
+
 
 export const loadDataAccount = e => {
     let account = e.target.value;
@@ -104,8 +130,14 @@ export const estimateContract = (account) => {
     return async (dispatch, getState) => {
         let abi = getState().abi;
         let bill = {};
-        console.log("account in action : ", account)
-        await abi.actions.forEach(async action => {
+        let actions = [...abi.actions];
+        if(lodash.find(actions, ['name', 'withdraw']) === undefined) actions.push({name: "withdraw"});
+        if(lodash.find(actions, ['name', 'deposit']) === undefined) actions.push({name:"deposit"});
+        let goal = actions.length;
+        let count = 0;
+
+        new Promise((resolve, reject) => {
+            actions.forEach(async action => {
             let dataTypes = {
                 symbol: 'EOS',
                 account_name: account,
@@ -121,13 +153,13 @@ export const estimateContract = (account) => {
             let acts = [];
             let data = {};
             let usage = {};
+
             let field = lodash.find(abi.structs, ['name', action.name])
             field.fields.forEach(arg => {
                 data[arg.name] = dataTypes[arg.type];
 
             });
 
-            console.log
             acts.push(
                 {
                     account: account,
@@ -139,31 +171,93 @@ export const estimateContract = (account) => {
                     data
                 });
 
-            // if(action.name === 'resetex'){    
-
             try {
-                let ramBefore = await eos.getAccount(account);
-                let respTransac = await eos.transaction({ actions: acts });
-                console.log(respTransac);
-                let ramAfter = await eos.getAccount(account);
+                let respTransac;
+                let ramBefore;
+                let ramAfter;
+                if(action.name === 'deposit') {
+                    respTransac = getState().deposit.respTransac;
+                    ramBefore = getState().deposit.ramBefore;
+                    ramAfter = getState().deposit.ramAfter;
+                }
+                if(action.name === 'withdraw') {
+                    respTransac = getState().withdraw.respTransac;
+                    ramBefore = getState().withdraw.ramBefore;
+                    ramAfter = getState().withdraw.ramAfter;
+                }     
+                else {
+                    ramBefore = await eos.getAccount(account);
+                    respTransac = await eos.transaction({ actions: acts });
+                    ramAfter = await eos.getAccount(account);
+                }
 
                 usage.ram = ramAfter.ram_usage - ramBefore.ram_usage;
                 usage.net = respTransac.processed.net_usage;
                 usage.cpu = respTransac.processed.receipt.cpu_usage_us;
 
                 bill[action.name] = usage;
-
+                
                 await dispatch(updateState(["bill", bill]));
-                // let transac = await eos.getTransaction(respTransac.transaction_id);
-                // console.log(action.name, ": ", transac);
+                count++;
+
             } catch (error) {
                 if (typeof error === 'string') {
                     let err = JSON.parse(error);
                     console.log(action.name, ": ", err);
                 } else console.log(error);
+                count++;
+                
             }
-        // }
+            if(goal === count) return resolve(bill);
         })
+    }).then((bill) => {
+        dispatch(updateState(["bill", bill]));
+        let props = getState();
+        let data = [{action: 'Deployment', ram: props.deploymentRam}]
+        var [cpuT, ramT, netT] = [[], [], []];
+        ramT.push(props.deploymentRam);
+        console.log("in generateCSV: ", props.bill);
+        for(let action in props.bill) {
+            let obj = {};
+            obj.action = action;
+            
+            obj.cpu = props.bill[action].cpu;
+            cpuT.push(obj.cpu);
+
+            obj.ram = props.bill[action].ram;
+            ramT.push(obj.ram);
+            
+            obj.net = props.bill[action].net;
+            netT.push(obj.net);
+            data.push(obj);
+        }
+
+        let cT = cpuT.reduce((a, b) => {a = a + b; return a;});
+        let rT = ramT.reduce((a, b) => {a = a + b; return a;});
+        let nT = netT.reduce((a, b) => {a = a + b; return a;});
+        data.push({action: 'Total', cpu: cT, ram: rT, net: nT});
+        data.push({action: 'Total Resources EOS', cpu: cT*getState().cpuRate, ram: rT*getState().ramPrice, net: getState().netRate});
+        data.push({action: 'Total EOS', ram: (cT*getState().cpuRate + rT*getState().ramPrice + getState().netRate).toString()+' EOS'});
+
+        dispatch(updateState(["cpuTotal", cT]));
+        dispatch(updateState(["netTotal", nT]));
+        dispatch(updateState(["csvData", data]));
+        let ramTotal =  getState().csvData.map(x => {
+            if(x.action === "Deployment" || x.action === "Total" || x.action === "Total Resources EOS" || x.action === "Total EOS") return 0;
+            else return x.ram;
+        }).reduce((a, b) => {
+            a = a + b;
+            return a;
+        }, 0)
+        console.log("ramTotal: ", ramTotal);
+        
+        dispatch(updateState(["ramTotal", ramTotal]));
+
+        dispatch(updateState(["loading", false]));
+        return bill;
+
+    }).catch(e => console.log("error in generateCSV", e));
+        
 
     }
 
