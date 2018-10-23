@@ -227,10 +227,10 @@ const airdropGenerator = async (formattedSnapshotData, accountName, tokenName, a
   
   
   `
-  await fs.writeFile('runAirdrop.sh', fullAirdropStr, (err) => {
+  await fs.writeFile('airdrop.sh', fullAirdropStr, (err) => {
     if (err) throw err;
-    console.log('runAirdrop.sh file has been saved! Ready to be ran in a cleos enabled terminal');
-    console.log('Once you account is ready with sufficient RAM bought and CPU/Net Staked, please run ./runAirdrop.sh')
+    console.log('airdrop.sh file has been saved! Ready to be ran in a cleos enabled terminal');
+    console.log('Once you account is ready with sufficient RAM bought and CPU/Net Staked, please run ./airdrop.sh')
   });
 };
 
@@ -240,16 +240,16 @@ const airdropGenerator = async (formattedSnapshotData, accountName, tokenName, a
 const runShell = () => {
   shell.echo('\nrunShell Initialized');
   
-  console.log('changing permissions of runAirdrop.sh to 755 read-write-execute')
-  shell.exec('bash -c chmod 755 runAirdrop.sh');
+  console.log('changing permissions of airdrop.sh to 755 read-write-execute')
+  shell.exec('bash -c chmod 755 airdrop.sh');
 
   //// To execute the shell script
   console.log('\n~~~~~~~ executing shell script by line: ~~~~~~~');
-  shell.exec('bash -c ./runAirdrop.sh');
+  shell.exec('bash -c ./airdrop.sh');
 
   //// To view the shell script
   console.log('\n######## viewing shell source code by line: ########'); 
-  var catshell = shell.cat('./runAirdrop.sh');
+  var catshell = shell.cat('./airdrop.sh');
   console.log(catshell['stdout']);
 
   //// To view the txt file
@@ -312,4 +312,9 @@ const runAirdrop = async () => {
   await runShell()
 };
 
+
+const promiseAirdrop = () => {
+  init();
+}
+// module.exports = promiseAirdrop();
 module.exports = runAirdrop();
