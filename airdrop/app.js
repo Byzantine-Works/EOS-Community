@@ -1,4 +1,4 @@
-angular.module('airdropper', [])
+angular.module('myapp', [])
 .component('main', {
   controller: function($http) {
     var ctrl = this;
