@@ -1,2 +1,3 @@
 airdrop.csv
-runAirdrop.sh
+airdrop.sh
+node_modules
