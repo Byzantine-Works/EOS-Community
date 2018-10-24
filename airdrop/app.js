@@ -9,8 +9,9 @@ angular.module('myapp', [])
     }
   },
 
-  template: 
-  `<div>
-    Angular component working
-  </div>`
+  templateUrl: './app.html'
+  // template: 
+  // `<div>
+  //   Angular component working
+  // </div>`
 })
