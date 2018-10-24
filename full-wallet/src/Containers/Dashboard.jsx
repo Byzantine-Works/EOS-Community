@@ -34,8 +34,6 @@ const eos = Eos({
 
 })
 
-
-
 // const eos = Eos({
 //     keyProvider: '5HtyHKqr43GQpZhLg3RWhHz59JHQqb1uQzb2QyYwz1nuEieo6QY',// private key
 //     httpEndpoint: 'https://cors-anywhere.herokuapp.com/https://api.kylin-testnet.eospacex.com',
@@ -64,8 +62,6 @@ const mapStateToProps = store => ({
     cpuRate: store.cpuRate,
     netRate: store.netRate,
     ramPrice: store.ramPrice
-
-
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -116,10 +112,9 @@ class Dashboard extends Component {
     }
 
     async pushTransaction() {
-
-        var text = "";
         let check = false;
-        
+        var text = "";
+   
         var possible = "abcdefghijklmnopqrstuvwxyz";
         for (var i = 0; i < 12; i++)
           text += possible.charAt(Math.floor(Math.random() * possible.length));

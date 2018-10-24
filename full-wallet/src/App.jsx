@@ -8,7 +8,7 @@ import * as actions from './actions/actions';
 
 
 const mapStateToProps = store => ({
-    account : store.account,
+    account: store.account,
 
 });
 
@@ -26,6 +26,7 @@ class App extends React.Component {
         return (
             <div className="App">
                 <Dashboard updateState={this.props.updateState} dispatch={this.props.dispatch}></Dashboard>
+
             </div>
 
         );
@@ -35,4 +36,4 @@ class App extends React.Component {
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-  )(App);
+)(App);
