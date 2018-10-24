@@ -23,11 +23,11 @@ sha512-VKOxq8R14PpPh4nbLvD8DtxxTv1UmZp7pb3+P8IOQ36m3PBJpm6cd8pI8WRI6d9/aozwADKb3
   /**
     Other httpEndpoint's: https://www.eosdocs.io/resources/apiendpoints
   */
-  // const eos = Eos({
-  //   keyProvider: '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3',// private key
-  //   httpEndpoint: 'http://193.93.219.219:8888/',
-  //   chainId: chain.jungle,
-  // });
+  const eos = Eos({
+    keyProvider: '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3',// private key
+    httpEndpoint: 'http://193.93.219.219:8888/',
+    chainId: chain.jungle,
+  });
  
 // Testing with server
 // const express = require('express')
@@ -92,11 +92,11 @@ const defaultConfig = {
 //   chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
 // }) 
 // Edited
-const eos = Eos({
-  keyProvider: '5KjDGssHn6aYBs32NwWiGvh2Aa7FbRpu7RGXv9ToNgj8FyS1vyw',// private key
-  httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://193.93.219.219:8888/', //193 Jungle
-  chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca'
-})
+// const eos = Eos({
+//   keyProvider: '5KjDGssHn6aYBs32NwWiGvh2Aa7FbRpu7RGXv9ToNgj8FyS1vyw',// private key
+//   httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://193.93.219.219:8888/', //193 Jungle
+//   chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca'
+// })
 // console.log(eos)
 // console.log(eos.getInfo((error, result) => { console.log(error, result) }))
 // console.log(eos.getInfo({}))
@@ -109,9 +109,10 @@ options = {
 
 const run = async function () {
   // console.log(json.stringify(eos))
-  var info = await eos.getInfo({}) 
+  // var info = await eos.getInfo({}) 
+  console.log('eos', eos)
   // eos.getBlock(1)
-  // var info = await eos.getBlock({block_num_or_id: 1})
+  var info = await eos.getBlock({block_num_or_id: 1})
   console.log('info', info)
   // await eos.getInfo({})
   // var transfer = await eos.transfer('junglefoxfox', 'junglefoxtwo', '1.0000 TEST', '', options)
