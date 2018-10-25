@@ -1,6 +1,10 @@
 'use strict';
+console.log("~~~~~ In CLI Spec ~~~~~~~")
 
-var should = chai.should();
+const cli = require('../cli.js');
+const assert = require("assert");
+const chai = require("chai");
+const should = chai.should();
 
 describe('Airdrop Tool Tester', function() {
 
@@ -23,3 +27,12 @@ describe('Airdrop Tool Tester', function() {
   });
 
 });
+
+// describe('Basic Mocha String Test', function () {
+//   it('should return number of charachters in a string', function () {
+//          assert.equal("Hello".length, 4);
+//      });
+//   it('should return first charachter of the string', function () {
+//          assert.equal("Hello".charAt(0), 'H');
+//      });
+//  });
