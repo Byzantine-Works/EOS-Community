@@ -128,6 +128,7 @@ const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) =>
 
   const RAM_PRICE = await getRamPrice()
   console.log("3)) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
+  console.log("Current Ram Price Is: ", RAM_PRICE)
   var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
   var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
   
@@ -155,7 +156,7 @@ const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) =>
 }
 
 const success = (priceEstimate) => {
-  console.log(`The estimated cost of the Airdrop with these settings will be : ` + chalk.bold.blue('$'+priceEstimate) + ` USD`);
+  console.log(`The estimated cost of the Airdrop with these settings will be : ` + chalk.bold.blue('$'+priceEstimate) + ` USD\n`);
 };
 
 
@@ -166,7 +167,7 @@ const formatOutput = (filtered, airdropRatio, precision) => {
   }
   var str = arr.join('\n')
   // console.log('formatted output: ', str)
-  console.log('Output Lines Length : ', str.split(/\r\n|\r|\n/).length)
+  // console.log('Output Lines Length : ', str.split(/\r\n|\r|\n/).length)
   return str
 }
 
@@ -309,7 +310,7 @@ const runAirdrop = async () => {
   await airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
 
   // setTimeout(runShell, )
-  await runShell()
+  // await runShell()
 };
 
 
@@ -318,3 +319,4 @@ const promiseAirdrop = () => {
 }
 // module.exports = promiseAirdrop();
 module.exports = runAirdrop();
+
