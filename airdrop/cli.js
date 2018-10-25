@@ -65,12 +65,12 @@ const askQuestions = () => {
 
 const snapshotCsvToJson = async (csvFilePath) => {
   if (csvFilePath == './airdrop-snapshots/genesis-snapshot.csv') {
-    console.log('Converting Genesis Snapshot to Fitted Json...')
+    console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
     return genesisSnapshotJson
   } else {
     var snapshotJson = await csv()
     .fromFile(csvFilePath).then((jsonObj)=>{
-      console.log('Converting Csv to Json...')
+      console.log('Step 2b)) Converting Csv to Json...')
       return jsonObj
       // console.log(jsonObj);
       /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
@@ -127,7 +127,7 @@ const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) =>
   // Filtered / Parsed Snapshot Data input here
 
   const RAM_PRICE = await getRamPrice()
-  console.log("3)) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
+  console.log("Step 3)) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
   console.log("Current Ram Price Is: ", RAM_PRICE)
   var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
   var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
@@ -171,16 +171,19 @@ const formatOutput = (filtered, airdropRatio, precision) => {
   return str
 }
 
-const generateAirdropCsv = async (formatted) => {
-  await fs.writeFile('airdrop.csv', formatted, (err) => {
-    if (err) throw err;
-    console.log('airdrop.csv file has been saved!');
-  });
-
+const generateAirdropCsv = (formatted) => {
+  // await fs.writeFile('airdrop.csv', formatted, (err) => {
+  //   if (err) throw err;
+  //   console.log('4)) airdrop.csv file has been saved!');
+  // });
+  fs.writeFileSync('airdrop.csv', formatted);
+  console.log('Step 4)) airdrop.csv file has been saved!');
+  
+  return formatted
 }
 
 
-const airdropGenerator = async (formattedSnapshotData, accountName, tokenName, airdropRatio, maxTokenSupply, initialTokenSupply) => {
+const airdropGenerator = (formattedSnapshotData, accountName, tokenName, airdropRatio, maxTokenSupply, initialTokenSupply) => {
   // Main Airdrop Logic Here
   // Either Generate .sh file, or use shelljs? 
   const fullAirdropStr = `
@@ -228,11 +231,20 @@ const airdropGenerator = async (formattedSnapshotData, accountName, tokenName, a
   
   
   `
-  await fs.writeFile('airdrop.sh', fullAirdropStr, (err) => {
-    if (err) throw err;
-    console.log('airdrop.sh file has been saved! Ready to be ran in a cleos enabled terminal');
-    console.log('Once you account is ready with sufficient RAM bought and CPU/Net Staked, please run ./airdrop.sh')
-  });
+  // await fs.writeFile('airdrop.sh', fullAirdropStr, (err) => {
+  //   if (err) throw err;
+  //   console.log('5)) airdrop.sh file has been saved! Ready to be ran in a cleos enabled terminal');
+  //   console.log('Once you account is ready with sufficient RAM bought and CPU/Net Staked, please run ./airdrop.sh')
+  // });
+  
+  try {
+    fs.writeFileSync('airdrop.sh', fullAirdropStr)
+    console.log('Step 5)) airdrop.sh file has been saved! Ready to be ran in a cleos enabled terminal');
+    console.log('\nOnce you account is ready with sufficient RAM bought and CPU/Net Staked, please run ./airdrop.sh')
+  } catch (err) {
+    console.log(err);
+  }
+  return fullAirdropStr
 };
 
 
@@ -294,7 +306,7 @@ const runAirdrop = async () => {
   // } = answers;
   // const INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
     
-  console.log('\n User Selected Inputs:')
+  console.log('\n Step 1)) User Selected Inputs:')
   for (var key in answers) {
     console.log(chalk.blue(key.toString()) + " --- " + chalk.red(answers[key].toString()))
   } console.log('\n')
@@ -306,8 +318,9 @@ const runAirdrop = async () => {
   
   /* Airdrop Portion */
   const formatted = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
-  await generateAirdropCsv(formatted);
-  await airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
+  generateAirdropCsv(formatted);
+  airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
+
 
   // setTimeout(runShell, )
   // await runShell()
