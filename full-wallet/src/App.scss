@@ -31,6 +31,10 @@ img {
     width: 100%;
 }
 
+img {
+    position: relative;
+}
+
 
 .Dashboard {
     position: absolute;
@@ -71,7 +75,7 @@ img {
     float: right;
     right: 5%;
     width: 65%;
-    height: 60%;
+    height: 45%;
 }
 
 .ContractBill{
@@ -204,6 +208,7 @@ a {
     top: 20px;
     float:right;
     margin-top: 10px;
+    margin-bottom: 10px;
     text-decoration: none;
  
 }

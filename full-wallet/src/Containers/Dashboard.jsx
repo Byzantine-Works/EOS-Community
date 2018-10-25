@@ -281,7 +281,7 @@ class Dashboard extends Component {
                         <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.contractName+".wasm" : "Load your WASM file"}<input id="wasm" type="file" placeholder="wasm" onChange={this.readFile}></input></label>
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
                 </div>
-                {this.props.csvData ? <ContractBill csvData={this.props.csvData} netRate={this.props.netRate} ramPrice={this.props.ramPrice} cpuRate={this.props.cpuRate}></ContractBill> : null}
+                {this.props.csvData ? <ContractBill csvData={this.props.csvData} netRate={this.props.netRate} ramPrice={this.props.ramPrice} deploymentRam={this.props.deploymentRam} cpuRate={this.props.cpuRate}></ContractBill> : null}
 
                 {this.props.bill ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
                 {this.props.account ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}

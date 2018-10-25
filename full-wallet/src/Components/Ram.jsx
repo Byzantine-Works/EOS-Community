@@ -7,10 +7,7 @@ const Ram = props => {
         datasets: [
           {
             label: 'used',  
-            backgroundColor: 'rgba(255, 183, 49, 0.2)',
-            borderColor: 'brown',
-            borderRadius: '15px',
-            borderWidth: 1,
+            backgroundColor: 'rgb(0, 179, 0)',
             data: [props.ram.used/props.ram.max]
           },
         //   props.bill ? {
@@ -25,9 +22,7 @@ const Ram = props => {
         // } : null,
           {
             label: 'available',  
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            borderWidth: 1,
-            borderColor: 'brown',
+            backgroundColor: 'rgba(0, 179, 0, 0.4)',
             data: [props.ram.available/props.ram.max]
           }
         ]

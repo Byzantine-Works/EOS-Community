@@ -8,9 +8,7 @@ const Cpu = props => {
         datasets: [
           {
             label: 'used',  
-            backgroundColor: 'blue',
-            borderColor: 'green',
-            borderWidth: 1,
+            backgroundColor: 'rgb(37, 84, 185)',
             data: [props.cpu.used/props.cpu.max]
           },
         //   props.bill ? {
@@ -25,9 +23,7 @@ const Cpu = props => {
         // } : null,
           {
             label: 'available',  
-            backgroundColor: 'rgba(0, 0, 189,0.2)',
-            borderWidth: 1,
-            borderColor: 'green',
+            backgroundColor: 'rgba(37, 84, 185, 0.4)',
             data: [props.cpu.available/props.cpu.max]
           }
         ]

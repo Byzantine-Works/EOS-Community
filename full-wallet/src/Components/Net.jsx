@@ -8,9 +8,7 @@ const Net = props => {
         datasets: [
           {
             label: 'used',  
-            backgroundColor: 'blue',
-            borderColor: 'green',
-            borderWidth: 1,
+            backgroundColor: 'rgb(255, 215, 35)',
             data: [props.net.used/props.net.max]
           },
         //   props.bill ? {
@@ -25,9 +23,7 @@ const Net = props => {
         // } : null,
           {
             label: 'available',  
-            backgroundColor: 'rgba(0, 0, 189, 0.2)',
-            borderWidth: 1,
-            borderColor: 'green',
+            backgroundColor: 'rgba(255, 215, 35, 0.4)',
             data: [props.net.available/props.net.max]
            },
    

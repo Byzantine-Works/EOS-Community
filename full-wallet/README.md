@@ -14,8 +14,23 @@ Comprehensive EOS full wallet to enable all EOS related on-chain functionality s
 
 - - [EosDex hacked with fake EOS tokens](https://thenextweb.com/hardfork/2018/09/18/eos-hackers-exchange-fake/)
 
+# Install
+```sh
+npm install npm-check-updates
+```
+
 # Build
-- EOS Full Wallet
+```sh
+npm run build
+```
+
+# Run
+```sh
+npm start
+```
+
+# Demo
+Find the wasm and abi files of a smart contract in ./full-wallet/src/contract to test the tool.
 
 
 # Design

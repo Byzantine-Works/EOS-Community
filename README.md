@@ -29,6 +29,11 @@ npm install
 curl -o https://github.com/Byzantine-Works/EOS-Stripe-Wallet/walletembed.js?
 ```
 
+- EOS Full Wallet
+```sh
+cd full-wallet
+```
+To run it look at the Readme inside ./full-wallet.
 
 
 # Design

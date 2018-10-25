@@ -8,16 +8,12 @@ const Staking = props => {
         datasets: [
           {
             label: 'staked',  
-            backgroundColor: 'blue',
-            borderColor: 'green',
-            borderWidth: 1,
+            backgroundColor: 'rgb(255,255, 255)',
             data: [props.staking.staked/(props.staking.unstaked+props.staking.staked)]
           },
           {
             label: 'unstaked',  
-            backgroundColor: 'rgba(0, 0, 189,0.2)',
-            borderWidth: 1,
-            borderColor: 'green',
+            backgroundColor: 'rgba(255, 255, 255, 0.658)',
             data: [props.staking.unstaked/(props.staking.unstaked+props.staking.staked)]
           }
         ]

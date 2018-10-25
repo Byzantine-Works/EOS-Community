@@ -25,7 +25,7 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-            {/* <img src="/asset/logo.png"></img> */}
+            {/* <img src="asset/logo.png"></img> */}
                 <Dashboard updateState={this.props.updateState} dispatch={this.props.dispatch}></Dashboard>
 
             </div>
