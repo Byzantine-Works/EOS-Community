@@ -267,7 +267,7 @@ class Dashboard extends Component {
         const override = css`
         position: absolute;
         border-color: red;
-        margin: 0 auto;
+        margin: auto 0;
         z-index: 5;`;
 
 
