@@ -57,7 +57,7 @@ const RamCost = props => {
         tooltips: {
             yAlign: 'left',
             position: 'nearest',
-            enabled: true,
+            enabled: false,
             callbacks: {
                 label: function (tooltipItems) {
                     return dt[tooltipItems.datasetIndex].label + ' :' + props.bill[dt[tooltipItems.datasetIndex].label].ram + 'bytes';

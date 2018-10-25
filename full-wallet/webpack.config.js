@@ -41,6 +41,10 @@ module.exports = {
         use: 'html-loader',
     },
     {
+      test: /\.png$/,
+      loader: 'url-loader?limit=100000',
+    },
+    {
       test: /node_modules.+js$/,
       loader: require.resolve("ify-loader"),
     },

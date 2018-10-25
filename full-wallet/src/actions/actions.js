@@ -27,7 +27,7 @@ require('dotenv').config();
 
 const eos = Eos({
     keyProvider: '5KjDGssHn6aYBs32NwWiGvh2Aa7FbRpu7RGXv9ToNgj8FyS1vyw',// private key
-    httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://13.57.210.230:8888',
+    httpEndpoint: 'http://13.57.210.230:8888',
     chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
 })
 

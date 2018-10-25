@@ -2,14 +2,18 @@ body {
     position: absolute;
     height:100%;
     width: 100%;
-    background-color: black;
-    color: white;
+    background-color:#193549;
+    color: black;
     font-family: Courier;
 }
 
 canvas {
     position: relative;
     z-index: 100;
+}
+
+img {
+    position: relative;
 }
 
 #root {
@@ -45,13 +49,11 @@ canvas {
 }
 
 .GraphMonitor {
-    margin: auto;
-    transform: translateY(10%);
-    background-color: black;
+    background-color:#193549;
     color: white;
     font-family: Courier;
     width: 70%;
-    height: 70%;
+    height: 30%;
     border-radius: 8px;
 }
 
@@ -68,30 +70,40 @@ canvas {
     padding: 5px;
 
 }
-// .Params {
-//     margin: 0 auto;
-//     transform: translateY(50%);
-// }
-
-// .Abi {
-//     position: relative;
-//     display: inline-block;
-// }
-.Wasm {
-    right: 0px;
-}
-
-
-label {
+.Params {
+    padding: 10px;
+    background-color: #152c3d;
     color: white;
-    position: fixed;
-    display: inline-block;
-    transform: translateY(30%);
+    font-family: Courier;
+    font-size: 1vw;
+    width: 20%;
+    height: 30%;
+    margin-left: 5%;
+    transform: translateY(60%);
+    border-radius: 15px;
+    text-align: center;
 }
 
-input {
+
+.Abi {
+    color: white;
+    cursor: pointer;
+    margin: 30px;
+    // border: solid;
+    border-radius: 20px;
+}
+.Wasm {
+    color: white;
+    cursor: pointer;
+    margin: 30px;
+    // border: solid;
+    border-radius: 20px;
+}
+
+
+.Params input {
     position: relative;
-    display: inline-block;
+    display: none;
     border: none;
     transform: translateY(10%);
     background: rgb(134, 198, 221);
@@ -99,7 +111,6 @@ input {
     border: none;
     border-radius: 10px;
     overflow: hidden;
-    top: 50%;
     &:focus {
         outline: none;
     }
@@ -111,10 +122,12 @@ input {
 #estimate {
     position: relative;
     font-family: 'Courier New', Courier, monospace;
-    width: 100px;
-    margin: 45%;
-    margin-top: 20%; 
+    font-weight: bold;
+    color: rgb(100, 100, 100);
+    margin: auto 0;
+    transform: translateY(200%);
     height: 40px;
+    width: 100px;
     border: none;
     border-radius: 20px;
     background-color: white;
@@ -125,7 +138,7 @@ input {
     }
     &:active {
         border: none;
-        background-color: black;
+        background-color: grey;
         color: white;
     }
 
@@ -179,4 +192,41 @@ a {
     text-decoration: none;
     color: greenyellow;
 
+}
+
+.plus-button {
+    border: 2px solid lightgrey;
+    margin-top: 15px;
+    background-color: #fff;
+    transform: translateY(30%);
+	font-size: 13px;
+	height: 30px;
+	width: 30px;
+	border-radius: 999px;
+    position: relative;
+    display: inline-block;
+	
+	&:after,
+	&:before {
+		content: "";
+		display: block;
+		background-color: grey;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+	
+	&:before {
+		height: 1em;
+		width: 0.2em;
+	}
+
+	&:after {
+		height: 0.2em;
+		width: 1em;
+	}
+}
+.plus-button--small {
+	font-size: 12px;
 }
