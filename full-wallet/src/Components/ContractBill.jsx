@@ -1,21 +1,20 @@
 import React from 'react';
+import { CSVLink, CSVDownload } from "react-csv";
 
 
 const ContractBill = props => {
-    let actionsPrice = [];
-    let cpu = [];
-    let net = [];
-    for(let action in props.bill){
-        cpu.push(props.bill[action].net);
-        net.push(props.bill[action].cpu);
-        actionsPrice.push(<div className="actionPrice"><p>{action.toString()}<br></br>Net usage: {props.bill[action].net} bytes, CPU usage: {props.bill[action].cpu} us, RAM usage: {props.bill[action].ram} bytes</p></div>);
-    }
+    let entries = props.csvData.map(action => {
+        console.log(action);
+        if(action.action === "Deployment" || action.action === "Total" || action.action === "Total Resources EOS" || action.action === "Total EOS") return null;
+        else return <span key={action.action} style={{display:"inline-block", width: "100%", float: "right", marginTop: "15px"}}>{action.action}: {((action.cpu*props.cpuRate)+(action.net*props.netRate)+(action.ram*props.ramPrice)).toFixed(4)} EOS</span>
+    })
 
     return (
-        <div className="ContractBillContainer">
-        {props.bill ? 
-            actionsPrice : 
-            null}
+        <div className="ContractBill">
+            {entries}
+            <div style={{display:"inline-block", left:"5%", width: "90%", marginTop: "20px", height:"0px", border:"solid white 1px"}}></div>
+            Deployment cost: {}
+            {props.csvData ? <CSVLink data={props.csvData} target="_blank" >Download Contract Bill</CSVLink> : null} 
         </div>
     )
 

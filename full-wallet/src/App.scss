@@ -17,73 +17,107 @@ img {
 }
 
 #root {
+    position: absolute;
+    top: 0px;
     height: 100%;
     width: 100%;
 
 }
 
 .App {
+    position: absolute;
+    top: 0px;
     height: 100%;
     width: 100%;
 }
 
 
 .Dashboard {
+    position: absolute;
+    top: 0px;
     height: 100%;
     width: 100%;
 }
 
+.graphContainer {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    height: 80%;
+
+}
+
 .AccountResources {
+    position: relative;
+    float: right;
     padding: 15px;
-    border: solid;
+    margin-top: 35px;
+    color: white;
+    width: 65%;
+    height: 60%;
+    right: 5%;
     border-radius: 8px;
-    border-color: white;
+    background-color: #152c3d;
 }
 
 .ActionsCost {
+    position: relative;
     padding: 15px;
-    border: solid;
+    margin-top: 35px;
+    background-color: #152c3d;
     border-radius: 8px;
-    border-color: white;
-    margin-top: -35%;
-}
-
-.GraphMonitor {
-    background-color:#193549;
     color: white;
     font-family: Courier;
-    width: 70%;
-    height: 30%;
-    border-radius: 8px;
+    float: right;
+    right: 5%;
+    width: 65%;
+    height: 60%;
+}
+
+.ContractBill{
+    position: absolute;
+    float: left;
+    color: white;
+    top: 50%;
+    left: 3%;
+    padding: 10px;
+    background-color: #152c3d;
+    border-radius: 10px;
+    width: 17.5%;
+    height: 70%;
+}
+
+.Params {
+    position: absolute;
+    display: inline-block;
+    padding: 5px;
+    background-color: #152c3d;
+    margin-top: 35px;
+    color: white;
+    font-family: Courier;
+    font-size: 1vw;
+    width: 18%;
+    height: 40%;
+    margin-left: 3%;
+    top: 0px;
+    border-radius: 10px;
+    text-align: center;
 }
 
 #account {
     position: relative;
-    top: 20px;
     float: right;
     right: 45px;
     z-index: 10;
-    height: 25px;
+    height: 18px;
     width: 30%;
     border-radius: 20px;
     background-color: white;
     padding: 5px;
+    top: 2%;
+
 
 }
-.Params {
-    padding: 10px;
-    background-color: #152c3d;
-    color: white;
-    font-family: Courier;
-    font-size: 1vw;
-    width: 20%;
-    height: 30%;
-    margin-left: 5%;
-    transform: translateY(60%);
-    border-radius: 15px;
-    text-align: center;
-}
-
 
 .Abi {
     color: white;
@@ -91,6 +125,9 @@ img {
     margin: 30px;
     // border: solid;
     border-radius: 20px;
+    &:hover {
+        color: rgb(155, 154, 154);
+    }
 }
 .Wasm {
     color: white;
@@ -98,6 +135,9 @@ img {
     margin: 30px;
     // border: solid;
     border-radius: 20px;
+    &:hover {
+        color: rgb(155, 154, 154);
+    }
 }
 
 
@@ -144,31 +184,6 @@ img {
 
 }
 
-.ContractBillContainer{
-    position: absolute;
-    line-height: 1.0;
-    transform: translateY(-10%);
-    color: white;
-    right: 5%;
-    border: solid;
-    border-color: white;
-    border-radius: 8px;
-    width: 17%;
-    height: 70%;
-
-}
-
-.ContractBillContainer div {
-    border: solid;
-    border-width: 1px;
-    margin: 20px;
-    border-color: white;
-    height: 60px;
-    border-radius: 8px;
-    color: white;
-
-}
-
 .ContractBillContainer div p {
     color: rgb(255, 183, 49);
 
@@ -186,9 +201,8 @@ img {
 
 a { 
     position: relative;
-    width:5%;
-    margin-left: 38%;
     top: 20px;
+    float:left;
     text-decoration: none;
     color: greenyellow;
 

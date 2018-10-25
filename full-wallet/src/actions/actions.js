@@ -27,7 +27,7 @@ require('dotenv').config();
 
 const eos = Eos({
     keyProvider: '5KjDGssHn6aYBs32NwWiGvh2Aa7FbRpu7RGXv9ToNgj8FyS1vyw',// private key
-    httpEndpoint: 'http://13.57.210.230:8888',
+    httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://13.57.210.230:8888',
     chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
 })
 
@@ -213,7 +213,7 @@ export const estimateContract = (account) => {
     }).then((bill) => {
         dispatch(updateState(["bill", bill]));
         let props = getState();
-        let data = [{action: 'Deployment', ram: props.deploymentRam}]
+        let data = [{action: 'Deployment', ram: props.deploymentRam, cpu:props.deploymentCpu, net: props.deploymentNet }]
         var [cpuT, ramT, netT] = [[], [], []];
         ramT.push(props.deploymentRam);
         console.log("in generateCSV: ", props.bill);
@@ -236,8 +236,8 @@ export const estimateContract = (account) => {
         let rT = ramT.reduce((a, b) => {a = a + b; return a;});
         let nT = netT.reduce((a, b) => {a = a + b; return a;});
         data.push({action: 'Total', cpu: cT, ram: rT, net: nT});
-        data.push({action: 'Total Resources EOS', cpu: cT*getState().cpuRate, ram: rT*getState().ramPrice, net: getState().netRate});
-        data.push({action: 'Total EOS', ram: (cT*getState().cpuRate + rT*getState().ramPrice + getState().netRate).toString()+' EOS'});
+        data.push({action: 'Total Resources EOS', cpu: (cT*getState().cpuRate).toFixed(4), ram: (rT*getState().ramPrice).toFixed(4), net: (nT*getState().netRate).toFixed(4)});
+        data.push({action: 'Total EOS', ram: (cT*getState().cpuRate + rT*getState().ramPrice + nT*getState().netRate).toFixed(4)+' EOS'});
 
         dispatch(updateState(["cpuTotal", cT]));
         dispatch(updateState(["netTotal", nT]));

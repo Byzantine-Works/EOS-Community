@@ -29,7 +29,7 @@ const Staking = props => {
         tooltips: {
             yAlign: 'left',
             position: 'nearest',
-            enabled: true,
+            enabled: false,
             callbacks: {
                 label: function(tooltipItems) { 
                     return data.datasets[tooltipItems.datasetIndex].label + ' :' + props.staking[data.datasets[tooltipItems.datasetIndex].label] + ' EOS';

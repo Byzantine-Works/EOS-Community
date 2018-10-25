@@ -11,7 +11,6 @@ import abi from './exchange.abi.json';
 import CpuCost from '../Components/CpuCost.jsx';
 import RamCost from '../Components/RamCost.jsx';
 import NetCost from '../Components/NetCost.jsx';
-import { CSVLink, CSVDownload } from "react-csv";
 import Loader from 'react-spinners/GridLoader';
 import { css } from 'react-emotion';
 
@@ -29,7 +28,7 @@ console.log(types);
 
 const eos = Eos({
     keyProvider: '5KjDGssHn6aYBs32NwWiGvh2Aa7FbRpu7RGXv9ToNgj8FyS1vyw',// private key
-    httpEndpoint: 'http://13.57.210.230:8888',
+    httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://13.57.210.230:8888',
     chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
 
 })
@@ -61,7 +60,7 @@ const mapStateToProps = store => ({
     netTotal: store.netTotal,
     cpuRate: store.cpuRate,
     netRate: store.netRate,
-    ramPrice: store.ramPrice
+    ramPrice: store.ramPrice,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -103,7 +102,12 @@ class Dashboard extends Component {
         let abi = this.props.abi;
         let wasmResp = await eos.setcode(account, 0, 0, wasm);
         let abiResp = await eos.setabi(account, abi);
+        await console.log("WASM resp: ", wasmResp);
+        await  console.log("ABI resp: ", abiResp);
         this.props.updateState(["deploymentRam", this.props.contractSize * 10.045]);
+        await this.props.updateState(["deploymentCpu", wasmResp.processed.receipt.cpu_usage_us+abiResp.processed.receipt.cpu_usage_us]);
+        await this.props.updateState(["deploymentNet", (wasmResp.processed.receipt.net_usage_words+abiResp.processed.receipt.net_usage_words)*8]);
+
 
 
         console.log("abiResp:", abiResp);
@@ -249,10 +253,10 @@ class Dashboard extends Component {
         // var myChart = new Chart(ctx, {...});
 
         let resources = [
-            <span>Staking<Staking staking={this.props.staking}></Staking></span>,
-            <span>CPU<Cpu cpu={this.props.cpu} bill={this.props.bill}></Cpu></span>,
-            <span>Net<Net net={this.props.net} bill={this.props.bill}></Net></span>,
-            <span>Ram<Ram bill={this.props.bill} ram={this.props.ram} contractSize={this.props.contractSize}></Ram></span>
+            <span>Staking: {this.props.staking.staked} EOS / {this.props.staking.staked+this.props.staking.unstaked} EOS<Staking staking={this.props.staking}></Staking></span>,
+            <span>CPU: {this.props.cpu.used/1000} ms / {this.props.cpu.max/1000} ms<Cpu cpu={this.props.cpu} bill={this.props.bill}></Cpu></span>,
+            <span>Net: {this.props.net.used/1000} KB / {this.props.net.max/1000} KB<Net net={this.props.net} bill={this.props.bill}></Net></span>,
+            <span>Ram: {this.props.ram.used/1000} KB / {this.props.ram.max/1000} KB<Ram bill={this.props.bill} ram={this.props.ram} contractSize={this.props.contractSize}></Ram></span>
         ]
 
         let actionsCost = [
@@ -261,6 +265,7 @@ class Dashboard extends Component {
             <span>Ram: {(this.props.ramTotal) / 1000} KB ({(this.props.ramTotal * this.props.ramPrice).toFixed(4)} EOS)<RamCost bill={this.props.bill} ram={this.props.ram}></RamCost></span>
         ];
         const override = css`
+        position: absolute;
         border-color: red;
         margin: 0 auto;
         z-index: 5;`;
@@ -269,22 +274,21 @@ class Dashboard extends Component {
 
         return (
             <div className="Dashboard">
-                {/* <input id="account" onChange={this.props.loadDataAccount} placeholder="Account Name"></input><br></br> */}
+                <input id="account" onChange={this.props.loadDataAccount} placeholder="Account Name"></input>
+                <div className="graphContainer">
                 <div className="Params">
                         <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.contractName+".abi" : "Load the ABI file"}<input id="abi" type="file" placeholder="abi" onChange={this.readFile}></input></label><br/>
                         <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.contractName+".wasm" : "Load your WASM file"}<input id="wasm" type="file" placeholder="wasm" onChange={this.readFile}></input></label>
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
                 </div>
+                {this.props.csvData ? <ContractBill csvData={this.props.csvData} netRate={this.props.netRate} ramPrice={this.props.ramPrice} cpuRate={this.props.cpuRate}></ContractBill> : null}
 
-                <div className="GraphMonitor">
-                    {/* <button onClick={this.test}>test</button> */}
-                    {this.props.account ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}
-
-               
+                {this.props.bill ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
+                {this.props.account ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}
 
 
-                    {this.props.bill ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
-                    {this.props.csvData ? <CSVLink data={this.props.csvData} target="_blank" >Download Contract Bill</CSVLink> : null}
+                    
+                    
                     <div className='sweet-loading'>
                         <Loader
                             className={override}
@@ -294,13 +298,7 @@ class Dashboard extends Component {
                             loading={this.props.loading} />
 
                     </div>
-                </div>
-
-                {/* <button onClick={this.deployContract}>Deploy contract</button>
-                <button onClick={this.pushTransaction}>Push</button> */}
-
-
-                {/* <ContractBill bill={this.props.bill} abi={this.props.abi}></ContractBill> */}
+                    </div>
             </div>
 
         );
