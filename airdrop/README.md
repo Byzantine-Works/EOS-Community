@@ -9,7 +9,20 @@ Utility tool to simplify the process of Airdrops for token launchers. Provides a
 
 # Build
 - EOS Aidrop Utility
+```sh
+//Codes
+git clone https://github.com/Byzantine-Works/EOS-Stripe-Wallet
+npm install
+```
 
+Switch into the airdrop directory
+```
+cd airdrop
+```
+Run the CLI Airdrop Price Calculator
+```
+node run.js
+```
 
 
 # Design
