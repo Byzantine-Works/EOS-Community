@@ -13,6 +13,7 @@ import RamCost from '../Components/RamCost.jsx';
 import NetCost from '../Components/NetCost.jsx';
 import Loader from 'react-spinners/GridLoader';
 import { css } from 'react-emotion';
+import Typed from 'react-typed';
 
 
 console.log(abi);
@@ -54,6 +55,8 @@ const mapStateToProps = store => ({
     contractSize: store.contractSize,
     csvData: store.csvData,
     deploymentRam: store.deploymentRam,
+    deploymentNet: store.deploymentNet,
+    deploymentCpu: store.deploymentCpu,
     loading: store.loading,
     cpuTotal: store.cpuTotal,
     ramTotal: store.ramTotal,
@@ -249,14 +252,17 @@ class Dashboard extends Component {
         await filereader.readAsBinaryString(e.target.files[0]);
     }
 
+
     render() {
         // var myChart = new Chart(ctx, {...});
+        let totalDeployment = ((this.props.deploymentRam*this.props.ramPrice)+(this.props.deploymentNet*this.props.netRate)+(this.props.deploymentCpu*this.props.cpuRate))
+
 
         let resources = [
-            <span>Staking: {this.props.staking.staked} EOS / {this.props.staking.staked+this.props.staking.unstaked} EOS<Staking staking={this.props.staking}></Staking></span>,
-            <span>CPU: {this.props.cpu.used/1000} ms / {this.props.cpu.max/1000} ms<Cpu cpu={this.props.cpu} bill={this.props.bill}></Cpu></span>,
-            <span>Net: {this.props.net.used/1000} KB / {this.props.net.max/1000} KB<Net net={this.props.net} bill={this.props.bill}></Net></span>,
-            <span>Ram: {this.props.ram.used/1000} KB / {this.props.ram.max/1000} KB<Ram bill={this.props.bill} ram={this.props.ram} contractSize={this.props.contractSize}></Ram></span>
+            <span>Staking: {this.props.staking.staked} EOS / {this.props.staking.staked+this.props.staking.unstaked} EOS<Staking staking={this.props.staking} totalDeployment={totalDeployment}></Staking></span>,
+            <span>CPU: {this.props.cpu.used/1000} ms / {this.props.cpu.max/1000} ms<Cpu cpu={this.props.cpu} bill={this.props.bill} deploymentCpu={this.props.deploymentCpu} deploymentCpu={this.props.deploymentCpu}></Cpu></span>,
+            <span>Net: {this.props.net.used/1000} KB / {this.props.net.max/1000} KB<Net net={this.props.net} bill={this.props.bill} deploymentNet={this.props.deploymentNet} deploymentNet={this.props.deploymentNet}></Net></span>,
+            <span>Ram: {this.props.ram.used/1000} KB / {this.props.ram.max/1000} KB<Ram bill={this.props.bill} ram={this.props.ram} contractSize={this.props.contractSize} deploymentRam={this.props.deploymentRam}></Ram></span>
         ]
 
         let actionsCost = [
@@ -270,18 +276,31 @@ class Dashboard extends Component {
         margin: auto 0;
         z-index: 5;`;
 
+        var options = {
+            strings: ["<i>First</i> sentence.", "&amp; a second sentence."],
+            typeSpeed: 40
+          }
+          
+          var typed = new Typed('Dashboard', options);
+
 
 
         return (
             <div className="Dashboard">
                 <input id="account" onChange={this.props.loadDataAccount} placeholder="Account Name"></input>
+                <span className="typedContainer"><Typed 
+                    strings={['Estimate the cost of your EOS smart contract before deploying it']} 
+                    typeSpeed={60}
+                    shuffle={true}
+                    cursorChar={'_'}
+                /></span>
                 <div className="graphContainer">
                 <div className="Params">
                         <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.contractName+".abi" : "Load the ABI file"}<input id="abi" type="file" placeholder="abi" onChange={this.readFile}></input></label><br/>
                         <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.contractName+".wasm" : "Load your WASM file"}<input id="wasm" type="file" placeholder="wasm" onChange={this.readFile}></input></label>
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
                 </div>
-                {this.props.csvData ? <ContractBill csvData={this.props.csvData} netRate={this.props.netRate} ramPrice={this.props.ramPrice} deploymentRam={this.props.deploymentRam} cpuRate={this.props.cpuRate}></ContractBill> : null}
+                {this.props.csvData ? <ContractBill csvData={this.props.csvData} totalDeployment={totalDeployment} netRate={this.props.netRate} ramPrice={this.props.ramPrice} cpuRate={this.props.cpuRate}></ContractBill> : null}
 
                 {this.props.bill ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
                 {this.props.account ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}

@@ -3,7 +3,6 @@ body {
     height:100%;
     width: 100%;
     background-color:#193549;
-    color: black;
     font-family: Courier;
 }
 
@@ -33,6 +32,18 @@ img {
 
 img {
     position: relative;
+    margin-left: 10%;
+    margin-top: 5%;
+}
+
+.typedContainer{
+    position: absolute;
+    color: white;
+    font-size: 50px;
+    right: 5%;
+    top: 17%;
+    width: 36%;
+
 }
 
 
@@ -84,7 +95,7 @@ img {
     color: white;
     top: 40%;
     left: 3%;
-    padding: 10px;
+    padding: 25px;
     background-color: #152c3d;
     border-radius: 10px;
     width: 17.5%;
@@ -93,14 +104,14 @@ img {
 
 .Params {
     position: absolute;
-    display: inline-block;
+
     padding: 5px;
     background-color: #152c3d;
     margin-top: 35px;
     color: white;
     font-family: Courier;
     font-size: 1vw;
-    width: 18%;
+    width: 19%;
     height: 30%;
     margin-left: 3%;
     top: 0px;
@@ -116,9 +127,13 @@ img {
     height: 18px;
     width: 30%;
     border-radius: 20px;
+    border: none;
     background-color: white;
     padding: 5px;
     top: 2%;
+    &:focus {
+     outline: none;
+    }
 
 
 }
@@ -161,6 +176,10 @@ img {
     &:active {
         border: none;
     }
+}
+
+.byzantine {
+    position: absolute 
 }
 
 #estimate {
@@ -221,6 +240,7 @@ a {
     color: greenyellow;
     border: none;
     float: left;
+    margin-bottom: 20px;
     padding: 10px;
 }
 
