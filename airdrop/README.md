@@ -8,22 +8,32 @@ Utility tool to simplify the process of Airdrops for token launchers. Provides a
 
 
 # Build
-- EOS Aidrop Utility
+- EOS Aidrop Utility. Download the EOS Wallet
 ```sh
 //Codes
-git clone https://github.com/Byzantine-Works/EOS-Stripe-Wallet
+git clone https://github.com/Byzantine-Works/EOS-Wallet-Integrations.git
 npm install
 ```
 
-Switch into the airdrop directory
+- Switch into the airdrop directory
 ```
 cd airdrop
 ```
-Run the CLI Airdrop Price Calculator
+- Run the CLI Airdrop Price Calculator
 ```
 node run.js
 ```
 
+Airdrop Generator will tell you the estiamted resource cost to run the airdrop. Once your account is ready with sufficient RAM bought and CPU/Net Staked, go into a cleos enabled terminal and run the airdrop script 
+```
+./airdrop.sh
+```
+
+# Unit Testing
+- Unit Tests for each subfunction of the airdrop price estimator + script generator. 
+```
+npm test
+```
 
 # Design
 - EOS Airdrop Utility
