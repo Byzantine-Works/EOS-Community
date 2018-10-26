@@ -100,8 +100,8 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
     }
   }
 
-  console.log(chalk.blue("Snapshot Number of Accounts: "), snapshot.length)
-  console.log(chalk.blue("Filtered Number of Accounts: "), filtered.length,'\n')
+  console.log(chalk.blue("Snapshot Number of Accounts: "), chalk.red(snapshot.length))
+  console.log(chalk.blue("Filtered Number of Accounts: "), chalk.red(filtered.length),'\n')
   // Return Array with all accounts within the threshold
   // console.log(filtered)
   return filtered
@@ -156,7 +156,7 @@ const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) =>
 }
 
 const success = (priceEstimate) => {
-  console.log(`The estimated cost of the Airdrop with these settings will be : ` + chalk.bold.blue('$'+priceEstimate) + ` USD\n`);
+  console.log(chalk.blue(`The estimated cost of the Airdrop with these settings will be: ` + chalk.bold.red('$'+priceEstimate+' USD\n')));
 };
 
 
@@ -239,8 +239,8 @@ const airdropGenerator = (formattedSnapshotData, accountName, tokenName, airdrop
   
   try {
     fs.writeFileSync('airdrop.sh', fullAirdropStr)
-    console.log('Step 5)) airdrop.sh file has been saved! Ready to be ran in a cleos enabled terminal');
-    console.log('\nOnce you account is ready with sufficient RAM bought and CPU/Net Staked, please run ./airdrop.sh')
+    console.log('Step 5)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
+    console.log(chalk.red.bold('\n Airdrop Generator complete. Once your account is ready with sufficient RAM bought and CPU/Net Staked, please run ./airdrop.sh'));
   } catch (err) {
     console.log(err);
   }
