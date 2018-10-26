@@ -123,7 +123,7 @@ const getRamPrice = async () => {
 
 }
 
-const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) => {
+ const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) => {
   // Filtered / Parsed Snapshot Data input here
 
   const RAM_PRICE = await getRamPrice()
@@ -274,7 +274,7 @@ const runShell = () => {
   // shell.exec('cleos -u http://193.93.219.219:8888/ get table junglefoxfox junglefoxfox accounts')
 }
 
-const runAirdrop = async () => {
+const run = async () => {
   init();
   
   /*    Sample Answers (for quick testing) */
@@ -321,15 +321,11 @@ const runAirdrop = async () => {
   generateAirdropCsv(formatted);
   airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
 
-
-  // setTimeout(runShell, )
   // await runShell()
 };
 
+module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, success, formatOutput, generateAirdropCsv, airdropGenerator, runShell, run}
+// module.exports = run();
 
-const promiseAirdrop = () => {
-  init();
-}
-// module.exports = promiseAirdrop();
-module.exports = runAirdrop();
+
 
