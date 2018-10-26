@@ -123,22 +123,22 @@ const getRamPrice = async () => {
 
 }
 
- const getPriceEstimate = async (filteredSnapshotData, minEosHeld, maxEosHeld) => {
+ const getPriceEstimate = async (numberOfAccounts) => {
   // Filtered / Parsed Snapshot Data input here
 
   const RAM_PRICE = await getRamPrice()
-  console.log("Step 3)) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
-  console.log("Current Ram Price Is: ", RAM_PRICE)
+  // console.log("Step 3)) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
+  // console.log("Current Ram Price Is: ", RAM_PRICE)
   var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
   var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
   
-  var numberOfAccounts = filteredSnapshotData.length         // 132192 Estimated based on genesis for now
+  // var numberOfAccounts = filteredSnapshotData.length         // 132192 Estimated based on genesis for now
   var ramPrice_EosPerByte = 0.11381643/1000                  // 0.11381643 EOS/kb for now
   var UsdPerEos = 5.61                                        // Current Price
   
   var ramRequiredKb = numberOfAccounts * 0.142  //142 Bytes Required per account
   
-  console.log('Starting Price Estimate Calculations...')
+  console.log('Step 3)) Starting Price Estimate Calculations...')
   var priceEstimate_Eos = ramRequiredKb * ramPrice_EosPerKb;
   var priceEstimate_Usd = ramRequiredKb * ramPrice_UsdPerKb;
   priceEstimate_Eos = Math.floor(priceEstimate_Eos * 10000) / 10000 // Truncating to 4 digits
@@ -313,8 +313,8 @@ const run = async () => {
 
   const snapshotJson = await snapshotCsvToJson(csvFilePath) // Csv to Json
   const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // Filtering Accounts by user params
-  const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData, MIN_EOS_HELD, MAX_EOS_HELD) // Price Estimate Calculations
-  await success(PRICE_ESTIMATE);
+  const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData.length) // Price Estimate Calculations
+  success(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
   const formatted = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
