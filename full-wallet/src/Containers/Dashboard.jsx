@@ -288,12 +288,13 @@ class Dashboard extends Component {
         return (
             <div className="Dashboard">
                 <input id="account" onChange={this.props.loadDataAccount} placeholder="Account Name"></input>
+                {this.props.bill || this.props.csvData ? null : 
                 <span className="typedContainer"><Typed 
                     strings={['Estimate the cost of your EOS smart contract before deploying it']} 
                     typeSpeed={60}
                     shuffle={true}
                     cursorChar={'_'}
-                /></span>
+                /></span>}
                 <div className="graphContainer">
                 <div className="Params">
                         <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.contractName+".abi" : "Load the ABI file"}<input id="abi" type="file" placeholder="abi" onChange={this.readFile}></input></label><br/>

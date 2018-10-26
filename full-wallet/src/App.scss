@@ -2,7 +2,7 @@ body {
     position: absolute;
     height:100%;
     width: 100%;
-    background-color:#193549;
+    background-color:white;
     font-family: Courier;
 }
 
@@ -32,16 +32,17 @@ img {
 
 img {
     position: relative;
-    margin-left: 10%;
-    margin-top: 5%;
+    margin-left: -15%;
+    margin-top: -16%;
+    width: 85%;
 }
 
 .typedContainer{
     position: absolute;
-    color: white;
+    color: #193549;
     font-size: 50px;
     right: 5%;
-    top: 17%;
+    top: 14%;
     width: 36%;
 
 }
@@ -56,7 +57,7 @@ img {
 
 .graphContainer {
     position: absolute;
-    top: 10%;
+    top: 7%;
     width: 100%;
     height: 80%;
 
@@ -69,7 +70,7 @@ img {
     margin-top: 35px;
     color: white;
     width: 65%;
-    height: 45%;
+    height: 60%;
     right: 5%;
     border-radius: 8px;
     background-color: #152c3d;
@@ -86,33 +87,32 @@ img {
     float: right;
     right: 5%;
     width: 65%;
-    height: 45%;
+    height: 60%;
 }
 
 .ContractBill{
     position: absolute;
     float: left;
     color: white;
-    top: 40%;
+    top: 50%;
     left: 3%;
     padding: 25px;
     background-color: #152c3d;
     border-radius: 10px;
     width: 17.5%;
-    height: 40%;
+    height: 55%;
 }
 
 .Params {
     position: absolute;
-
     padding: 5px;
     background-color: #152c3d;
     margin-top: 35px;
     color: white;
     font-family: Courier;
     font-size: 1vw;
-    width: 19%;
-    height: 30%;
+    width: 20%;
+    height: 36%;
     margin-left: 3%;
     top: 0px;
     border-radius: 10px;
@@ -127,7 +127,8 @@ img {
     height: 18px;
     width: 30%;
     border-radius: 20px;
-    border: none;
+    border: solid;
+    border-width: 2px;
     background-color: white;
     padding: 5px;
     top: 2%;
