@@ -255,7 +255,8 @@ class Dashboard extends Component {
 
     render() {
         // var myChart = new Chart(ctx, {...});
-        let totalDeployment = ((this.props.deploymentRam*this.props.ramPrice)+(this.props.deploymentNet*this.props.netRate)+(this.props.deploymentCpu*this.props.cpuRate))
+        let totalDeployment = ((this.props.deploymentRam*this.props.ramPrice)+(this.props.deploymentNet*this.props.netRate)+(this.props.deploymentCpu*this.props.cpuRate));
+        this.props.updateState(["totalDeployment", totalDeployment]);
 
 
         let resources = [
@@ -288,6 +289,7 @@ class Dashboard extends Component {
         return (
             <div className="Dashboard">
                 <input id="account" onChange={this.props.loadDataAccount} placeholder="Account Name"></input>
+                <div className="graphContainer">
                 {this.props.bill || this.props.csvData ? null : 
                 <span className="typedContainer"><Typed 
                     strings={['Estimate the cost of your EOS smart contract before deploying it']} 
@@ -295,7 +297,7 @@ class Dashboard extends Component {
                     shuffle={true}
                     cursorChar={'_'}
                 /></span>}
-                <div className="graphContainer">
+
                 <div className="Params">
                         <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.contractName+".abi" : "Load the ABI file"}<input id="abi" type="file" placeholder="abi" onChange={this.readFile}></input></label><br/>
                         <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.contractName+".wasm" : "Load your WASM file"}<input id="wasm" type="file" placeholder="wasm" onChange={this.readFile}></input></label>
@@ -314,7 +316,7 @@ class Dashboard extends Component {
                             className={override}
                             sizeUnit={"px"}
                             size={25}
-                            color={'white'}
+                            color={'#193549'}
                             loading={this.props.loading} />
 
                     </div>

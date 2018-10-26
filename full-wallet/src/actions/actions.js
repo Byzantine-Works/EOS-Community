@@ -213,7 +213,7 @@ export const estimateContract = (account) => {
     }).then((bill) => {
         dispatch(updateState(["bill", bill]));
         let props = getState();
-        let data = [{action: 'Deployment', ram: props.deploymentRam, cpu:props.deploymentCpu, net: props.deploymentNet }]
+        let data = [{action: 'Deployment', ram: props.deploymentRam, cpu:props.deploymentCpu, net: props.deploymentNet, total:props.totalDeployment }]
         var [cpuT, ramT, netT] = [[], [], []];
         ramT.push(props.deploymentRam);
         console.log("in generateCSV: ", props.bill);
@@ -230,6 +230,8 @@ export const estimateContract = (account) => {
             obj.net = props.bill[action].net;
             netT.push(obj.net);
             data.push(obj);
+
+            obj.total = ((obj.cpu*getState().cpuRate)+(obj.net*getState().netRate)+(obj.ram*getState().ramPrice)).toFixed(4)
         }
 
         let cT = cpuT.reduce((a, b) => {a = a + b; return a;});
