@@ -4,7 +4,7 @@
   "description": "EOS Airdrop Tool",
   "main": "cli.js",
   "scripts": {
-    "test": "mocha ./tests"
+    "test": "mocha ./tests/spec"
   },
   "author": "",
   "license": "ISC",
