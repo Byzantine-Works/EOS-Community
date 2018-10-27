@@ -11,6 +11,11 @@ const Cpu = props => {
             backgroundColor: 'rgb(37, 84, 185)',
             data: [props.cpu.used/props.cpu.max]
           },
+        //   {
+        //     label: 'deployment',  
+        //     backgroundColor: 'rgb(199, 7, 0)',
+        //     data: [props.deploymentCpu/props.cpu.max]
+        //    },
         //   props.bill ? {
         //     label: 'Contract cost estimation',
         //     backgroundColor: 'red',
@@ -25,7 +30,8 @@ const Cpu = props => {
             label: 'available',  
             backgroundColor: 'rgba(37, 84, 185, 0.4)',
             data: [props.cpu.available/props.cpu.max]
-          }
+          },
+   
         ]
       }
       : null;

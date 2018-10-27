@@ -6,7 +6,9 @@ export default class State {
         this.cpu = { used: null, max: null};
         this.net = { used: null, max: null};
         this.ram = { used: null, max: null};
-        this.bill = false;
+        this.indexString = 0;
+        this.loading = false;
+        // this.bill =
         // this.csvData = [
         //     {
         //       action: 'Deployment',
@@ -122,5 +124,5 @@ export default class State {
         //       cpu: 593
         //     }
         //   }
-     }
+      }
 }

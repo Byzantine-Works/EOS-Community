@@ -3,6 +3,7 @@ import {HorizontalBar} from 'react-chartjs-2';
 
 
 const Staking = props => {
+    console.log("Deployment total: ", props.totalDeployment);
     
     const data = props.staking ? {
         datasets: [
@@ -11,6 +12,11 @@ const Staking = props => {
             backgroundColor: 'rgb(255,255, 255)',
             data: [props.staking.staked/(props.staking.unstaked+props.staking.staked)]
           },
+        //   {
+        //    label: 'deployment',  
+        //    backgroundColor: 'rgb(199, 7, 0)',
+        //    data: [props.totalDeployment/(props.staking.unstaked+props.staking.staked)]
+        //  },
           {
             label: 'unstaked',  
             backgroundColor: 'rgba(255, 255, 255, 0.658)',

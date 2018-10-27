@@ -41,8 +41,17 @@ module.exports = {
         use: 'html-loader',
     },
     {
-      test: /\.png$/,
-      loader: 'url-loader?limit=100000',
+      test: /\.(gif|png|jpe?g|svg)$/i,
+      use: [
+        'file-loader',
+        {
+          loader: 'image-webpack-loader',
+          options: {
+            bypassOnDebug: true, // webpack@1.x
+            disable: true, // webpack@2.x and newer
+          },
+        },
+      ],
     },
     {
       test: /node_modules.+js$/,
