@@ -175,6 +175,7 @@ class Dashboard extends Component {
             quantity: '0.0002 EOS',
             memo: 'first transaction'
         });
+        await console.log("deposit is Dashboard :", respTransac)
         let ramAfter = await eos.getAccount(text);
         this.props.updateState(["progress", 12])
         console.log(respTransac)

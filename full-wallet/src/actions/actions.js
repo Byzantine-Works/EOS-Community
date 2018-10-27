@@ -146,6 +146,8 @@ export const estimateContract = (account) => {
                     extended_asset: '0.0001 EOS@' + account,
                     uint64: 1,
                     string: 'test',
+                    name: 'victor',
+                    permission_level: 'active',
                     bytes: myBuffer,
                     int64: 1,
                     bool: 0
@@ -154,7 +156,7 @@ export const estimateContract = (account) => {
                 let acts = [];
                 let data = {};
                 let usage = {};
-
+                if(action.name !== 'deposit' && action.name !== 'withdraw') {
                 let field = lodash.find(abi.structs, ['name', action.name])
                 field.fields.forEach(arg => {
                     data[arg.name] = dataTypes[arg.type];
@@ -171,6 +173,7 @@ export const estimateContract = (account) => {
                         }],
                         data
                     });
+                }
 
                 try {
                     let respTransac;
@@ -181,7 +184,7 @@ export const estimateContract = (account) => {
                         ramBefore = getState().deposit.ramBefore;
                         ramAfter = getState().deposit.ramAfter;
                     }
-                    if (action.name === 'withdraw') {
+                    else if (action.name === 'withdraw') {
                         respTransac = getState().withdraw.respTransac;
                         ramBefore = getState().withdraw.ramBefore;
                         ramAfter = getState().withdraw.ramAfter;

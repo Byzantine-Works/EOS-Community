@@ -3,9 +3,7 @@ import { CSVLink, CSVDownload } from "react-csv";
 
 
 const ContractBill = props => {
-    console.log("DRam and ramPrice", props.deploymentRam, props.ramPrice)
     let entries = props.csvData.map(action => {
-        console.log(action);
         if(action.action === "Deployment" || action.action === "Total" || action.action === "Total Resources EOS" || action.action === "Total EOS") return null;
         else return <span key={action.action} style={{display:"inline-block", width: "100%", textAlign: "right", marginTop: "15px"}}>{action.action}: {((action.cpu*props.cpuRate)+(action.net*props.netRate)+(action.ram*props.ramPrice)).toFixed(4)} EOS</span>
     })
