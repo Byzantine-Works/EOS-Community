@@ -77,14 +77,14 @@ export const getResourcesPrice = () => {
             httpEndpoint: 'https://proxy.eosnode.tools',
             chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
         })
- 
+
         let balance = await eosMain.getAccount('vicisnotvern');
         console.log("balance vicisnotvern: ", balance);
-        await dispatch(updateState(["cpuRate", (balance.cpu_weight/balance.cpu_limit.max)/1000]));
-        await dispatch(updateState(["netRate", (balance.net_weight/balance.net_limit.max)/1000]));
+        await dispatch(updateState(["cpuRate", (balance.cpu_weight / balance.cpu_limit.max) / 1000]));
+        await dispatch(updateState(["netRate", (balance.net_weight / balance.net_limit.max) / 1000]));
         let price = await axios('http://api.byzanti.ne:8902/getRamPrice?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
-        await dispatch(updateState(["ramPrice", (price.data.price_per_kb_eos)/1000]));
-    
+        await dispatch(updateState(["ramPrice", (price.data.price_per_kb_eos) / 1000]));
+
         //     console.log(e.target)
         //     price = this.props.ramPrice ? this.props.ramPrice : await this.props.getRamPrice();
         //     let result = (val/1000)*price;
@@ -113,7 +113,7 @@ export const loadDataAccount = e => {
 
             let ram = {
                 used: balance.data.ram_usage,
-                available: balance.data.ram_quota-balance.data.ram_usage, 
+                available: balance.data.ram_quota - balance.data.ram_usage,
                 max: balance.data.ram_quota
             }
             await dispatch(updateState(["ram", ram]));
@@ -131,133 +131,144 @@ export const estimateContract = (account) => {
         let abi = getState().abi;
         let bill = {};
         let actions = [...abi.actions];
-        if(lodash.find(actions, ['name', 'withdraw']) === undefined) actions.push({name: "withdraw"});
-        if(lodash.find(actions, ['name', 'deposit']) === undefined) actions.push({name:"deposit"});
+        if (lodash.find(actions, ['name', 'withdraw']) === undefined) actions.push({ name: "withdraw" });
+        if (lodash.find(actions, ['name', 'deposit']) === undefined) actions.push({ name: "deposit" });
         let goal = actions.length;
         let count = 0;
+        dispatch(updateState(["progress", 41]));
 
         new Promise((resolve, reject) => {
             actions.forEach(async action => {
-            let dataTypes = {
-                symbol: 'EOS',
-                account_name: account,
-                asset: '0.0001 EOS',
-                extended_asset: '0.0001 EOS@'+account,
-                uint64: 1,
-                string: 'test',
-                bytes: myBuffer,
-                int64: 1,
-                bool: 0
-            }
+                let dataTypes = {
+                    symbol: 'EOS',
+                    account_name: account,
+                    asset: '0.0001 EOS',
+                    extended_asset: '0.0001 EOS@' + account,
+                    uint64: 1,
+                    string: 'test',
+                    name: 'victor',
+                    permission_level: 'active',
+                    bytes: myBuffer,
+                    int64: 1,
+                    bool: 0
+                }
 
-            let acts = [];
-            let data = {};
-            let usage = {};
+                let acts = [];
+                let data = {};
+                let usage = {};
+                if(action.name !== 'deposit' && action.name !== 'withdraw') {
+                let field = lodash.find(abi.structs, ['name', action.name])
+                field.fields.forEach(arg => {
+                    data[arg.name] = dataTypes[arg.type];
 
-            let field = lodash.find(abi.structs, ['name', action.name])
-            field.fields.forEach(arg => {
-                data[arg.name] = dataTypes[arg.type];
-
-            });
-
-            acts.push(
-                {
-                    account: account,
-                    name: action.name,
-                    authorization: [{
-                        actor: account,
-                        permission: 'active'
-                    }],
-                    data
                 });
 
-            try {
-                let respTransac;
-                let ramBefore;
-                let ramAfter;
-                if(action.name === 'deposit') {
-                    respTransac = getState().deposit.respTransac;
-                    ramBefore = getState().deposit.ramBefore;
-                    ramAfter = getState().deposit.ramAfter;
-                }
-                if(action.name === 'withdraw') {
-                    respTransac = getState().withdraw.respTransac;
-                    ramBefore = getState().withdraw.ramBefore;
-                    ramAfter = getState().withdraw.ramAfter;
-                }     
-                else {
-                    ramBefore = await eos.getAccount(account);
-                    respTransac = await eos.transaction({ actions: acts });
-                    ramAfter = await eos.getAccount(account);
+                acts.push(
+                    {
+                        account: account,
+                        name: action.name,
+                        authorization: [{
+                            actor: account,
+                            permission: 'active'
+                        }],
+                        data
+                    });
                 }
 
-                usage.ram = ramAfter.ram_usage - ramBefore.ram_usage;
-                usage.net = respTransac.processed.net_usage;
-                usage.cpu = respTransac.processed.receipt.cpu_usage_us;
+                try {
+                    let respTransac;
+                    let ramBefore;
+                    let ramAfter;
+                    if (action.name === 'deposit') {
+                        respTransac = getState().deposit.respTransac;
+                        ramBefore = getState().deposit.ramBefore;
+                        ramAfter = getState().deposit.ramAfter;
+                    }
+                    else if (action.name === 'withdraw') {
+                        respTransac = getState().withdraw.respTransac;
+                        ramBefore = getState().withdraw.ramBefore;
+                        ramAfter = getState().withdraw.ramAfter;
+                    }
+                    else {
+                        dispatch(updateState(["progress", getState().progress + 3]));
+                        ramBefore = await eos.getAccount(account);
+                        respTransac = await eos.transaction({ actions: acts });
+                        ramAfter = await eos.getAccount(account);
+                    }
 
-                bill[action.name] = usage;
-                
-                await dispatch(updateState(["bill", bill]));
-                count++;
+                    usage.ram = ramAfter.ram_usage - ramBefore.ram_usage;
+                    usage.net = respTransac.processed.net_usage;
+                    usage.cpu = respTransac.processed.receipt.cpu_usage_us;
 
-            } catch (error) {
-                if (typeof error === 'string') {
-                    let err = JSON.parse(error);
-                    console.log(action.name, ": ", err);
-                } else console.log(error);
-                count++;
-                
+                    bill[action.name] = usage;
+
+                    await dispatch(updateState(["bill", bill]));
+                    dispatch(updateState(["progress", getState().progress + 1]))
+                    count++;
+
+                } catch (error) {
+                    if (typeof error === 'string') {
+                        let err = JSON.parse(error);
+                        console.log(action.name, ": ", err);
+                    } else console.log(error);
+                    count++;
+
+                }
+                if (goal === count) return resolve(bill);
+            })
+        }).then((bill) => {
+            dispatch(updateState(["bill", bill]));
+            let props = getState();
+            let data = [{ action: 'Deployment', ram: props.deploymentRam, cpu: props.deploymentCpu, net: props.deploymentNet, total: props.totalDeployment }]
+            var [cpuT, ramT, netT] = [[], [], []];
+            ramT.push(props.deploymentRam);
+            console.log("in generateCSV: ", props.bill);
+            for (let action in props.bill) {
+                let obj = {};
+                obj.action = action;
+
+                obj.cpu = props.bill[action].cpu;
+                cpuT.push(obj.cpu);
+
+                obj.ram = props.bill[action].ram;
+                ramT.push(obj.ram);
+
+                obj.net = props.bill[action].net;
+                netT.push(obj.net);
+                data.push(obj);
+
+                obj.total = ((obj.cpu * getState().cpuRate) + (obj.net * getState().netRate) + (obj.ram * getState().ramPrice)).toFixed(4)
             }
-            if(goal === count) return resolve(bill);
-        })
-    }).then((bill) => {
-        dispatch(updateState(["bill", bill]));
-        let props = getState();
-        let data = [{action: 'Deployment', ram: props.deploymentRam, cpu:props.deploymentCpu, net: props.deploymentNet }]
-        var [cpuT, ramT, netT] = [[], [], []];
-        ramT.push(props.deploymentRam);
-        console.log("in generateCSV: ", props.bill);
-        for(let action in props.bill) {
-            let obj = {};
-            obj.action = action;
+
+            let cT = cpuT.reduce((a, b) => { a = a + b; return a; });
+            let rT = ramT.reduce((a, b) => { a = a + b; return a; });
+            let nT = netT.reduce((a, b) => { a = a + b; return a; });
+            data.push({ action: 'Total', cpu: cT, ram: rT, net: nT });
+            data.push({ action: 'Total Resources EOS', cpu: (cT * getState().cpuRate).toFixed(4), ram: (rT * getState().ramPrice).toFixed(4), net: (nT * getState().netRate).toFixed(4) });
+            data.push({ action: 'Total EOS', ram: (cT * getState().cpuRate + rT * getState().ramPrice + nT * getState().netRate).toFixed(4) + ' EOS' });
             
-            obj.cpu = props.bill[action].cpu;
-            cpuT.push(obj.cpu);
 
-            obj.ram = props.bill[action].ram;
-            ramT.push(obj.ram);
-            
-            obj.net = props.bill[action].net;
-            netT.push(obj.net);
-            data.push(obj);
-        }
+            dispatch(updateState(["cpuTotal", cT]));
+            dispatch(updateState(["netTotal", nT]));
+            dispatch(updateState(["csvData", data]));
+            let ramTotal = getState().csvData.map(x => {
+                if (x.action === "Deployment" || x.action === "Total" || x.action === "Total Resources EOS" || x.action === "Total EOS") return 0;
+                else return x.ram;
+            }).reduce((a, b) => {
+                a = a + b;
+                return a;
+            }, 0)
+            console.log("ramTotal: ", ramTotal);
 
-        let cT = cpuT.reduce((a, b) => {a = a + b; return a;});
-        let rT = ramT.reduce((a, b) => {a = a + b; return a;});
-        let nT = netT.reduce((a, b) => {a = a + b; return a;});
-        data.push({action: 'Total', cpu: cT, ram: rT, net: nT});
-        data.push({action: 'Total Resources EOS', cpu: (cT*getState().cpuRate).toFixed(4), ram: (rT*getState().ramPrice).toFixed(4), net: (nT*getState().netRate).toFixed(4)});
-        data.push({action: 'Total EOS', ram: (cT*getState().cpuRate + rT*getState().ramPrice + nT*getState().netRate).toFixed(4)+' EOS'});
+            dispatch(updateState(["ramTotal", ramTotal]));
 
-        dispatch(updateState(["cpuTotal", cT]));
-        dispatch(updateState(["netTotal", nT]));
-        dispatch(updateState(["csvData", data]));
-        let ramTotal =  getState().csvData.map(x => {
-            if(x.action === "Deployment" || x.action === "Total" || x.action === "Total Resources EOS" || x.action === "Total EOS") return 0;
-            else return x.ram;
-        }).reduce((a, b) => {
-            a = a + b;
-            return a;
-        }, 0)
-        console.log("ramTotal: ", ramTotal);
-        
-        dispatch(updateState(["ramTotal", ramTotal]));
 
-        dispatch(updateState(["loading", false]));
-        return bill;
+            dispatch(updateState(["progress", 100]));
 
-    }).catch(e => console.log("error in generateCSV", e));
-        
+            return bill;
+
+        }).catch(e => console.log("error in generateCSV", e));
+
 
     }
 

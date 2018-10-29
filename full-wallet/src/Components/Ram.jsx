@@ -10,6 +10,11 @@ const Ram = props => {
             backgroundColor: 'rgb(0, 179, 0)',
             data: [props.ram.used/props.ram.max]
           },
+        //   {
+        //   label: 'deployment',  
+        //   backgroundColor: 'rgb(199, 7, 0)',
+        //   data: [props.deploymentRam/props.ram.max]
+        //  },
         //   props.bill ? {
         //     label: 'Contract cost estimation',
         //     backgroundColor: 'red',

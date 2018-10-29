@@ -15,9 +15,12 @@ Comprehensive EOS full wallet to enable all EOS related on-chain functionality s
 - - [EosDex hacked with fake EOS tokens](https://thenextweb.com/hardfork/2018/09/18/eos-hackers-exchange-fake/)
 
 # Install
+if Unix:
 ```sh
-npm install npm-check-updates
+npm install -g npm-check-updates
 ```
+if Mac OS:
+sudo npm install -g npm
 
 # Build
 ```sh
