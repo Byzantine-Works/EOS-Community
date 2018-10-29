@@ -176,14 +176,19 @@ const generateAirdropCsv = (formatted) => {
   //   if (err) throw err;
   //   console.log('4)) airdrop.csv file has been saved!');
   // });
-  fs.writeFileSync('airdrop.csv', formatted);
-  console.log('Step 4)) airdrop.csv file has been saved!');
-  
-  return formatted
+  try {
+    fs.writeFileSync('airdrop.csv', formatted);
+    console.log('Step 4)) airdrop.csv file has been saved!');
+    return true
+  } catch(err) {
+    console.log(err)
+    return false
+  }
+    
 }
 
 
-const airdropGenerator = (formattedSnapshotData, accountName, tokenName, airdropRatio, maxTokenSupply, initialTokenSupply) => {
+const generateAirdropSh = (formattedSnapshotData, accountName, tokenName, airdropRatio, maxTokenSupply, initialTokenSupply) => {
   // Main Airdrop Logic Here
   // Either Generate .sh file, or use shelljs? 
   const fullAirdropStr = `
@@ -241,10 +246,12 @@ const airdropGenerator = (formattedSnapshotData, accountName, tokenName, airdrop
     fs.writeFileSync('airdrop.sh', fullAirdropStr)
     console.log('Step 5)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
     console.log(chalk.red.bold('\n Airdrop Generator complete. Once your account is ready with sufficient RAM bought and CPU/Net Staked, please run ./airdrop.sh'));
+    return true
   } catch (err) {
     console.log(err);
+    return false
   }
-  return fullAirdropStr
+  // return fullAirdropStr
 };
 
 
@@ -318,13 +325,15 @@ const run = async () => {
   
   /* Airdrop Portion */
   const formatted = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
-  generateAirdropCsv(formatted);
-  airdropGenerator(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
+  var isCsvGenerated = generateAirdropCsv(formatted);
+  var isShGenerated = generateAirdropSh(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
+  console.log('isCsvGenerated: ', isCsvGenerated);
+  console.log('isShGenerated: ', isShGenerated);
 
   // await runShell()
 };
 
-module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, success, formatOutput, generateAirdropCsv, airdropGenerator, runShell, run}
+module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, success, formatOutput, generateAirdropCsv, generateAirdropSh, runShell, run}
 // module.exports = run();
 
 

@@ -112,12 +112,12 @@ describe('Airdrop Script Generator', function () {
     });
   });
 
-  describe('airdropGenerator', function() {
+  describe('generateAirdropSh', function() {
     it('should exist', function() {
-      should.exist(cli.airdropGenerator);
+      should.exist(cli.generateAirdropSh);
     });
     it('should be a function', function() {
-      (typeof cli.airdropGenerator).should.equal('function')
+      (typeof cli.generateAirdropSh).should.equal('function')
     });
   });
 
