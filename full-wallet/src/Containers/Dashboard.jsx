@@ -91,13 +91,11 @@ class Dashboard extends Component {
         this.estimate = this.estimate.bind(this);
         this.conversion = this.conversion.bind(this);
         this.test = this.test.bind(this);
-
     }
 
     async test() {
         let table = await eos.getAccount('victorfaucon');
         console.log(table);
-
     }
 
 
@@ -140,7 +138,9 @@ class Dashboard extends Component {
             check = true;
         }
         console.log(text);
-        this.props.updateState(["progress", 2])
+        this.props.updateState(["progress", 2]);
+
+
 
 
         let accCreate = await eos.transaction(tr => {
@@ -172,7 +172,7 @@ class Dashboard extends Component {
         let respTransac = await eos.transfer({
             from: 'victor',
             to: text,
-            quantity: '0.0002 EOS',
+            quantity: '0.0010 EOS',
             memo: 'first transaction'
         });
         await console.log("deposit is Dashboard :", respTransac)
@@ -187,7 +187,7 @@ class Dashboard extends Component {
         respTransac = await eos.transfer({
             from: 'victor',
             to: text,
-            quantity: '0.0002 EOS',
+            quantity: '0.0001 EOS',
             memo: 'first transaction'
         });
         this.props.updateState(["progress", 19])
@@ -281,7 +281,7 @@ class Dashboard extends Component {
             <span>CPU: {this.props.cpu.used / 1000} ms / {this.props.cpu.max / 1000} ms<Cpu cpu={this.props.cpu} bill={this.props.bill} deploymentCpu={this.props.deploymentCpu} deploymentCpu={this.props.deploymentCpu}></Cpu></span>,
             <span>Net: {this.props.net.used / 1000} KB / {this.props.net.max / 1000} KB<Net net={this.props.net} bill={this.props.bill} deploymentNet={this.props.deploymentNet} deploymentNet={this.props.deploymentNet}></Net></span>,
             <span>Ram: {this.props.ram.used / 1000} KB / {this.props.ram.max / 1000} KB<Ram bill={this.props.bill} ram={this.props.ram} contractSize={this.props.contractSize} deploymentRam={this.props.deploymentRam}></Ram></span>
-        ]
+        ];
 
         let actionsCost = [
             <span>CPU: {(this.props.cpuTotal) / 1000} ms ({(this.props.cpuTotal * this.props.cpuRate).toFixed(4)} EOS)<CpuCost style={{ display: 'inline' }} cpu={this.props.cpu} bill={this.props.bill} height={100}></CpuCost></span>,
@@ -321,15 +321,15 @@ class Dashboard extends Component {
 
                     {this.props.loading ? null :
                         <span className="typedContainer"><Typed
-                            strings={['Estimate the cost of your EOS smart contract before deploying it:', '1. Load the ABI file of your smart contract. <br/><br/> 2. Load the WASM file after compiling your smart contract. <br/><br/> 3. Click estimate. Be patient this could take up to 2 minutes. <br/><br/> 4. If you wish, you can check how much EOS you already own on your account.']}
+                            strings={['Estimate the cost of your EOS smart contract before deploying it:', '1. Load the ABI file of your smart contract. <br/><br/> 2. Load the WASM file after compiling it. <br/><br/> 3. Enter an account name to check how much EOS are already staked. <br/><br/> 4. Click estimate. Be patient this could take up to 2 minutes.']}
                             typeSpeed={30}
                             shuffle={true}
                             cursorChar={'_'}
                         /></span>}
 
                     <div className="Params">
-                        <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.contractName + ".abi" : "Load your ABI file"}<input id="abi" type="file" placeholder="abi" onChange={this.readFile}></input></label><br />
-                        <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.contractName + ".wasm" : "Load your WASM file"}<input id="wasm" type="file" placeholder="wasm" onChange={this.readFile}></input></label><br />
+                        <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.contractName + ".abi" : "Load your ABI file"}<input id="abi" type="file" accept=".json, .abi" placeholder="abi" onChange={this.readFile}></input></label><br />
+                        <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.contractName + ".wasm" : "Load your WASM file"}<input id="wasm" type="file" accept=".wasm" placeholder="wasm" onChange={this.readFile}></input></label><br />
                         <input id="accountInput" onChange={this.props.loadDataAccount} placeholder="Compare to your account"></input>
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
                         {progressCir}

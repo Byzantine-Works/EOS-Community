@@ -29,7 +29,7 @@ class App extends React.Component {
             <div className="App">
             {/* <img className="byzantine" src={byzantine} width="200"></img> */}
             <img src={logo}></img>
-                <Dashboard updateState={this.props.updateState} dispatch={this.props.dispatch}></Dashboard>
+                <Dashboard updateState={this.props.updateState} ></Dashboard>
 
             </div>
 
