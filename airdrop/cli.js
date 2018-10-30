@@ -298,33 +298,33 @@ const run = async () => {
   init();
   
   /*    Sample Answers (for quick testing) */
-  const ACCOUNT_NAME= 'junglefoxfox'
-  const TOKEN_NAME= 'AIRSIX';
-  const AIRDROP_RATIO= '5';
-  const MAX_TOKEN_SUPPLY= '1000000';
-  const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
-  const MIN_EOS_HELD= '1000';
-  const MAX_EOS_HELD= '9999999';
-  const answers = {
-      ACCOUNT_NAME,
-      TOKEN_NAME,
-      AIRDROP_RATIO,
-      MAX_TOKEN_SUPPLY,
-      INITIAL_TOKEN_SUPPLY,
-      MIN_EOS_HELD,
-      MAX_EOS_HELD,
-  }
+  // const ACCOUNT_NAME= 'junglefoxfox'
+  // const TOKEN_NAME= 'AIRSIX';
+  // const AIRDROP_RATIO= '5';
+  // const MAX_TOKEN_SUPPLY= '1000000';
+  // const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
+  // const MIN_EOS_HELD= '1000';
+  // const MAX_EOS_HELD= '9999999';
+  // const answers = {
+  //     ACCOUNT_NAME,
+  //     TOKEN_NAME,
+  //     AIRDROP_RATIO,
+  //     MAX_TOKEN_SUPPLY,
+  //     INITIAL_TOKEN_SUPPLY,
+  //     MIN_EOS_HELD,
+  //     MAX_EOS_HELD,
+  // }
   
-  // const answers = await askQuestions();
-  // const {
-  //   ACCOUNT_NAME,
-  //   TOKEN_NAME,
-  //   AIRDROP_RATIO,
-  //   MAX_TOKEN_SUPPLY,
-  //   MIN_EOS_HELD,
-  //   MAX_EOS_HELD,
-  // } = answers;
-  // const INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
+  const answers = await askQuestions();
+  const {
+    ACCOUNT_NAME,
+    TOKEN_NAME,
+    AIRDROP_RATIO,
+    MAX_TOKEN_SUPPLY,
+    MIN_EOS_HELD,
+    MAX_EOS_HELD,
+  } = answers;
+  const INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
     
   console.log('\nStep 1)) User Selected Inputs:\n')
   for (var key in answers) {

@@ -1,3 +1,16 @@
+header {
+	background-color: black;
+	color: white;
+}
+body {
+	background-color: rgb(85, 83, 83);
+	color: white;
+}
 .section-dark {
-  background-color: rgb(85, 83, 83)
+	background-color: black;
+	color: white;
+}
+.section-white {
+	background-color: white
+	color: black;
 }
