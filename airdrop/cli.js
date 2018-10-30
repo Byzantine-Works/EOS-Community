@@ -327,6 +327,9 @@ const run = async () => {
   const formatted = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
   var isCsvGenerated = generateAirdropCsv(formatted);
   var isShGenerated = generateAirdropSh(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
+  // console.log(formatted.split('\n').slice(0,9))
+  console.log(formatted)
+  // console.log(ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY)
   console.log('isCsvGenerated: ', isCsvGenerated);
   console.log('isShGenerated: ', isShGenerated);
 
