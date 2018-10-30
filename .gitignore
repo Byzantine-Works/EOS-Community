@@ -59,3 +59,7 @@ typings/
 
 # next.js build output
 .next
+
+# airdrop utility specific
+airdrop/airdrop.sh
+airdrop/airdrop.csv
