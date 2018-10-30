@@ -9,7 +9,7 @@ SNAPSHOT_FILE="airdrop.csv"
 NODE_URL="http://193.93.219.219:8888/"
 
 
-echo "Deplyoing token contract.."
+echo "Deploying token contract.."
     cleos -u $NODE_URL set contract $ISSUER_ACCOUNT ./eosio.token
     cleos -u $NODE_URL get code $ISSUER_ACCOUNT
 ## cleos -u http://193.93.219.219:8888/ set contract junglefoxfox ./eosio.token 

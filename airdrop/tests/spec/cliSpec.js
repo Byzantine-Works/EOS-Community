@@ -83,12 +83,12 @@ describe('RAM Price Calculator', function() {
     })
   });
   
-  describe('success', function() {
+  describe('successPrice', function() {
     it('should exist', function() {
-      should.exist(cli.success);
+      should.exist(cli.successPrice);
     });
     it('should be a function', function() {
-      (typeof cli.success).should.equal('function')
+      (typeof cli.successPrice).should.equal('function')
     });
   });
 
@@ -137,6 +137,15 @@ describe('Airdrop Script Generator', function () {
       heztcnbrgage,6349.8432,31749.2160
       heztcnbthage,3151.66,15758.3000`
       assert.equal(cli.generateAirdropSh(formatted, 'junglefoxfox', 'AIRTEST', 5, 1000000, 1000000), true);
+    });
+  });
+
+  describe('successFinal', function() {
+    it('should exist', function() {
+      should.exist(cli.successFinal);
+    });
+    it('should be a function', function() {
+      (typeof cli.successFinal).should.equal('function')
     });
   });
 
