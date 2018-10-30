@@ -83,12 +83,12 @@ describe('RAM Price Calculator', function() {
     })
   });
   
-  describe('success', function() {
+  describe('successPrice', function() {
     it('should exist', function() {
-      should.exist(cli.success);
+      should.exist(cli.successPrice);
     });
     it('should be a function', function() {
-      (typeof cli.success).should.equal('function')
+      (typeof cli.successPrice).should.equal('function')
     });
   });
 
@@ -131,12 +131,25 @@ describe('Airdrop Script Generator', function () {
       (typeof cli.generateAirdropSh).should.equal('function')
     });
     it('should return true after generating shell script', function () {
-      var formatted = `heztcmzuhege,2241.8178,11209.0890
-      heztcmzvhage,1577.65,7888.2500
-      heztcmzzgmge,6000.8596,30004.2980
-      heztcnbrgage,6349.8432,31749.2160
-      heztcnbthage,3151.66,15758.3000`
-      assert.equal(cli.generateAirdropSh(formatted, 'junglefoxfox', 'AIRTEST', 5, 1000000, 1000000), true);
+      var AIRDROP_PARAMS = {
+        'accountName': 'junglefoxfox',
+        'tokenName': 'TESTTWO',
+        'airdropRatio': 5,
+        'maxTokenSupply': 1000000,
+        'initialTokenSupply': 1000000,
+        'nodeUrl': "http://193.93.219.219:8888/",
+        'contractDir': "./eosio.token",
+      }
+      assert.equal(cli.generateAirdropSh(AIRDROP_PARAMS), true);
+    });
+  });
+
+  describe('successFinal', function() {
+    it('should exist', function() {
+      should.exist(cli.successFinal);
+    });
+    it('should be a function', function() {
+      (typeof cli.successFinal).should.equal('function')
     });
   });
 

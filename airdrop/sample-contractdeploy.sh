@@ -1,16 +1,17 @@
-#!/bin/bash
+  #!/bin/bash
 
-ISSUER_ACCOUNT="junglefoxfox"
-TOKEN_SYMBOL="MANTWO"
-AIRDROP_RATIO="5"
-MAX_TOKEN_SUPPLY="9100200300.000"
-INITIAL_TOKEN_SUPPLY="1000000.000"
-SNAPSHOT_FILE="airdrop.csv"
-NODE_URL="http://193.93.219.219:8888/"
+  ISSUER_ACCOUNT="junglefoxfox"
+  TOKEN_SYMBOL="AIRFOUR"
+  AIRDROP_RATIO="5"
+  MAX_TOKEN_SUPPLY="1000000.0000"
+  INITIAL_TOKEN_SUPPLY="1000000.0000"
+  NODE_URL="http://193.93.219.219:8888/"
+  CONTRACT_DIR="./eosio.token"
+  SNAPSHOT_FILE="airdrop.csv"
+  
 
-
-echo "Deplyoing token contract.."
-    cleos -u $NODE_URL set contract $ISSUER_ACCOUNT ./eosio.token
+  echo "Deploying token contract.."
+    cleos -u $NODE_URL set contract $ISSUER_ACCOUNT $CONTRACT_DIR
     cleos -u $NODE_URL get code $ISSUER_ACCOUNT
 ## cleos -u http://193.93.219.219:8888/ set contract junglefoxfox ./eosio.token 
 ## cleos -u http://193.93.219.219:8888/ get code junglefoxfox
