@@ -140,6 +140,12 @@ class Dashboard extends Component {
         console.log(text);
         this.props.updateState(["progress", 2]);
 
+        // let options = {
+        //     authorization: 'victor@active',
+        //     broadcast: true,
+        //     sign: true,
+        //   }
+
 
 
 
@@ -172,7 +178,7 @@ class Dashboard extends Component {
         let respTransac = await eos.transfer({
             from: 'victor',
             to: text,
-            quantity: '0.0010 EOS',
+            quantity: '0.0002 EOS',
             memo: 'first transaction'
         });
         await console.log("deposit is Dashboard :", respTransac)
@@ -184,12 +190,23 @@ class Dashboard extends Component {
 
         ramBefore = await eos.getAccount(text);
         this.props.updateState(["progress", 16])
+
+        // let options = {
+        //     authorization: text+'@active',
+        //   };
+
+        try {
         respTransac = await eos.transfer({
-            from: 'victor',
-            to: text,
+            from: text,
+            to: 'eoseos',
             quantity: '0.0001 EOS',
             memo: 'first transaction'
         });
+        console.log("respTransac: ", respTransac);
+
+    } catch(err) {
+        console.log(JSON.parse(err));
+    }
         this.props.updateState(["progress", 19])
         ramAfter = await eos.getAccount(text);
         this.props.updateState(["progress", 23])
