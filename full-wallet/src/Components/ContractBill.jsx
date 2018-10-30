@@ -23,7 +23,7 @@ const ContractBill = props => {
         <div className="ContractBill">
             {entries}
             <div style={{display:"inline-block", left:"5%", width: "100%", marginTop: "20px", marginBottom: "20px", height:"0px", border:"solid white 1px",borderLeft: 'none', borderRight: 'none'}}></div>
-            Total runtime cost: {totalRun} EOS
+            Total runtime cost: {totalRun.toFixed(4)} EOS
 
             <div style={{display:"inline-block", left:"5%", width: "100%", marginTop: "20px", marginBottom: "20px", height:"0px", border:"solid white 1px",borderLeft: 'none', borderRight: 'none'}}></div>            
             Design cost: {(props.totalDeployment).toFixed(4)} EOS
