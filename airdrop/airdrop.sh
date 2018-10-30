@@ -2,7 +2,7 @@
   #!/bin/bash
 
   ISSUER_ACCOUNT="junglefoxfox"
-  TOKEN_SYMBOL="AIRFOUR"
+  TOKEN_SYMBOL="AIRSIX"
   AIRDROP_RATIO="5"
   MAX_TOKEN_SUPPLY="1000000.0000"
   INITIAL_TOKEN_SUPPLY="1000000.0000"
@@ -46,7 +46,5 @@
           echo "Skipping $ACCOUNT"
       fi 
   done
-  
-  
   
   

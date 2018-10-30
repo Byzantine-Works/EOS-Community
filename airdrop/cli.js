@@ -250,10 +250,7 @@ const generateAirdropSh = (airdropParams) => {
       fi 
   done
   
-  
-  
   `
-
   try {
     fs.writeFileSync('airdrop.sh', fullAirdropStr)
     console.log('Step 5)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
@@ -266,7 +263,7 @@ const generateAirdropSh = (airdropParams) => {
 };
 
 const successFinal = (isCsvGenerated, isShGenerated) => {
-  if (isCsvGenerated && isShGenerated) {
+  if (isCsvGenerated && isShGenerated) {  
     console.log(chalk.red.bold('\n Airdrop Generator complete. Once your account is ready with sufficient RAM bought and CPU/Net Staked, please run ./airdrop.sh'));
   }
 }
@@ -301,7 +298,7 @@ const run = async () => {
   
   /*    Sample Answers (for quick testing) */
   const ACCOUNT_NAME= 'junglefoxfox'
-  const TOKEN_NAME= 'AIRFOUR';
+  const TOKEN_NAME= 'AIRSIX';
   const AIRDROP_RATIO= '5';
   const MAX_TOKEN_SUPPLY= '1000000';
   const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
@@ -340,7 +337,6 @@ const run = async () => {
   successPrice(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
-  
   var AIRDROP_PARAMS = {
     'accountName': ACCOUNT_NAME,
     'tokenName': TOKEN_NAME,
@@ -353,12 +349,11 @@ const run = async () => {
   const formattedSnapshotData = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
   const isCsvGenerated = generateAirdropCsv(formattedSnapshotData);
   const isShGenerated = generateAirdropSh(AIRDROP_PARAMS);
-  // const isShGenerated = generateAirdropSh(formattedSnapshotData, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
   successFinal(isCsvGenerated, isShGenerated);
-  // console.log(formattedSnapshotData, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
-  // console.log('isCsvGenerated: ', isCsvGenerated);
-  // console.log('isShGenerated: ', isShGenerated);
-
+  // console.log(AIRDROP_PARAMS);
+  // console.log('isCsvGenerated: ', isCsvGenerated, '\nisShGenerated: ', isShGenerated);
+  shell.exec('chmod 755 airdrop.sh');
+  
   // await runShell()
 };
 
