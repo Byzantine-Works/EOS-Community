@@ -2,16 +2,17 @@
   #!/bin/bash
 
   ISSUER_ACCOUNT="junglefoxfox"
-  TOKEN_SYMBOL="AIRTEST"
+  TOKEN_SYMBOL="AIRFOUR"
   AIRDROP_RATIO="5"
   MAX_TOKEN_SUPPLY="1000000.0000"
   INITIAL_TOKEN_SUPPLY="1000000.0000"
-  SNAPSHOT_FILE="airdrop.csv"
   NODE_URL="http://193.93.219.219:8888/"
+  CONTRACT_DIR="./eosio.token"
+  SNAPSHOT_FILE="airdrop.csv"
   
 
   echo "Deploying token contract.."
-    cleos -u $NODE_URL set contract $ISSUER_ACCOUNT ./eosio.token
+    cleos -u $NODE_URL set contract $ISSUER_ACCOUNT $CONTRACT_DIR
     cleos -u $NODE_URL get code $ISSUER_ACCOUNT
 
   echo "Creating token..."

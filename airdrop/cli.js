@@ -197,24 +197,25 @@ const generateAirdropCsv = (formatted) => {
     
 }
 
-
-const generateAirdropSh = (formattedSnapshotData, accountName, tokenName, airdropRatio, maxTokenSupply, initialTokenSupply) => {
+// const generateAirdropSh = (formattedSnapshotData, accountName, tokenName, airdropRatio, maxTokenSupply, initialTokenSupply) => {
+const generateAirdropSh = (airdropParams) => {
   // Main Airdrop Logic Here
   // Either Generate .sh file, or use shelljs? 
   const fullAirdropStr = `
   #!/bin/bash
 
-  ISSUER_ACCOUNT="${accountName}"
-  TOKEN_SYMBOL="${tokenName}"
-  AIRDROP_RATIO="${airdropRatio}"
-  MAX_TOKEN_SUPPLY="${maxTokenSupply}.0000"
-  INITIAL_TOKEN_SUPPLY="${initialTokenSupply}.0000"
+  ISSUER_ACCOUNT="${airdropParams.accountName}"
+  TOKEN_SYMBOL="${airdropParams.tokenName}"
+  AIRDROP_RATIO="${airdropParams.airdropRatio}"
+  MAX_TOKEN_SUPPLY="${airdropParams.maxTokenSupply}.0000"
+  INITIAL_TOKEN_SUPPLY="${airdropParams.initialTokenSupply}.0000"
+  NODE_URL="${airdropParams.nodeUrl}"
+  CONTRACT_DIR="${airdropParams.contractDir}"
   SNAPSHOT_FILE="airdrop.csv"
-  NODE_URL="http://193.93.219.219:8888/"
   
 
   echo "Deploying token contract.."
-    cleos -u $NODE_URL set contract $ISSUER_ACCOUNT ./eosio.token
+    cleos -u $NODE_URL set contract $ISSUER_ACCOUNT $CONTRACT_DIR
     cleos -u $NODE_URL get code $ISSUER_ACCOUNT
 
   echo "Creating token..."
@@ -339,11 +340,22 @@ const run = async () => {
   successPrice(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
-  const formatted = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
-  const isCsvGenerated = generateAirdropCsv(formatted);
-  const isShGenerated = generateAirdropSh(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
+  
+  var AIRDROP_PARAMS = {
+    'accountName': ACCOUNT_NAME,
+    'tokenName': TOKEN_NAME,
+    'airdropRatio': AIRDROP_RATIO,
+    'maxTokenSupply': MAX_TOKEN_SUPPLY,
+    'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
+    'nodeUrl': "http://193.93.219.219:8888/",
+    'contractDir': "./eosio.token",
+  }
+  const formattedSnapshotData = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
+  const isCsvGenerated = generateAirdropCsv(formattedSnapshotData);
+  const isShGenerated = generateAirdropSh(AIRDROP_PARAMS);
+  // const isShGenerated = generateAirdropSh(formattedSnapshotData, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
   successFinal(isCsvGenerated, isShGenerated);
-  // console.log(formatted, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
+  // console.log(formattedSnapshotData, ACCOUNT_NAME, TOKEN_NAME, AIRDROP_RATIO, MAX_TOKEN_SUPPLY, INITIAL_TOKEN_SUPPLY);
   // console.log('isCsvGenerated: ', isCsvGenerated);
   // console.log('isShGenerated: ', isShGenerated);
 
