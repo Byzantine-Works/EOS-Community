@@ -254,6 +254,7 @@ const generateAirdropSh = (airdropParams) => {
   try {
     fs.writeFileSync('airdrop.sh', fullAirdropStr)
     console.log('Step 5)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
+    shell.exec('chmod 755 airdrop.sh');
     return true
   } catch (err) {
     console.log(err);
@@ -352,8 +353,7 @@ const run = async () => {
   successFinal(isCsvGenerated, isShGenerated);
   // console.log(AIRDROP_PARAMS);
   // console.log('isCsvGenerated: ', isCsvGenerated, '\nisShGenerated: ', isShGenerated);
-  shell.exec('chmod 755 airdrop.sh');
-  
+
   // await runShell()
 };
 
