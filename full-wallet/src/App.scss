@@ -6,14 +6,10 @@ body {
     font-family: Courier;
 }
 
-canvas {
-    position: relative;
-    z-index: 100;
-}
-
-img {
-    position: relative;
-}
+// canvas {
+//     position: relative;
+//     z-index: 100;
+// }
 
 #root {
     position: absolute;
@@ -70,6 +66,8 @@ img {
 
 }
 
+//Account resources components
+
 .AccountResources {
     position: relative;
     float: right;
@@ -82,6 +80,32 @@ img {
     border-radius: 8px;
     background-color: #152c3d;
 }
+
+.NetContainer {
+    position: relative;
+    margin-bottom: 20px;
+    height: 10%;
+}
+
+.CpuContainer {
+    position: relative;
+    margin-bottom: 20px;
+    height: 10%;
+}
+
+.NetContainer {
+    position: relative;
+    margin-bottom: 20px;
+    height: 10%;
+}
+
+.StakingContainer {
+    position: relative;
+    margin-bottom: 20px;
+    height: 10%;
+}
+
+// Actions cost components
 
 .ActionsCost {
     position: relative;
@@ -97,11 +121,34 @@ img {
     height: 410px;
 }
 
+.CpuCostContainer {
+    position: relative;
+    margin-bottom: 40px;
+    margin-top: 15px;
+    height: 10%;
+}
+
+.NetCostContainer {
+    position: relative;
+    margin-bottom: 40px;
+    margin-top: 15px;
+    height: 10%;
+}
+
+.RamCostContainer {
+    position: relative;
+    margin-bottom: 40px;
+    margin-top: 15px;
+    height: 10%;
+}
+
+
+
 .ContractBill{
     position: absolute;
     float: left;
     color: white;
-    top: 48%;
+    margin-top: 510px;
     left: 3%;
     padding: 25px;
     background-color: #152c3d;
@@ -288,3 +335,5 @@ a {
 .sweet-loading {
     margin-left: 50%;
 }
+
+

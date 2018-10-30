@@ -252,10 +252,12 @@ class Dashboard extends Component {
     }
 
     async estimate() {
-        this.props.updateState(["loading", true]);
-        let account = await this.pushTransaction();
-        await this.deployContract(account);
-        await this.props.estimateContract(account);
+        if(this.props.wasm && this.props.abi) {
+            this.props.updateState(["loading", true]);
+            let account = await this.pushTransaction();
+            await this.deployContract(account);
+            await this.props.estimateContract(account);
+        }
      
         // this.props.updateState(["progress", this.props.progress+1])
         // this.props.updateState(["bill", bill]);
