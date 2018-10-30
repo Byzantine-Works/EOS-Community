@@ -219,9 +219,8 @@ export const estimateContract = (account) => {
         }).then((bill) => {
             dispatch(updateState(["bill", bill]));
             let props = getState();
-            let data = [{ action: 'Deployment', ram: props.deploymentRam, cpu: props.deploymentCpu, net: props.deploymentNet, total: props.totalDeployment }]
-            var [cpuT, ramT, netT] = [[], [], []];
-            ramT.push(props.deploymentRam);
+            let data = []
+            var [cpuT, ramT, netT, eosT] = [[], [], [], []];
             console.log("in generateCSV: ", props.bill);
             for (let action in props.bill) {
                 let obj = {};
@@ -235,19 +234,24 @@ export const estimateContract = (account) => {
 
                 obj.net = props.bill[action].net;
                 netT.push(obj.net);
+               
+                obj.total_EOS = ((obj.cpu * getState().cpuRate) + (obj.net * getState().netRate) + (obj.ram * getState().ramPrice)).toFixed(4)
+                eosT.push(Number(obj.total_EOS));
+
                 data.push(obj);
 
-                obj.total = ((obj.cpu * getState().cpuRate) + (obj.net * getState().netRate) + (obj.ram * getState().ramPrice)).toFixed(4)
             }
+
+            
 
             let cT = cpuT.reduce((a, b) => { a = a + b; return a; });
             let rT = ramT.reduce((a, b) => { a = a + b; return a; });
             let nT = netT.reduce((a, b) => { a = a + b; return a; });
-            data.push({ action: 'Total', cpu: cT, ram: rT, net: nT });
-            data.push({ action: 'Total Resources EOS', cpu: (cT * getState().cpuRate).toFixed(4), ram: (rT * getState().ramPrice).toFixed(4), net: (nT * getState().netRate).toFixed(4) });
-            data.push({ action: 'Total EOS', ram: (cT * getState().cpuRate + rT * getState().ramPrice + nT * getState().netRate).toFixed(4) + ' EOS' });
+            let eT = eosT.reduce((a, b) => { a = a + b; return a; });
+            data.push({ action: 'Total runtime cost', cpu: cT, ram: rT, net: nT, total_EOS: eT });
+            data.push({ action: 'Deployment', ram: props.deploymentRam, cpu: props.deploymentCpu, net: props.deploymentNet, total_EOS: props.totalDeployment });
+            data.push({ action: 'Total EOS', total_EOS: (((cT+props.deploymentCpu) * getState().cpuRate) + ((rT+props.deploymentRam) * getState().ramPrice) + ((nT+props.deploymentNet) * getState().netRate)).toFixed(4) + ' EOS' });
             
-
             dispatch(updateState(["cpuTotal", cT]));
             dispatch(updateState(["netTotal", nT]));
             dispatch(updateState(["csvData", data]));

@@ -3,7 +3,6 @@ import {HorizontalBar} from 'react-chartjs-2';
 
 
 const Staking = props => {
-    console.log("Deployment total: ", props.totalDeployment);
     
     const data = props.staking ? {
         datasets: [

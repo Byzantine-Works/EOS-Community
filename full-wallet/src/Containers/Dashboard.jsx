@@ -353,12 +353,10 @@ class Dashboard extends Component {
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
                         {progressCir}
 
-
-
                     </div>
                     {this.props.csvData ? <ContractBill csvData={this.props.csvData} totalDeployment={totalDeployment} netRate={this.props.netRate} ramPrice={this.props.ramPrice} cpuRate={this.props.cpuRate}></ContractBill> : null}
 
-                    {this.props.bill ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
+                    {this.props.csvData ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
                     {this.props.account && this.props.loading ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}
                 </div>
             </div>

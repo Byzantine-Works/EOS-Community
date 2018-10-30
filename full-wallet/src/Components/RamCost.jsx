@@ -43,8 +43,7 @@ const RamCost = props => {
                 ctx.font = 'bold 70% Courier';
                 ctx.lineWidth = 1;
                 ctx.globalCompositeOperation = "destination-over";
-                console.log(ctx)
-
+                
                 this.data.datasets.forEach(function (dataset, i) {
                     var meta = chartInstance.controller.getDatasetMeta(i);
                     meta.data.forEach(function (bar, index) {
