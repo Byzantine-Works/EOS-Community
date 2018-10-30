@@ -17,6 +17,7 @@ console.log(
   )
 );
 
+
 describe('RAM Price Calculator', function() {
   describe('init', function() {
     it('should exist', function() {
@@ -117,7 +118,7 @@ describe('Airdrop Script Generator', function () {
       heztcmzzgmge,6000.8596,30004.2980
       heztcnbrgage,6349.8432,31749.2160
       heztcnbthage,3151.66,15758.3000`
-      assert.equal(cli.generateAirdropSh(formatted), true);
+      assert.equal(cli.generateAirdropCsv(formatted), true);
     });
 
   });
