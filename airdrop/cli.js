@@ -152,11 +152,19 @@ const getRamPrice = async () => {
   Price Estimate EOS: ${priceEstimate_Eos}    
   Price Estimate USD: $${priceEstimate_Usd}    
   #################################` + '\n'))
-  return priceEstimate_Usd
+  // return priceEstimate_Usd
+
+  var priceEstimate = {
+    'numberOfAccounts': numberOfAccounts,
+    'ramRequiredKb': ramRequiredKb,
+    'priceEstimate_Eos': priceEstimate_Eos,
+    'priceEstimate_Usd': priceEstimate_Usd,
+  }
+  return priceEstimate
 }
 
 const successPrice = (priceEstimate) => {
-  console.log(chalk.blue(`The estimated cost of the Airdrop with these settings will be: ` + chalk.bold.red('$'+priceEstimate+' USD\n')));
+  console.log(chalk.blue(`The estimated cost of the Airdrop with these settings will be: ` + chalk.bold.red('$'+priceEstimate.priceEstimate_Usd+' USD\n')));
 };
 
 
