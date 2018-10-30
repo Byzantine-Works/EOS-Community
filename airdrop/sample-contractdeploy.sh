@@ -26,7 +26,7 @@ else
     echo "Token \"$TOKEN_SYMBOL\" already exist -- Skipping Create."
 fi
 
-ISSUANCE=$(cleos -u  get table $ISSUER_ACCOUNT $ISSUER_ACCOUNT accounts | grep $TOKEN_SYMBOL)
+ISSUANCE=$(cleos -u get table $ISSUER_ACCOUNT $ISSUER_ACCOUNT accounts | grep $TOKEN_SYMBOL)
 if [[ -z $ISSUANCE ]]; then
     echo "Issuing initial supply of: \"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\" to account \"$ISSUER_ACCOUNT\"..."
     cleos -u $NODE_URL push action $ISSUER_ACCOUNT issue "[\"$ISSUER_ACCOUNT\", \"$INITIAL_TOKEN_SUPPLY $TOKEN_SYMBOL\", \"initial supply\"]" -p $ISSUER_ACCOUNT@active
