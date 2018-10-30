@@ -4,6 +4,7 @@ const cli = require('../../cli.js');
 const assert = require("assert");
 const chai = require("chai");
 const should = chai.should();
+// const expect = chai.expect;
 const figlet = require('figlet');
 const chalk = require('chalk');
 console.log(
@@ -110,14 +111,31 @@ describe('Airdrop Script Generator', function () {
     it('should be a function', function() {
       (typeof cli.generateAirdropCsv).should.equal('function')
     });
+    it('should return true after generating csv', function () {
+      var formatted = `heztcmzuhege,2241.8178,11209.0890
+      heztcmzvhage,1577.65,7888.2500
+      heztcmzzgmge,6000.8596,30004.2980
+      heztcnbrgage,6349.8432,31749.2160
+      heztcnbthage,3151.66,15758.3000`
+      assert.equal(cli.generateAirdropSh(formatted), true);
+    });
+
   });
 
-  describe('airdropGenerator', function() {
+  describe('generateAirdropSh', function() {
     it('should exist', function() {
-      should.exist(cli.airdropGenerator);
+      should.exist(cli.generateAirdropSh);
     });
     it('should be a function', function() {
-      (typeof cli.airdropGenerator).should.equal('function')
+      (typeof cli.generateAirdropSh).should.equal('function')
+    });
+    it('should return true after generating shell script', function () {
+      var formatted = `heztcmzuhege,2241.8178,11209.0890
+      heztcmzvhage,1577.65,7888.2500
+      heztcmzzgmge,6000.8596,30004.2980
+      heztcnbrgage,6349.8432,31749.2160
+      heztcnbthage,3151.66,15758.3000`
+      assert.equal(cli.generateAirdropSh(formatted, 'junglefoxfox', 'AIRTEST', 5, 1000000, 1000000), true);
     });
   });
 
@@ -145,8 +163,8 @@ describe('Airdrop Script Generator', function () {
 // describe('Basic Mocha String Test', function () {
 //   it('should return number of charachters in a string', function () {
 //          assert.equal("Hello".length, 5);
-//      });
+//   });
 //   it('should return first charachter of the string', function () {
 //          assert.equal("Hello".charAt(0), 'H');
-//      });
+//   });
 //  });

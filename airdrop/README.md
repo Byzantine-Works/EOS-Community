@@ -15,9 +15,10 @@ git clone https://github.com/Byzantine-Works/EOS-Wallet-Integrations.git
 npm install
 ```
 
-- Switch into the airdrop directory
+- Switch into the airdrop directory, install the airdrop utility specific dependencies
 ```
 cd airdrop
+npm install
 ```
 - Run the CLI Airdrop Price Calculator
 ```
