@@ -137,6 +137,7 @@ const getRamPrice = async () => {
   var UsdPerEos = 5.61                                        // Current Price
   
   var ramRequiredKb = numberOfAccounts * 0.142  //142 Bytes Required per account
+  ramRequiredKb = Math.floor(ramRequiredKb * 1000) / 1000 // Truncating to 3 digits
   
   console.log('Step 3)) Starting Price Estimate Calculations...')
   var priceEstimate_Eos = ramRequiredKb * ramPrice_EosPerKb;
@@ -144,14 +145,6 @@ const getRamPrice = async () => {
   priceEstimate_Eos = Math.floor(priceEstimate_Eos * 10000) / 10000 // Truncating to 4 digits
   priceEstimate_Usd = Math.floor(priceEstimate_Usd * 100) / 100;    // Truncating to 2 digits
   
-  console.log(chalk.bold.blue(
-  `
-  #################################
-  Number of Accounts: ${numberOfAccounts}       
-  RAM Required (kb): ${ramRequiredKb}     
-  Price Estimate EOS: ${priceEstimate_Eos}    
-  Price Estimate USD: $${priceEstimate_Usd}    
-  #################################` + '\n'))
   // return priceEstimate_Usd
 
   var priceEstimate = {
@@ -164,6 +157,15 @@ const getRamPrice = async () => {
 }
 
 const successPrice = (priceEstimate) => {
+  console.log(chalk.bold.blue(
+    `
+    #################################
+    Number of Accounts: ${priceEstimate.numberOfAccounts}       
+    RAM Required (kb): ${priceEstimate.ramRequiredKb}     
+    Price Estimate EOS: ${priceEstimate.priceEstimate_Eos}    
+    Price Estimate USD: $${priceEstimate.priceEstimate_Usd}    
+    #################################` + '\n'))
+
   console.log(chalk.blue(`The estimated cost of the Airdrop with these settings will be: ` + chalk.bold.red('$'+priceEstimate.priceEstimate_Usd+' USD\n')));
 };
 

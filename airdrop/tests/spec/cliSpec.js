@@ -83,12 +83,12 @@ describe('RAM Price Calculator', function() {
     })
   });
   
-  describe('success', function() {
+  describe('successPrice', function() {
     it('should exist', function() {
-      should.exist(cli.success);
+      should.exist(cli.successPrice);
     });
     it('should be a function', function() {
-      (typeof cli.success).should.equal('function')
+      (typeof cli.successPrice).should.equal('function')
     });
   });
 
