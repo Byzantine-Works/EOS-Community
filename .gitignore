@@ -61,5 +61,8 @@ typings/
 .next
 
 # airdrop utility specific
+airdrop.sh
+airdrop.csv
+Airdrop.csv
 airdrop/airdrop.sh
 airdrop/airdrop.csv
