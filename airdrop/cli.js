@@ -46,7 +46,7 @@ const askQuestions = async () => {
         name: "SNAPSHOT_MONTH",
         type: "list",
         message: "Which Snapshot wouldyou like to use?:",
-        choices: ["Genesis", "July", "August", "September", "October"],
+        choices: ["Genesis", "July", "August", "September", "October", "November"],
       },
       {
         type: "list",
@@ -130,32 +130,17 @@ const snapshotCsvToJson = async (snapshotMonth) => {
     csvFilePath = './airdrop-snapshots/20180901_account_snapshot.csv'; // September 1st
   } else if (snapshotMonth === 'October') { 
     csvFilePath = './airdrop-snapshots/20181001_account_snapshot.csv'; // October 1st
+  } else if (snapshotMonth === 'November') { 
+    csvFilePath = './airdrop-snapshots/20181030_account_snapshot.csv'; // October 30th (closest to November)
   }
   var snapshotJson = await csv()
   .fromFile(csvFilePath).then((jsonObj)=>{
     console.log(`Step 2b)) Converting Csv to Json for ${snapshotMonth} Snapshot...`)
-    console.log('jsonObj', jsonObj);
+    // console.log('jsonObj', jsonObj);
     return jsonObj
     /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
   }) 
   return snapshotJson; 
-
-  // if (csvFilePath == './airdrop-snapshots/genesis-snapshot.csv') {
-  //   console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
-  //   return genesisSnapshotJson
-  // } else {
-  //   var snapshotJson = await csv()
-  //   .fromFile(csvFilePath).then((jsonObj)=>{
-  //     console.log('Step 2b)) Converting Csv to Json...')
-  //     return jsonObj
-  //     // console.log(jsonObj);
-  //     /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
-  //   })  
-
-
-  //   return snapshotJson;
-  // }
-
 } 
 
 const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
@@ -374,8 +359,8 @@ const run = async () => {
   const ACCOUNT_NAME= 'junglefoxfox'
   const TOKEN_NAME= 'AIRSIX';
   const MAX_TOKEN_SUPPLY= '1000000';
-  const SNAPSHOT_MONTH= 'October'
-  const MIN_EOS_HELD= '1000';
+  const SNAPSHOT_MONTH= 'November'
+  const MIN_EOS_HELD= '100';
   const MAX_EOS_HELD= '9999999';
   const RATIO_OR_FLAT= 'Airdrop Flat Amount'
   const AIRDROP_RATIO= '5';
