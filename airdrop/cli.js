@@ -8,9 +8,6 @@ const csv = require("csvtojson");
 const fs = require('fs');
 const genesisSnapshotJson = require("./airdrop-snapshots/genesis-snapshot-fitted.json") // Fitted Genesis Snapshot, or .csv file of daily EOS NewYork Snapshots
 
-// const csvFilePath = './airdrop-snapshots/genesis-snapshot.csv';  // UNCOMMENT TO USE GENESIS SNAPSHOT
-// const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
-
 const init = () => {
     console.log(
         chalk.red.bold(
@@ -89,29 +86,13 @@ const askQuestions = async () => {
   } else if (answers1.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
     var answers2 = await inquirer.prompt(questions2_flat);
   }
-  for (var key in answers2) {answers1[key] = answers2[key];}
+
+  for (var key in answers2) {
+    answers1[key] = answers2[key];
+  }
+  
   // console.log('answers1', answers1)
   return answers1
-  
-// Original
-// 1) Account Name
-// 2) Token Name
-// 3) Airdrop Ratio
-// 4) Max Token Supply 
-// 5) Min Eos Held 
-// 6) Max Eos Held 
-
-// New 
-// 1) Account Name 
-// 2) Token Name 
-// 3) Max Token Supply
-// 4) Which Snapshot (list)
-// 5) Min Eos Held 
-// 6) Max Eos Held 
-
-// 7) Airdrop Ratio or Flat Amount (list)
-//   7a) If Airdrop - Ratio? (input)
-//   7b) If Flat Amount - Amount? (input)
 };
 
 
@@ -356,39 +337,40 @@ const run = async () => {
   init();
   
   /*    Sample Answers (for quick testing) */
-  const ACCOUNT_NAME= 'junglefoxfox'
-  const TOKEN_NAME= 'AIRSIX';
-  const MAX_TOKEN_SUPPLY= '1000000';
-  const SNAPSHOT_MONTH= 'November'
-  const MIN_EOS_HELD= '100';
-  const MAX_EOS_HELD= '9999999';
-  const RATIO_OR_FLAT= 'Airdrop Flat Amount'
-  const AIRDROP_RATIO= '5';
-  const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
-  const answers = {
-      ACCOUNT_NAME,
-      TOKEN_NAME,
-      AIRDROP_RATIO,
-      MAX_TOKEN_SUPPLY,
-      INITIAL_TOKEN_SUPPLY,
-      MIN_EOS_HELD,
-      MAX_EOS_HELD,
-  }
+  // const ACCOUNT_NAME= 'junglefoxfox'
+  // const TOKEN_NAME= 'AIRSIX';
+  // const MAX_TOKEN_SUPPLY= '1000000';
+  // const SNAPSHOT_MONTH= 'November'
+  // const MIN_EOS_HELD= '100';
+  // const MAX_EOS_HELD= '9999999';
+  // const RATIO_OR_FLAT= 'Airdrop Flat Amount'
+  // const AIRDROP_RATIO= '5';
+  // const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
+  // const answers = {
+  //     ACCOUNT_NAME,
+  //     TOKEN_NAME,
+  //     AIRDROP_RATIO,
+  //     MAX_TOKEN_SUPPLY,
+  //     INITIAL_TOKEN_SUPPLY,
+  //     MIN_EOS_HELD,
+  //     MAX_EOS_HELD,
+  // }
   
-  // const answers = await askQuestions();
-  // var {
-  //   ACCOUNT_NAME,
-  //   TOKEN_NAME,
-  //   MAX_TOKEN_SUPPLY,
-  //   SNAPSHOT_MONTH,
-  //   MIN_EOS_HELD,
-  //   MAX_EOS_HELD,
-  //   RATIO_OR_FLAT,
-  //   AIRDROP_RATIO,
-  // } = answers;
-  // var INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
-  // ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
-  // TOKEN_NAME = TOKEN_NAME.toUpperCase();
+  /* Actual Questions */
+  const answers = await askQuestions();
+  var {
+    ACCOUNT_NAME,
+    TOKEN_NAME,
+    MAX_TOKEN_SUPPLY,
+    SNAPSHOT_MONTH,
+    MIN_EOS_HELD,
+    MAX_EOS_HELD,
+    RATIO_OR_FLAT,
+    AIRDROP_RATIO,
+  } = answers;
+  var INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
+  ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
+  TOKEN_NAME = TOKEN_NAME.toUpperCase();
     
   console.log('\nStep 1)) User Selected Inputs:\n')
   for (var key in answers) {
