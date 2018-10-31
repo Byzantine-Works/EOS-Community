@@ -49,7 +49,7 @@ const askQuestions = async () => {
         type: "list",
         name: "MIN_EOS_HELD",
         message: "Minimum of number of EOS held for accounts you want to Airdrop to?",
-        choices: ["0", "1", "10", "100", "1000", "10000"],
+        choices: ["0", "1", "10", "100", "1000", "10000", "100000", "1000000"],
       },
       {
         type: "list",
@@ -90,12 +90,10 @@ const askQuestions = async () => {
   for (var key in answers2) {
     answers1[key] = answers2[key];
   }
-  
+
   // console.log('answers1', answers1)
   return answers1
 };
-
-
 
 const snapshotCsvToJson = async (snapshotMonth) => {
 // const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
@@ -119,7 +117,6 @@ const snapshotCsvToJson = async (snapshotMonth) => {
     console.log(`Step 2b)) Converting Csv to Json for ${snapshotMonth} Snapshot...`)
     // console.log('jsonObj', jsonObj);
     return jsonObj
-    /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
   }) 
   return snapshotJson; 
 } 
@@ -277,18 +274,22 @@ const generateAirdropSh = (airdropParams) => {
       echo "Token already issued to \\"$ISSUER_ACCOUNT\\" -- Skipping issue"
   fi
   
+  count=0
   for line in $(cat $SNAPSHOT_FILE); do
+      ((count++))
       ACCOUNT=$(echo $line | tr "," "\\n" | head -1)
       AMOUNT=$(echo $line | tr "," "\\n" | tail -1)
       CURRENT_BALANCE=$(cleos -u $NODE_URL get table $ISSUER_ACCOUNT $ACCOUNT accounts | grep $TOKEN_SYMBOL) 
       if [[ -z $CURRENT_BALANCE ]]; then
-          echo "Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
+          echo "$count Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
           echo cleos -u $NODE_URL push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
           cleos -u $NODE_URL push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
       else
           echo "Skipping $ACCOUNT"
       fi 
   done
+
+  echo "Airdrop Complete"
   
   `
   try {
