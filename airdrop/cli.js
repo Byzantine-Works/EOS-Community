@@ -8,7 +8,7 @@ const csv = require("csvtojson");
 const fs = require('fs');
 const genesisSnapshotJson = require("./airdrop-snapshots/genesis-snapshot-fitted.json") // Fitted Genesis Snapshot, or .csv file of daily EOS NewYork Snapshots
 
-const csvFilePath = './airdrop-snapshots/genesis-snapshot.csv';  // UNCOMMENT TO USE GENESIS SNAPSHOT
+// const csvFilePath = './airdrop-snapshots/genesis-snapshot.csv';  // UNCOMMENT TO USE GENESIS SNAPSHOT
 // const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
 
 const init = () => {
@@ -116,29 +116,45 @@ const askQuestions = async () => {
 
 
 
-const snapshotCsvToJson = async (csvFilePath) => {
+const snapshotCsvToJson = async (snapshotMonth) => {
 // const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
+  var csvFilePath;
   if (snapshotMonth === 'Genesis') {
-    const csvFilePath = './airdrop-snapshots/genesis-snapshot.csv'
-  } else if (snapshotMonth === 'October') { 
-    const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
-  }
-
-  if (csvFilePath == './airdrop-snapshots/genesis-snapshot.csv') {
     console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
     return genesisSnapshotJson
-  } else {
-    var snapshotJson = await csv()
-    .fromFile(csvFilePath).then((jsonObj)=>{
-      console.log('Step 2b)) Converting Csv to Json...')
-      return jsonObj
-      // console.log(jsonObj);
-      /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
-    })  
-
-
-    return snapshotJson;
+  } else if (snapshotMonth === 'July') { 
+    csvFilePath = './airdrop-snapshots/20180730_account_snapshot.csv'; // July 30th
+  } else if (snapshotMonth === 'August') { 
+    csvFilePath = './airdrop-snapshots/20180801_account_snapshot.csv'; // August 1st  
+  } else if (snapshotMonth === 'September') { 
+    csvFilePath = './airdrop-snapshots/20180901_account_snapshot.csv'; // September 1st
+  } else if (snapshotMonth === 'October') { 
+    csvFilePath = './airdrop-snapshots/20181001_account_snapshot.csv'; // October 1st
   }
+  var snapshotJson = await csv()
+  .fromFile(csvFilePath).then((jsonObj)=>{
+    console.log(`Step 2b)) Converting Csv to Json for ${snapshotMonth} Snapshot...`)
+    console.log('jsonObj', jsonObj);
+    return jsonObj
+    /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
+  }) 
+  return snapshotJson; 
+
+  // if (csvFilePath == './airdrop-snapshots/genesis-snapshot.csv') {
+  //   console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
+  //   return genesisSnapshotJson
+  // } else {
+  //   var snapshotJson = await csv()
+  //   .fromFile(csvFilePath).then((jsonObj)=>{
+  //     console.log('Step 2b)) Converting Csv to Json...')
+  //     return jsonObj
+  //     // console.log(jsonObj);
+  //     /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
+  //   })  
+
+
+  //   return snapshotJson;
+  // }
 
 } 
 
@@ -355,37 +371,39 @@ const run = async () => {
   init();
   
   /*    Sample Answers (for quick testing) */
-  // const ACCOUNT_NAME= 'junglefoxfox'
-  // const TOKEN_NAME= 'AIRSIX';
-  // const AIRDROP_RATIO= '5';
-  // const MAX_TOKEN_SUPPLY= '1000000';
-  // const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
-  // const MIN_EOS_HELD= '1000';
-  // const MAX_EOS_HELD= '9999999';
-  // const answers = {
-  //     ACCOUNT_NAME,
-  //     TOKEN_NAME,
-  //     AIRDROP_RATIO,
-  //     MAX_TOKEN_SUPPLY,
-  //     INITIAL_TOKEN_SUPPLY,
-  //     MIN_EOS_HELD,
-  //     MAX_EOS_HELD,
-  // }
+  const ACCOUNT_NAME= 'junglefoxfox'
+  const TOKEN_NAME= 'AIRSIX';
+  const MAX_TOKEN_SUPPLY= '1000000';
+  const SNAPSHOT_MONTH= 'October'
+  const MIN_EOS_HELD= '1000';
+  const MAX_EOS_HELD= '9999999';
+  const RATIO_OR_FLAT= 'Airdrop Flat Amount'
+  const AIRDROP_RATIO= '5';
+  const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
+  const answers = {
+      ACCOUNT_NAME,
+      TOKEN_NAME,
+      AIRDROP_RATIO,
+      MAX_TOKEN_SUPPLY,
+      INITIAL_TOKEN_SUPPLY,
+      MIN_EOS_HELD,
+      MAX_EOS_HELD,
+  }
   
-  const answers = await askQuestions();
-  var {
-    ACCOUNT_NAME,
-    TOKEN_NAME,
-    MAX_TOKEN_SUPPLY,
-    SNAPSHOT_MONTH,
-    MIN_EOS_HELD,
-    MAX_EOS_HELD,
-    RATIO_OR_FLAT,
-    AIRDROP_RATIO,
-  } = answers;
-  var INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
-  ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
-  TOKEN_NAME = TOKEN_NAME.toUpperCase();
+  // const answers = await askQuestions();
+  // var {
+  //   ACCOUNT_NAME,
+  //   TOKEN_NAME,
+  //   MAX_TOKEN_SUPPLY,
+  //   SNAPSHOT_MONTH,
+  //   MIN_EOS_HELD,
+  //   MAX_EOS_HELD,
+  //   RATIO_OR_FLAT,
+  //   AIRDROP_RATIO,
+  // } = answers;
+  // var INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
+  // ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
+  // TOKEN_NAME = TOKEN_NAME.toUpperCase();
     
   console.log('\nStep 1)) User Selected Inputs:\n')
   for (var key in answers) {
@@ -393,7 +411,7 @@ const run = async () => {
   } console.log('\n')
 
   /* Price Estimator Portion */
-  const snapshotJson = await snapshotCsvToJson(csvFilePath) // Csv to Json
+  const snapshotJson = await snapshotCsvToJson(SNAPSHOT_MONTH) // Csv to Json
   const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // Filtering Accounts by user params
   const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData.length) // Price Estimate Calculations
   successPrice(PRICE_ESTIMATE);
