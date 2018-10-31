@@ -265,7 +265,7 @@ const generateAirdropSh = (airdropParams) => {
 
 const successFinal = (isCsvGenerated, isShGenerated) => {
   if (isCsvGenerated && isShGenerated) {  
-    console.log(chalk.red.bold('\n Airdrop Generator complete. Once your account is ready with sufficient RAM bought and CPU/Net Staked, please run ./airdrop.sh'));
+    console.log(chalk.red.bold('\n Airdrop Generator complete. Once your account is ready with sufficient RAM bought and CPU/Net Staked, unlock your cleos wallet and run ./airdrop.sh'));
   }
 }
 
@@ -344,7 +344,8 @@ const run = async () => {
     'airdropRatio': AIRDROP_RATIO,
     'maxTokenSupply': MAX_TOKEN_SUPPLY,
     'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
-    'nodeUrl': "http://193.93.219.219:8888/",
+    // 'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
+    'nodeUrl': "http://eos-bp.bitfinex.com:8888/",
     'contractDir': "./eosio.token",
   }
   const formattedSnapshotData = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
