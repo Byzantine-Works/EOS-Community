@@ -320,7 +320,7 @@ const run = async () => {
   // }
   
   const answers = await askQuestions();
-  const {
+  var {
     ACCOUNT_NAME,
     TOKEN_NAME,
     AIRDROP_RATIO,
@@ -328,7 +328,7 @@ const run = async () => {
     MIN_EOS_HELD,
     MAX_EOS_HELD,
   } = answers;
-  const INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
+  var INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
   ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
   TOKEN_NAME = TOKEN_NAME.toUpperCase();
     
