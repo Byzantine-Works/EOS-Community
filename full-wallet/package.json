@@ -11,6 +11,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.6.1",
+    "async-es": "^2.6.1",
     "axios": "^0.18.0",
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",

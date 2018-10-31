@@ -7,11 +7,11 @@ const RamCost = props => {
     let dataDisplay = [];
     let colours = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff', '#000000'];
     if (props.bill) {
-        const total = Object.keys(props.bill).map(x => { return props.bill[x].ram }).reduce((a, b) => { a = a + b; return a; })
+        const total = Object.keys(props.bill).map(x => { return Math.abs(props.bill[x].ram) }).reduce((a, b) => { a = a + b; return a; })
 
         let i = 0;
         for (let action in props.bill) {
-            dataDisplay.push(action.toString() + ':' + props.bill[action].ram.toString());
+            dataDisplay.push(action + ':' + props.bill[action].ram);
 
             dt.push({
                 label: action,
@@ -36,19 +36,21 @@ const RamCost = props => {
         animation: {
             onComplete: function () {
                 var chartInstance = this.chart,
-                    ctx = chartInstance.ctx;
+                ctx = chartInstance.ctx;
                 ctx.fillStyle = 'white';
                 ctx.textAlign = 'right';
                 ctx.textBaseline = 'bottom';
                 ctx.font = 'bold 70% Courier';
                 ctx.lineWidth = 1;
                 ctx.globalCompositeOperation = "destination-over";
-                
+
                 this.data.datasets.forEach(function (dataset, i) {
                     var meta = chartInstance.controller.getDatasetMeta(i);
                     meta.data.forEach(function (bar, index) {
                         var data = dataDisplay[i];
-                        if (dataset.data[index] > 0) ctx.fillText(data, bar._model.x-10, bar._model.y-10);
+                        if (dataset.data[index] > 0) ctx.fillText(data, bar._model.x - 10, bar._model.y - 10);
+                        else if (dataset.data[index] < 0) ctx.fillText(data, bar._model.x + 80, bar._model.y -10 );
+
                     });
                 });
             }

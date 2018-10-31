@@ -115,11 +115,6 @@ class Dashboard extends Component {
         await this.props.updateState(["deploymentNet", (wasmResp.processed.receipt.net_usage_words + abiResp.processed.receipt.net_usage_words) * 8]);
         this.props.updateState(["progress", 39]);
 
-
-
-        console.log("abiResp:", abiResp);
-        console.log("wasm response: ", wasmResp);
-
     }
 
     async pushTransaction() {
@@ -196,17 +191,17 @@ class Dashboard extends Component {
         //   };
 
         try {
-        respTransac = await eos.transfer({
-            from: text,
-            to: 'eoseos',
-            quantity: '0.0001 EOS',
-            memo: 'first transaction'
-        });
-        console.log("respTransac: ", respTransac);
+            respTransac = await eos.transfer({
+                from: text,
+                to: 'eoseos',
+                quantity: '0.0001 EOS',
+                memo: 'first transaction'
+            });
+            console.log("respTransac: ", respTransac);
 
-    } catch(err) {
-        console.log(JSON.parse(err));
-    }
+        } catch (err) {
+            console.log(JSON.parse(err));
+        }
         this.props.updateState(["progress", 19])
         ramAfter = await eos.getAccount(text);
         this.props.updateState(["progress", 23])
@@ -252,13 +247,13 @@ class Dashboard extends Component {
     }
 
     async estimate() {
-        if(this.props.wasm && this.props.abi) {
+        if (this.props.wasm && this.props.abi) {
             this.props.updateState(["loading", true]);
             let account = await this.pushTransaction();
             await this.deployContract(account);
             await this.props.estimateContract(account);
         }
-     
+
         // this.props.updateState(["progress", this.props.progress+1])
         // this.props.updateState(["bill", bill]);
         // await this.generateCsv(bill); 
@@ -305,7 +300,7 @@ class Dashboard extends Component {
         let actionsCost = [
             <span>CPU: {(this.props.cpuTotal) / 1000} ms ({(this.props.cpuTotal * this.props.cpuRate).toFixed(4)} EOS)<CpuCost style={{ display: 'inline' }} cpu={this.props.cpu} bill={this.props.bill} height={100}></CpuCost></span>,
             <span>Net: {(this.props.netTotal) / 1000} KB ({(this.props.netTotal * this.props.netRate).toFixed(4)} EOS)<NetCost net={this.props.net} bill={this.props.bill}></NetCost></span>,
-            <span>Ram: {(this.props.ramTotal) / 1000} KB ({(this.props.ramTotal * this.props.ramPrice).toFixed(4)} EOS)<RamCost bill={this.props.bill} ram={this.props.ram}></RamCost></span>
+            <span>Ram: {((this.props.ramTotal) / 1000).toFixed(3)} KB ({(this.props.ramTotal * this.props.ramPrice).toFixed(4)} EOS)<RamCost bill={this.props.bill} ram={this.props.ram}></RamCost></span>
         ];
         const override = css`
         position: absolute;
@@ -349,7 +344,7 @@ class Dashboard extends Component {
                     <div className="Params">
                         <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.contractName + ".abi" : "Load your ABI file"}<input id="abi" type="file" accept=".json, .abi" placeholder="abi" onChange={this.readFile}></input></label><br />
                         <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.contractName + ".wasm" : "Load your WASM file"}<input id="wasm" type="file" accept=".wasm" placeholder="wasm" onChange={this.readFile}></input></label><br />
-                        <input id="accountInput" onChange={this.props.loadDataAccount} placeholder="Compare to your account"></input>
+                        {/* <input id="accountInput" onChange={this.props.loadDataAccount} placeholder="Compare to your account"></input> */}
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
                         {progressCir}
 

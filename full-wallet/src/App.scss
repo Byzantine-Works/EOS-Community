@@ -28,9 +28,9 @@ body {
 
 img {
     position: relative;
-    margin-left: -15%;
-    margin-top: -16%;
-    width: 85%;
+    margin-left: 5%;
+    margin-top: -24%;
+    width: 100%;
 }
 
 .typedContainer{
@@ -110,15 +110,15 @@ img {
 .ActionsCost {
     position: relative;
     padding: 15px;
-    margin-top: 35px;
+    margin-top: 15px;
     background-color: #152c3d;
-    border-radius: 8px;
+    border-radius: 10px;
     color: white;
     font-family: Courier;
     float: right;
     right: 5%;
     width: 65%;
-    height: 410px;
+    height: 385px;
 }
 
 .CpuCostContainer {
@@ -143,25 +143,40 @@ img {
 }
 
 
+// Contract Bill
 
 .ContractBill{
     position: absolute;
     float: left;
     color: white;
-    margin-top: 510px;
+    margin-top: 490px;
     left: 3%;
     padding: 25px;
     background-color: #152c3d;
     border-radius: 10px;
-    height: 550px;
-    width: 17.5%;
+    height: 630px;
+    width: 310px;
 }
+
+.RTContainer {
+    position: relative;
+    border: solid;
+    border-color: white;
+    border-radius: 5px;
+    border-width: 1px;
+    padding: 5px;
+    margin-top: 20px;
+    width: 70%;
+}
+
+
+//Inputs box
 
 .Params {
     position: absolute;
     padding: 5px;
     background-color: #152c3d;
-    margin-top: 35px;
+    margin-top: 15px;
     color: white;
     font-family: Courier;
     font-size: 1vw;
