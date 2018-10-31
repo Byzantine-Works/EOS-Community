@@ -46,7 +46,7 @@ const askQuestions = async () => {
         name: "SNAPSHOT_MONTH",
         type: "list",
         message: "Which Snapshot wouldyou like to use?:",
-        choices: ["Genesis", "September", "October"],
+        choices: ["Genesis", "July", "August", "September", "October"],
       },
       {
         type: "list",
@@ -116,9 +116,14 @@ const askQuestions = async () => {
 
 
 
-
-
 const snapshotCsvToJson = async (csvFilePath) => {
+// const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
+  if (snapshotMonth === 'Genesis') {
+    const csvFilePath = './airdrop-snapshots/genesis-snapshot.csv'
+  } else if (snapshotMonth === 'October') { 
+    const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
+  }
+
   if (csvFilePath == './airdrop-snapshots/genesis-snapshot.csv') {
     console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
     return genesisSnapshotJson
@@ -130,6 +135,8 @@ const snapshotCsvToJson = async (csvFilePath) => {
       // console.log(jsonObj);
       /* [{a:"1", b:"2", c:"3"}, {a:"4", b:"5". c:"6"}]*/ 
     })  
+
+
     return snapshotJson;
   }
 
