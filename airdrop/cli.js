@@ -63,6 +63,15 @@ const askQuestions = () => {
   return inquirer.prompt(questions);
 };
 
+// Original
+// 1) Account Name
+// 2) Token Name
+// 3) Airdrop Ratio
+// 4) Max Token Supply 
+// 5) Min Eos Held 
+// 6) Max Eos Held 
+
+
 const snapshotCsvToJson = async (csvFilePath) => {
   if (csvFilePath == './airdrop-snapshots/genesis-snapshot.csv') {
     console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
@@ -320,6 +329,8 @@ const run = async () => {
     MAX_EOS_HELD,
   } = answers;
   const INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
+  ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
+  TOKEN_NAME = TOKEN_NAME.toUpperCase();
     
   console.log('\nStep 1)) User Selected Inputs:\n')
   for (var key in answers) {
@@ -334,13 +345,13 @@ const run = async () => {
   
   /* Airdrop Portion */
   var AIRDROP_PARAMS = {
-    'accountName': ACCOUNT_NAME.toLowerCase(),
-    'tokenName': TOKEN_NAME.toUpperCase(),
+    'accountName': ACCOUNT_NAME,
+    'tokenName': TOKEN_NAME,
     'airdropRatio': AIRDROP_RATIO,
     'maxTokenSupply': MAX_TOKEN_SUPPLY,
     'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
-    // 'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
-    'nodeUrl': "http://eos-bp.bitfinex.com:8888/",
+    'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
+    // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/",
     'contractDir': "./eosio.token",
   }
   const formattedSnapshotData = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
