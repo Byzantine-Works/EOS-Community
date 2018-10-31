@@ -118,19 +118,19 @@ img {
     float: right;
     right: 5%;
     width: 65%;
-    height: 385px;
+    height: 485px;
 }
 
 .CpuCostContainer {
     position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
     margin-top: 15px;
     height: 10%;
 }
 
 .NetCostContainer {
     position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
     margin-top: 15px;
     height: 10%;
 }
@@ -149,7 +149,7 @@ img {
     position: absolute;
     float: left;
     color: white;
-    margin-top: 490px;
+    top: 15px;
     left: 3%;
     padding: 25px;
     background-color: #152c3d;
@@ -173,10 +173,11 @@ img {
 //Inputs box
 
 .Params {
-    position: absolute;
+    position: relative;
+    display: inline-block;
     padding: 5px;
     background-color: #152c3d;
-    margin-top: 15px;
+    margin-top: 10px;
     color: white;
     font-family: Courier;
     font-size: 1vw;
@@ -187,6 +188,8 @@ img {
     border-radius: 10px;
     text-align: center;
 }
+
+
 
 #estimate {
     position: relative;

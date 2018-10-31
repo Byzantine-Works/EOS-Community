@@ -341,7 +341,10 @@ class Dashboard extends Component {
                             cursorChar={'_'}
                         /></span>}
 
-                    <div className="Params">
+                    {this.props.csvData ? <ContractBill csvData={this.props.csvData} totalDeployment={totalDeployment} netRate={this.props.netRate} ramPrice={this.props.ramPrice} cpuRate={this.props.cpuRate}></ContractBill> : null}
+                    {this.props.csvData ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
+
+                    <div className="Params" style={this.props.csvData ? {marginTop:'750px'}: null}>
                         <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.contractName + ".abi" : "Load your ABI file"}<input id="abi" type="file" accept=".json, .abi" placeholder="abi" onChange={this.readFile}></input></label><br />
                         <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.contractName + ".wasm" : "Load your WASM file"}<input id="wasm" type="file" accept=".wasm" placeholder="wasm" onChange={this.readFile}></input></label><br />
                         {/* <input id="accountInput" onChange={this.props.loadDataAccount} placeholder="Compare to your account"></input> */}
@@ -349,9 +352,6 @@ class Dashboard extends Component {
                         {progressCir}
 
                     </div>
-                    {this.props.csvData ? <ContractBill csvData={this.props.csvData} totalDeployment={totalDeployment} netRate={this.props.netRate} ramPrice={this.props.ramPrice} cpuRate={this.props.cpuRate}></ContractBill> : null}
-
-                    {this.props.csvData ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
                     {this.props.account && this.props.loading ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}
                 </div>
             </div>
