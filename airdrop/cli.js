@@ -13,7 +13,7 @@ const csvFilePath = './airdrop-snapshots/genesis-snapshot.csv';  // UNCOMMENT TO
 
 const init = () => {
     console.log(
-        chalk.blue(
+        chalk.red.bold(
             figlet.textSync("Airdrop Price Calculator", {
                 font: "Standard",
                 horizontalLayout: "default",
@@ -80,7 +80,6 @@ const snapshotCsvToJson = async (csvFilePath) => {
 
 } 
 
-
 const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   // Filter through accounts that fit input parameters
   var snapshotCopy = snapshot.slice(0);
@@ -106,8 +105,6 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   // console.log(filtered)
   return filtered
 }
-
-
 
 const getRamPrice = async () => {
   var RAM_PRICE = await axios.get('http://api.byzanti.ne:8902/getRamPrice?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N')
@@ -168,7 +165,6 @@ const successPrice = (priceEstimate) => {
 
   console.log(chalk.blue(`The estimated cost of the Airdrop with these settings will be: ` + chalk.bold.red('$'+priceEstimate.priceEstimate_Usd+' USD\n')));
 };
-
 
 const formatOutput = (filtered, airdropRatio, precision) => {
   var arr = []; 
@@ -269,7 +265,6 @@ const successFinal = (isCsvGenerated, isShGenerated) => {
   }
 }
 
-
 const runShell = () => {
   shell.echo('\nrunShell Initialized');
   
@@ -339,8 +334,8 @@ const run = async () => {
   
   /* Airdrop Portion */
   var AIRDROP_PARAMS = {
-    'accountName': ACCOUNT_NAME,
-    'tokenName': TOKEN_NAME,
+    'accountName': ACCOUNT_NAME.toLowerCase(),
+    'tokenName': TOKEN_NAME.toUpperCase(),
     'airdropRatio': AIRDROP_RATIO,
     'maxTokenSupply': MAX_TOKEN_SUPPLY,
     'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
