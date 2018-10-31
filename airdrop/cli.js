@@ -25,7 +25,7 @@ const init = () => {
   console.log('Airdrop Price Calculator initialzed...\n')
 };
 
-const askQuestions = () => {
+const askQuestions = async () => {
   const questions = [
       {
         name: "ACCOUNT_NAME",
@@ -38,31 +38,61 @@ const askQuestions = () => {
           message: "Enter the name of Token?"
       },
       {
-        name: "AIRDROP_RATIO",
-        type: "input",
-        message: "Airdrop Ratio - How many tokens to give per 1 EOS? (Enter a Number or Decimal):"
-      },
-      {
         name: "MAX_TOKEN_SUPPLY",
         type: "input",
         message: "What is the Maximum Token Supply? (Enter a Number):"
       },
       {
+        name: "SNAPSHOT_MONTH",
+        type: "list",
+        message: "Which Snapshot wouldyou like to use?:",
+        choices: ["Genesis", "September", "October"],
+      },
+      {
         type: "list",
         name: "MIN_EOS_HELD",
-        message: "What is the Minimum of number of EOS held for accounts you want to Airdrop to?",
+        message: "Minimum of number of EOS held for accounts you want to Airdrop to?",
         choices: ["0", "1", "10", "100", "1000", "10000"],
       },
       {
         type: "list",
         name: "MAX_EOS_HELD",
-        message: "What is the Maximum of number of EOS held for accounts you want to Airdrop to?",
+        message: "Maximum of number of EOS held for accounts you want to Airdrop to?",
         choices: ["No Max", "1", "10", "100", "1000", "10000", "100000", "1000000"],
-      }
+      },
+      {
+        name: "RATIO_OR_FLAT",
+        type: "list",
+        message: "Would you like an Airdrop Ratio or an Equal Flat Amount to all users",
+        choices: ["Airdrop Ratio", "Airdrop Flat Amount"],
+      },
   ];
-  return inquirer.prompt(questions);
-};
+  const questions2_ratio = [
+    {
+      name: "AIRDROP_RATIO",
+      type: "input",
+      message: "Airdrop Ratio - How many tokens to give per 1 EOS? (Enter a Number or Decimal):"
+    },
+  ];
+  const questions2_flat = [
+    {
+      name: "AIRDROP_RATIO",
+      type: "input",
+      message: "Airdrop Flat Amount - How many tokens to give every user? (Enter a Number or Decimal):"
+    },
+  ];
 
+  var answers1 = await inquirer.prompt(questions);
+  
+  if (answers1.RATIO_OR_FLAT === 'Airdrop Ratio') {
+    var answers2 = await inquirer.prompt(questions2_ratio);
+  } else if (answers1.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
+    var answers2 = await inquirer.prompt(questions2_flat);
+  }
+  for (var key in answers2) {answers1[key] = answers2[key];}
+  // console.log('answers1', answers1)
+  return answers1
+  
 // Original
 // 1) Account Name
 // 2) Token Name
@@ -70,6 +100,22 @@ const askQuestions = () => {
 // 4) Max Token Supply 
 // 5) Min Eos Held 
 // 6) Max Eos Held 
+
+// New 
+// 1) Account Name 
+// 2) Token Name 
+// 3) Max Token Supply
+// 4) Which Snapshot (list)
+// 5) Min Eos Held 
+// 6) Max Eos Held 
+
+// 7) Airdrop Ratio or Flat Amount (list)
+//   7a) If Airdrop - Ratio? (input)
+//   7b) If Flat Amount - Amount? (input)
+};
+
+
+
 
 
 const snapshotCsvToJson = async (csvFilePath) => {
@@ -323,10 +369,12 @@ const run = async () => {
   var {
     ACCOUNT_NAME,
     TOKEN_NAME,
-    AIRDROP_RATIO,
     MAX_TOKEN_SUPPLY,
+    SNAPSHOT_MONTH,
     MIN_EOS_HELD,
     MAX_EOS_HELD,
+    RATIO_OR_FLAT,
+    AIRDROP_RATIO,
   } = answers;
   var INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
   ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
@@ -347,11 +395,13 @@ const run = async () => {
   var AIRDROP_PARAMS = {
     'accountName': ACCOUNT_NAME,
     'tokenName': TOKEN_NAME,
-    'airdropRatio': AIRDROP_RATIO,
     'maxTokenSupply': MAX_TOKEN_SUPPLY,
+    'snapshotMonth': SNAPSHOT_MONTH,
+    'ratioOrFlat': RATIO_OR_FLAT,
+    'airdropRatio': AIRDROP_RATIO,
     'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
     'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
-    // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/",
+    // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/", // Bitfinex Testnet
     'contractDir': "./eosio.token",
   }
   const formattedSnapshotData = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
