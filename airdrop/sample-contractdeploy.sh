@@ -35,12 +35,14 @@ else
     echo "Token already issued to \"$ISSUER_ACCOUNT\" -- Skipping issue"
 fi
 
+count=0
 for line in $(cat $SNAPSHOT_FILE); do
+    ((count++))
     ACCOUNT=$(echo $line | tr "," "\n" | head -1)
     AMOUNT=$(echo $line | tr "," "\n" | tail -1)
     CURRENT_BALANCE=$(cleos -u $NODE_URL get table $ISSUER_ACCOUNT $ACCOUNT accounts | grep $TOKEN_SYMBOL) 
     if [[ -z $CURRENT_BALANCE ]]; then
-        echo "Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
+        echo "$count Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
         cleos -u $NODE_URL push action $ISSUER_ACCOUNT transfer "[\"$ISSUER_ACCOUNT\", \"$ACCOUNT\", \"$AMOUNT $TOKEN_SYMBOL\", \"airdrop\"]" -p $ISSUER_ACCOUNT@active
     else
         echo "Skipping $ACCOUNT"
