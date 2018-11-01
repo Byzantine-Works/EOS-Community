@@ -5,6 +5,7 @@ import Eos from 'eosjs';
 import EosApi from 'eosjs-api';
 import lodash from 'lodash';
 import async from 'async-es';
+import DataTypes from './datatypes.js';
 
 // import fetch from 'node-fetch';
 // import { TextDecoder, TextEncoder } from 'text-encoding';
@@ -43,7 +44,7 @@ const eos = Eos({
 
 
 var myBuffer = [];
-var str = 'test';
+var str = 'EOS7AyWifeevBwdZamViPcboQC8k9nT86q6merJELVGBhq35PU7J6';
 var buffer = new Buffer(str, 'utf16le');
 for (var i = 0; i < buffer.length; i++) {
     myBuffer.push(buffer[i]);
@@ -135,26 +136,14 @@ export const estimateContract = (account) => {
         let abi = getState().abi;
         let bill = {};
         let actions = [...abi.actions];
-        if (lodash.find(actions, ['name', 'withdraw']) === undefined) actions.push({ name: "withdraw" });
-        if (lodash.find(actions, ['name', 'deposit']) === undefined) actions.push({ name: "deposit" });
-        let goal = actions.length;
-        let count = 0;
+        // if (lodash.find(actions, ['name', 'withdraw']) === undefined) actions.push({ name: "withdraw" });
+        // if (lodash.find(actions, ['name', 'deposit']) === undefined) actions.push({ name: "deposit" });
+
         dispatch(updateState(["progress", 41]));
 
         const fetch = async (action, callback) => {
-            let dataTypes = {
-                symbol: 'EOS',
-                account_name: account,
-                asset: '0.0001 EOS',
-                extended_asset: '0.0001 EOS@' + account,
-                uint64: 1,
-                string: 'test',
-                name: 'victor',
-                permission_level: 'active',
-                bytes: myBuffer,
-                int64: 1,
-                bool: 0
-            }
+    
+            let dataTypes = new DataTypes(account, buffer);
         
             let acts = [];
             let data = {};

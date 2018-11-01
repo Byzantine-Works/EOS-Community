@@ -18,7 +18,15 @@ const ContractBill = props => {
         return a;
     });
 
-    let totalRT = lodash.find(props.csvData, ["action", "Total runtime cost"])
+    let totalRT = lodash.find(props.csvData, ["action", "Total runtime cost"]);
+
+    let sucActions = props.csvData.map(el=>{return el.action});
+
+    props.abi.actions.forEach(el => {
+        if(!sucActions.includes(el.name)) entries.push(<span key={el.name} style={{display:"inline-block", width: "100%", textAlign: "right", marginTop: "15px"}}>{el.name}: N/A</span>)
+
+    })
+    
 
 
 
@@ -33,13 +41,13 @@ const ContractBill = props => {
             </div>
             
             <div style={{display:"inline-block", left:"5%", width: "100%", marginTop: "20px", marginBottom: "20px", height:"0px", border:"solid white 1px",borderLeft: 'none', borderRight: 'none'}}></div>
-            Total runtime cost: {totalRun.toFixed(4)} EOS
+            Total Runtime cost: {totalRun.toFixed(4)} EOS
 
             <div style={{display:"inline-block", left:"5%", width: "100%", marginTop: "20px", marginBottom: "20px", height:"0px", border:"solid white 1px",borderLeft: 'none', borderRight: 'none'}}></div>            
-            Design cost: {(props.totalDeployment).toFixed(4)} EOS
+            Total Design cost: {(props.totalDeployment).toFixed(4)} EOS
             
             <div style={{display:"inline-block", left:"5%", width: "100%", marginTop: "20px", marginBottom: "20px", height:"0px", border:"solid white 1px",borderLeft: 'none', borderRight: 'none'}}></div>            
-            Total cost: {(totalRun+props.totalDeployment).toFixed(4)} EOS
+            Overall cost: {(totalRun+props.totalDeployment).toFixed(4)} EOS
             
             {props.csvData ? <CSVLink data={props.csvData} target="_blank" ><div className="LinkContainer">Download csv</div></CSVLink> : null} 
 

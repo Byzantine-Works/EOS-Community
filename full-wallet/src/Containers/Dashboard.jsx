@@ -11,7 +11,7 @@ import abi from './exchange.abi.json';
 import CpuCost from '../Components/CpuCost.jsx';
 import RamCost from '../Components/RamCost.jsx';
 import NetCost from '../Components/NetCost.jsx';
-import Loader from 'react-spinners/GridLoader';
+import Message from '../Components/Message.jsx';
 import { css } from 'react-emotion';
 import Typed from 'react-typed';
 import CircularProgressbar from 'react-circular-progressbar';
@@ -168,47 +168,49 @@ class Dashboard extends Component {
         console.log(accCreate)
         this.props.updateState(["progress", 5])
 
-        let ramBefore = await eos.getAccount(text);
-        this.props.updateState(["progress", 8])
-        let respTransac = await eos.transfer({
-            from: 'victor',
-            to: text,
-            quantity: '0.0002 EOS',
-            memo: 'first transaction'
-        });
-        await console.log("deposit is Dashboard :", respTransac)
-        let ramAfter = await eos.getAccount(text);
-        this.props.updateState(["progress", 12])
-        console.log(respTransac)
+        // let ramBefore = await eos.getAccount(text);
+        // this.props.updateState(["progress", 8])
+        // let respTransac = await eos.transfer({
+        //     from: 'victor',
+        //     to: text,
+        //     quantity: '0.0002 EOS',
+        //     memo: 'first transaction'
+        // });
+        // await console.log("deposit is Dashboard :", respTransac)
+        // let ramAfter = await eos.getAccount(text);
+        // this.props.updateState(["progress", 12])
+        // console.log(respTransac)
 
-        this.props.updateState(["deposit", { ramBefore: ramBefore, ramAfter: ramAfter, respTransac: respTransac }]);
+        // this.props.updateState(["deposit", { ramBefore: ramBefore, ramAfter: ramAfter, respTransac: respTransac }]);
 
-        ramBefore = await eos.getAccount(text);
-        this.props.updateState(["progress", 16])
+        // ramBefore = await eos.getAccount(text);
+        // this.props.updateState(["progress", 16])
 
-        // let options = {
-        //     authorization: text+'@active',
-        //   };
+        // // let options = {
+        // //     authorization: text+'@active',
+        // //   };
 
-        try {
-            respTransac = await eos.transfer({
-                from: text,
-                to: 'eoseos',
-                quantity: '0.0001 EOS',
-                memo: 'first transaction'
-            });
-            console.log("respTransac: ", respTransac);
+        // try {
+        //     respTransac = await eos.transfer({
+        //         from: text,
+        //         to: 'eoseos',
+        //         quantity: '0.0001 EOS',
+        //         memo: 'first transaction'
+        //     });
+        //     console.log("respTransac: ", respTransac);
 
-        } catch (err) {
-            console.log(JSON.parse(err));
-        }
-        this.props.updateState(["progress", 19])
-        ramAfter = await eos.getAccount(text);
-        this.props.updateState(["progress", 23])
-        console.log("ramAfter: ", ramAfter);
+        // } catch (err) {
+        //     console.log(JSON.parse(err));
+        // }
+        // this.props.updateState(["progress", 19])
+        // ramAfter = await eos.getAccount(text);
+        // this.props.updateState(["progress", 23])
+        // console.log("ramAfter: ", ramAfter);
 
 
-        this.props.updateState(["withdraw", { ramBefore: ramBefore, ramAfter: ramAfter, respTransac: respTransac }]);
+        // this.props.updateState(["withdraw", { ramBefore: ramBefore, ramAfter: ramAfter, respTransac: respTransac }]);
+
+
         this.props.getResourcesPrice();
         this.props.updateState(["progress", 25]);
 
@@ -335,13 +337,13 @@ class Dashboard extends Component {
 
                     {this.props.loading ? null :
                         <span className="typedContainer"><Typed
-                            strings={['Estimate the cost of your EOS smart contract before deploying it:', '1. Load the ABI file of your smart contract. <br/><br/> 2. Load the WASM file after compiling it. <br/><br/> 3. Enter an account name to check how much EOS are already staked. <br/><br/> 4. Click estimate. Be patient this could take up to 2 minutes.']}
+                            strings={['Estimate the cost of your EOS smart contract before deploying it:', '1. Load the ABI file of a smart contract. <br/><br/> 2. Load the WASM file, the compiled version of the contract. <br/><br/> 3. Click estimate. Be patient this could take up to 2 minutes.']}
                             typeSpeed={30}
                             shuffle={true}
                             cursorChar={'_'}
                         /></span>}
 
-                    {this.props.csvData ? <ContractBill csvData={this.props.csvData} totalDeployment={totalDeployment} netRate={this.props.netRate} ramPrice={this.props.ramPrice} cpuRate={this.props.cpuRate}></ContractBill> : null}
+                    {this.props.csvData ? <ContractBill csvData={this.props.csvData} totalDeployment={totalDeployment} netRate={this.props.netRate} ramPrice={this.props.ramPrice} cpuRate={this.props.cpuRate} abi={this.props.abi}></ContractBill> : null}
                     {this.props.csvData ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
 
                     <div className="Params" style={this.props.csvData ? {marginTop:'750px'}: null}>
@@ -350,9 +352,11 @@ class Dashboard extends Component {
                         {/* <input id="accountInput" onChange={this.props.loadDataAccount} placeholder="Compare to your account"></input> */}
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
                         {progressCir}
-
                     </div>
+
                     {this.props.account && this.props.loading ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}
+                    {this.props.csvData ? <Message/> : null}
+                    
                 </div>
             </div>
 
