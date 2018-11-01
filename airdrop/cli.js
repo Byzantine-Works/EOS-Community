@@ -106,8 +106,7 @@ const snapshotCsvToJson = async (snapshotMonth) => {
     console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
     return genesisSnapshotJson
   } else if (snapshotMonth === 'Jungle Testnet') { 
-    return genesisSnapshotJson
-    // csvFilePath = './airdrop-snapshots/20180730_account_snapshot.csv'; // July 30th
+    return genesisSnapshotJson // Genesis until Up-to-date Jungle snapshot located
   } else if (snapshotMonth === 'July') { 
     csvFilePath = './airdrop-snapshots/20180730_account_snapshot.csv'; // July 30th
   } else if (snapshotMonth === 'August') { 
@@ -277,6 +276,7 @@ const generateAirdropSh = (airdropParams) => {
   AIRDROP_RATIO="${airdropParams.airdropRatio}"
   MAX_TOKEN_SUPPLY="${airdropParams.maxTokenSupply}.0000"
   INITIAL_TOKEN_SUPPLY="${airdropParams.initialTokenSupply}.0000"
+  NUMBER_OF_ACCOUNTS="${airdropParams.numberOfAccounts}"
   NODE_URL="${airdropParams.nodeUrl}"
   CONTRACT_DIR="${airdropParams.contractDir}"
   SNAPSHOT_FILE="airdrop.csv"
@@ -312,11 +312,11 @@ const generateAirdropSh = (airdropParams) => {
       AMOUNT=$(echo $line | tr "," "\\n" | tail -1)
       CURRENT_BALANCE=$(cleos -u $NODE_URL get table $ISSUER_ACCOUNT $ACCOUNT accounts | grep $TOKEN_SYMBOL) 
       if [[ -z $CURRENT_BALANCE ]]; then
-          echo "$count Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
+          echo "$count/$NUMBER_OF_ACCOUNTS Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
           echo cleos -u $NODE_URL push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
           cleos -u $NODE_URL push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
       else
-          echo "Skipping $ACCOUNT"
+          echo "$count Skipping $ACCOUNT"
       fi 
   done
 
@@ -424,6 +424,7 @@ const run = async () => {
     'ratioOrFlat': RATIO_OR_FLAT,
     'airdropRatio': AIRDROP_RATIO,
     'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
+    'numberOfAccounts':filteredSnapshotData.length,
     'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
     // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/", // Bitfinex Testnet
     'contractDir': "./eosio.token",
