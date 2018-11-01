@@ -169,6 +169,22 @@ const getRamPrice = async () => {
   // console.log("Current Ram Price Is: ", RAM_PRICE)
   var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
   var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
+
+  
+  // Staking Values CPU
+  // 1 EOS = 8916.9603 microseconds - Estimate 
+  // 650 microseconds = 0.07289480 EOS Average
+  // 2000 microseconds = 0.22429168 EOS (Average After High Outliers)
+  // 12000 microeconds = 0.22429168 EOS High End
+  var cpuCostPerAccount = 0.22429168 // EOS
+  var cpuStakeEstimate_EOS = numberOfAccounts * cpuCostPerAccount
+  cpuStakeEstimate_EOS = Math.floor(cpuStakeEstimate_EOS * 100) / 100;    // Truncating to 2 digits
+
+  // Bandwidth 
+  // 66~ Bytes per account = 0.00003217 EOS 
+  var netCostPerAccount = 0.00003217 // EOS
+  var netStakeEstimate_EOS = numberOfAccounts * netCostPerAccount
+  netStakeEstimate_EOS = Math.floor(netStakeEstimate_EOS * 100) / 100;    // Truncating to 2 digits
   
   // var numberOfAccounts = filteredSnapshotData.length         // 132192 Estimated based on genesis for now
   var ramPrice_EosPerByte = 0.11381643/1000                  // 0.11381643 EOS/kb for now
@@ -188,6 +204,8 @@ const getRamPrice = async () => {
   var priceEstimate = {
     'numberOfAccounts': numberOfAccounts,
     'ramRequiredKb': ramRequiredKb,
+    'cpuStakeEstimate_EOS': cpuStakeEstimate_EOS,
+    'netStakeEstimate_EOS': netStakeEstimate_EOS,
     'priceEstimate_Eos': priceEstimate_Eos,
     'priceEstimate_Usd': priceEstimate_Usd,
   }
@@ -200,6 +218,8 @@ const successPrice = (priceEstimate) => {
     #################################
     Number of Accounts: ${priceEstimate.numberOfAccounts}       
     RAM Required (kb): ${priceEstimate.ramRequiredKb}     
+    CPU-Stake Estimate EOS: ${priceEstimate.cpuStakeEstimate_EOS}    
+    NET-Stake Estimate EOS: ${priceEstimate.netStakeEstimate_EOS}    
     Price Estimate EOS: ${priceEstimate.priceEstimate_Eos}    
     Price Estimate USD: $${priceEstimate.priceEstimate_Usd}    
     #################################` + '\n'))
