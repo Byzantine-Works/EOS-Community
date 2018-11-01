@@ -43,7 +43,7 @@ const askQuestions = async () => {
         name: "SNAPSHOT_MONTH",
         type: "list",
         message: "Which Snapshot wouldyou like to use?:",
-        choices: ["Genesis", "July", "August", "September", "October", "November"],
+        choices: ["Genesis", "Jungle Testnet", "July", "August", "September", "October", "November"],
       },
       {
         type: "list",
@@ -90,6 +90,10 @@ const askQuestions = async () => {
   for (var key in answers2) {
     answers1[key] = answers2[key];
   }
+  // Adding Default values
+  // if (answers1['ACCOUNT_NAME'] = '') {answers1['ACCOUNT_NAME']='junglefoxfox';} // Default to junglefoxfox test account
+  // if (answers1['TOKEN_NAME'] = '') {answers1['TOKEN_NAME']='TESTA';} // Default to test coin symbol
+  // if (answers1['MAX_TOKEN_SUPPLY'] = '') {answers1['MAX_TOKEN_SUPPLY']='1000000000';} // Default to 1 Billion
 
   // console.log('answers1', answers1)
   return answers1
@@ -101,6 +105,9 @@ const snapshotCsvToJson = async (snapshotMonth) => {
   if (snapshotMonth === 'Genesis') {
     console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
     return genesisSnapshotJson
+  } else if (snapshotMonth === 'Jungle Testnet') { 
+    return genesisSnapshotJson
+    // csvFilePath = './airdrop-snapshots/20180730_account_snapshot.csv'; // July 30th
   } else if (snapshotMonth === 'July') { 
     csvFilePath = './airdrop-snapshots/20180730_account_snapshot.csv'; // July 30th
   } else if (snapshotMonth === 'August') { 
@@ -173,12 +180,15 @@ const getRamPrice = async () => {
   
   // Staking Values CPU
   // 1 EOS = 8916.9603 microseconds - Estimate 
-  // 650 microseconds = 0.07289480 EOS Average
-  // 2000 microseconds = 0.22429168 EOS (Average After High Outliers)
-  // 12000 microeconds = 0.22429168 EOS High End
-  var cpuCostPerAccount = 0.22429168 // EOS
-  var cpuStakeEstimate_EOS = numberOfAccounts * cpuCostPerAccount
-  cpuStakeEstimate_EOS = Math.floor(cpuStakeEstimate_EOS * 100) / 100;    // Truncating to 2 digits
+  // 650 microseconds = 0.07289480 EOS Average Low
+  // 2000 microseconds = 0.22429168 EOS Average High (With Outliers)
+  // 12000 microeconds = 1.34575008  EOS High Outlier
+  var cpuCostPerAccountLow = 0.07289480 // EOS High End
+  var cpuStakeEstimate_EOSLow = numberOfAccounts * cpuCostPerAccountLow
+  cpuStakeEstimate_EOSLow = Math.floor(cpuStakeEstimate_EOSLow * 1) / 1;    // Rounding to 0 digits
+  var cpuCostPerAccountHigh = 0.22429168 // EOS High End
+  var cpuStakeEstimate_EOSHigh = numberOfAccounts * cpuCostPerAccountHigh
+  cpuStakeEstimate_EOSHigh = Math.floor(cpuStakeEstimate_EOSHigh * 1) / 1;    // Rounding to 0 digits
 
   // Bandwidth 
   // 66~ Bytes per account = 0.00003217 EOS 
@@ -204,7 +214,8 @@ const getRamPrice = async () => {
   var priceEstimate = {
     'numberOfAccounts': numberOfAccounts,
     'ramRequiredKb': ramRequiredKb,
-    'cpuStakeEstimate_EOS': cpuStakeEstimate_EOS,
+    'cpuStakeEstimate_EOSLow': cpuStakeEstimate_EOSLow,
+    'cpuStakeEstimate_EOSHigh': cpuStakeEstimate_EOSHigh,
     'netStakeEstimate_EOS': netStakeEstimate_EOS,
     'priceEstimate_Eos': priceEstimate_Eos,
     'priceEstimate_Usd': priceEstimate_Usd,
@@ -218,8 +229,8 @@ const successPrice = (priceEstimate) => {
     #################################
     Number of Accounts: ${priceEstimate.numberOfAccounts}       
     RAM Required (kb): ${priceEstimate.ramRequiredKb}     
-    CPU-Stake Estimate EOS: ${priceEstimate.cpuStakeEstimate_EOS}    
-    NET-Stake Estimate EOS: ${priceEstimate.netStakeEstimate_EOS}    
+    CPU-Stake Rough Estimate*: ${priceEstimate.cpuStakeEstimate_EOSLow}-${priceEstimate.cpuStakeEstimate_EOSHigh} EOS   
+    NET-Stake Rough Estimate*: ${priceEstimate.netStakeEstimate_EOS} EOS    
     Price Estimate EOS: ${priceEstimate.priceEstimate_Eos}    
     Price Estimate USD: $${priceEstimate.priceEstimate_Usd}    
     #################################` + '\n'))
