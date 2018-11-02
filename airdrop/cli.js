@@ -244,11 +244,12 @@ const nodeChecker = async (node) => {
 
   var nodeCheck = await axios.get(node + 'v1/chain/get_info')
   .then(response => {
-    // console.log('4)) Axios Node get_info Is: ', response.data)
     console.log('Step 4a)) Successfully connected to node')
-    return response.data.head_block_num
+    return true
+    // return response.data.head_block_num
   }).catch(error => {
     console.log('Error Connecting with node')
+    return false
   })
   
   if (nodeCheck) {
@@ -263,12 +264,15 @@ const nodeSelector = async (snapshotMonth) => {
   var nodes = {
     'jungleTiger': 'http://193.93.219.219:8888/', // Jungle CryptoLions.io Tiger
     'jungleBitfinex': "http://eos-bp.bitfinex.com:8888/", // Jungle Bitfinex
+    'broken': "http://jungle.cryptolions.io:8888/", // Broken Jungle Server (for testing)
     'mainnetLibertyblock': "http://mainnet.libertyblock.io:8888/", // LibertyBlock Mainnet
     'mainnetGreymass': "https://eos.greymass.com/", // Greymass Mainnet
-    'broken': "http://jungle.cryptolions.io:8888/" // Broken Jungle Server (for testing)
   }
   // console.log('All nodes', nodes)
-
+  var mainnetNodes = {
+    'Greymass': "https://eos.greymass.com/", // Greymass Mainnet
+    'Libertyblock': "http://mainnet.libertyblock.io:8888/", // LibertyBlock Mainnet
+  }
 
   if (snapshotMonth === 'Jungle Testnet') {
     if (await nodeChecker(nodes.jungleBitfinex)) {
@@ -285,15 +289,13 @@ const nodeSelector = async (snapshotMonth) => {
     }
     
   } else {
-    if (await nodeChecker(nodes.mainnetLibertyblock)) {
-      console.log('Step 4b)) Choosing Available Node:', nodes['mainnetLibertyblock']) 
-      return nodes['mainnetLibertyblock']      
+    for (node in mainnetNodes) {
+      if (await nodeChecker(mainnetNodes[node])) {
+        console.log(`Step 4b)) Choosing Available Node:, ${mainnetNodes[node]}`);
+        workingNodes[node] = mainnetNodes[node];
+        return workingNodes[node];
+      }
     }
-    if (await nodeChecker(nodes.mainnetGreymass)) {
-      console.log('Step 4b)) Choosing Available Node:', nodes['mainnetGreymass']) 
-      return nodes['mainnetGreymass']
-    }
-
   }
 
   console.log('Error: Nodes are all down or unavailable, please try again later')
