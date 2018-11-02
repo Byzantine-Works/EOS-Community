@@ -127,6 +127,31 @@ const snapshotCsvToJson = async (snapshotMonth) => {
   return snapshotJson; 
 } 
 
+const snapshotAccountEstimator = async (snapshot) => {
+  console.log(`Out of ${snapshot.length} total accounts, Estimating number of Accounts above X EOS...\n`);
+  var accountsWithOverXEos = {
+    '0': 0,
+    '1': 0,
+    '10': 0,
+    '100': 0,
+    '1000': 0,
+    '10000': 0,
+    '100000': 0,
+    '1000000': 0,
+  };
+  var snapshotCopy = snapshot.slice(0);
+  var filtered = [];
+  for (rangeMin in accountsWithOverXEos) {    
+    for (let i=0; i<snapshotCopy.length; i++) {
+      if (parseInt(snapshotCopy[i]['total_eos']) >= parseInt(rangeMin)) {
+        accountsWithOverXEos[rangeMin]++;
+      }
+    }
+  }
+
+  console.log('accountsWithOverXEos', accountsWithOverXEos)
+}
+
 const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   // Filter through accounts that fit input parameters
   var snapshotCopy = snapshot.slice(0);
@@ -261,31 +286,31 @@ const nodeChecker = async (node) => {
 
 const nodeSelector = async (snapshotMonth) => {
   var workingNodes = {};
-  var nodes = {
+  var jungleNodes = {
     'jungleTiger': 'http://193.93.219.219:8888/', // Jungle CryptoLions.io Tiger
     'jungleBitfinex': "http://eos-bp.bitfinex.com:8888/", // Jungle Bitfinex
     'broken': "http://jungle.cryptolions.io:8888/", // Broken Jungle Server (for testing)
-    'mainnetLibertyblock': "http://mainnet.libertyblock.io:8888/", // LibertyBlock Mainnet
-    'mainnetGreymass': "https://eos.greymass.com/", // Greymass Mainnet
   }
-  // console.log('All nodes', nodes)
+  // console.log('All jungleNodes', jungleNodes)
   var mainnetNodes = {
     'Greymass': "https://eos.greymass.com/", // Greymass Mainnet
     'Libertyblock': "http://mainnet.libertyblock.io:8888/", // LibertyBlock Mainnet
   }
+  // console.log('All mainnetNodes', mainnetNodes)
+
 
   if (snapshotMonth === 'Jungle Testnet') {
-    if (await nodeChecker(nodes.jungleBitfinex)) {
-      console.log('Step Step 4b)) Choosing Available Node:', nodes['jungleBitfinex']) 
-      return nodes['jungleBitfinex']
+    if (await nodeChecker(jungleNodes.jungleBitfinex)) {
+      console.log('Step Step 4b)) Choosing Available Node:', jungleNodes['jungleBitfinex']) 
+      return jungleNodes['jungleBitfinex']
     }
-    if (await nodeChecker(nodes.jungleTiger)) {
-      console.log('Step 4b)) Choosing Available Node:', nodes['jungleTiger']) 
-      return nodes['jungleTiger']      
+    if (await nodeChecker(jungleNodes.jungleTiger)) {
+      console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleTiger']) 
+      return jungleNodes['jungleTiger']      
     }
-    if (await nodeChecker(nodes.broken)) {
-      console.log('Step 4b)) Choosing Available Node:', nodes['broken']) 
-      return nodes['broken']
+    if (await nodeChecker(jungleNodes.broken)) {
+      console.log('Step 4b)) Choosing Available Node:', jungleNodes['broken']) 
+      return jungleNodes['broken']
     }
     
   } else {
@@ -476,6 +501,7 @@ const run = async () => {
 
   /* Price Estimator Portion */
   const snapshotJson = await snapshotCsvToJson(SNAPSHOT_MONTH) // Csv to Json
+  const accountEstimate = await snapshotAccountEstimator(snapshotJson) // accountEstimator
   const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // Filtering Accounts by user params
   const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData.length) // Price Estimate Calculations
   successPrice(PRICE_ESTIMATE);
@@ -506,7 +532,7 @@ const run = async () => {
   // await runShell()
 };
 
-module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, nodeSelector, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
+module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, nodeChecker, nodeSelector, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
 // module.exports = run();
 
 
