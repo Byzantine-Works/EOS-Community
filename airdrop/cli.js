@@ -43,7 +43,7 @@ const askQuestions = async () => {
         name: "SNAPSHOT_MONTH",
         type: "list",
         message: "Which Snapshot wouldyou like to use?:",
-        choices: ["Genesis", "July", "August", "September", "October", "November"],
+        choices: ["Genesis", "Jungle Testnet", "July", "August", "September", "October", "November"],
       },
       {
         type: "list",
@@ -78,9 +78,33 @@ const askQuestions = async () => {
       message: "Airdrop Flat Amount - How many tokens to give every user? (Enter a Number or Decimal):"
     },
   ];
-
+  
   var answers1 = await inquirer.prompt(questions);
   
+  console.log('answers1 in Questions', answers1)
+  var estimateSnapshotJson = await snapshotCsvToJson(answers1.SNAPSHOT_MONTH);
+  var accountEstimate = await snapshotAccountEstimator(estimateSnapshotJson);
+  console.log('accountEstimate in Questions', accountEstimate);
+  const questions_min = [
+    {
+      type: "list",
+      name: "MIN_EOS_HELD",
+      message: "Minimum of number of EOS held for accounts you want to Airdrop to?",
+      choices: ["0", "1", "10", "100", "1000", "10000", "100000", "1000000"],
+    }
+  ];
+  questions_min[0]['choices'] = [];
+  var arr = [];
+  for (key in accountEstimate) {
+    arr.push(key.toString() + ': (' + accountEstimate[key].toString() + ' accounts)')
+    // questions_min[0]['choices'].push(accountEstimate[key])
+  }
+  console.log('arr', arr)
+  questions_min[0]['choices'] = arr
+  // questions_min[0]['choices'] = ["Test", "TestB", "TestC"]
+  var answers_min = await inquirer.prompt(questions_min)
+  
+
   if (answers1.RATIO_OR_FLAT === 'Airdrop Ratio') {
     var answers2 = await inquirer.prompt(questions2_ratio);
   } else if (answers1.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
@@ -90,6 +114,10 @@ const askQuestions = async () => {
   for (var key in answers2) {
     answers1[key] = answers2[key];
   }
+  // Adding Default values
+  // if (answers1['ACCOUNT_NAME'] = '') {answers1['ACCOUNT_NAME']='junglefoxfox';} // Default to junglefoxfox test account
+  // if (answers1['TOKEN_NAME'] = '') {answers1['TOKEN_NAME']='TESTA';} // Default to test coin symbol
+  // if (answers1['MAX_TOKEN_SUPPLY'] = '') {answers1['MAX_TOKEN_SUPPLY']='1000000000';} // Default to 1 Billion
 
   // console.log('answers1', answers1)
   return answers1
@@ -101,6 +129,8 @@ const snapshotCsvToJson = async (snapshotMonth) => {
   if (snapshotMonth === 'Genesis') {
     console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
     return genesisSnapshotJson
+  } else if (snapshotMonth === 'Jungle Testnet') { 
+    return genesisSnapshotJson // Genesis until Up-to-date Jungle snapshot located
   } else if (snapshotMonth === 'July') { 
     csvFilePath = './airdrop-snapshots/20180730_account_snapshot.csv'; // July 30th
   } else if (snapshotMonth === 'August') { 
@@ -120,6 +150,32 @@ const snapshotCsvToJson = async (snapshotMonth) => {
   }) 
   return snapshotJson; 
 } 
+
+const snapshotAccountEstimator = async (snapshot) => {
+  console.log(`Out of ${snapshot.length} total accounts, Estimating number of Accounts above X EOS...\n`);
+  var accountsWithOverXEos = {
+    '0': 0,
+    '1': 0,
+    '10': 0,
+    '100': 0,
+    '1000': 0,
+    '10000': 0,
+    '100000': 0,
+    '1000000': 0,
+  };
+  var snapshotCopy = snapshot.slice(0);
+  var filtered = [];
+  for (rangeMin in accountsWithOverXEos) {    
+    for (let i=0; i<snapshotCopy.length; i++) {
+      if (parseInt(snapshotCopy[i]['total_eos']) >= parseInt(rangeMin)) {
+        accountsWithOverXEos[rangeMin]++;
+      }
+    }
+  }
+
+  // console.log('accountsWithOverXEos', accountsWithOverXEos)
+  return accountsWithOverXEos
+}
 
 const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   // Filter through accounts that fit input parameters
@@ -169,6 +225,25 @@ const getRamPrice = async () => {
   // console.log("Current Ram Price Is: ", RAM_PRICE)
   var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
   var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
+
+  
+  // Staking Values CPU
+  // 1 EOS = 8916.9603 microseconds - 262026.3546 microseconds Estimate 
+  // 650 microseconds = 0.07289480 - 0.00248067 EOS Average Low
+  // 2000 microseconds = 0.22429168 - 0.00763282 EOS Average High (With Outliers)
+  // 12000 microeconds = 1.34575008  - 0.04579692 EOS High Outlier
+  var cpuCostPerAccountLow = 0.07289480 // EOS High End
+  var cpuStakeEstimate_EOSLow = numberOfAccounts * cpuCostPerAccountLow
+  cpuStakeEstimate_EOSLow = Math.floor(cpuStakeEstimate_EOSLow * 1) / 1;    // Rounding to 0 digits
+  var cpuCostPerAccountHigh = 0.22429168 // EOS High End
+  var cpuStakeEstimate_EOSHigh = numberOfAccounts * cpuCostPerAccountHigh
+  cpuStakeEstimate_EOSHigh = Math.floor(cpuStakeEstimate_EOSHigh * 1) / 1;    // Rounding to 0 digits
+
+  // Bandwidth 
+  // 66~ Bytes per account = 0.00003217 EOS 
+  var netCostPerAccount = 0.00003217 // EOS
+  var netStakeEstimate_EOS = numberOfAccounts * netCostPerAccount
+  netStakeEstimate_EOS = Math.floor(netStakeEstimate_EOS * 100) / 100;    // Truncating to 2 digits
   
   // var numberOfAccounts = filteredSnapshotData.length         // 132192 Estimated based on genesis for now
   var ramPrice_EosPerByte = 0.11381643/1000                  // 0.11381643 EOS/kb for now
@@ -188,6 +263,9 @@ const getRamPrice = async () => {
   var priceEstimate = {
     'numberOfAccounts': numberOfAccounts,
     'ramRequiredKb': ramRequiredKb,
+    'cpuStakeEstimate_EOSLow': cpuStakeEstimate_EOSLow,
+    'cpuStakeEstimate_EOSHigh': cpuStakeEstimate_EOSHigh,
+    'netStakeEstimate_EOS': netStakeEstimate_EOS,
     'priceEstimate_Eos': priceEstimate_Eos,
     'priceEstimate_Usd': priceEstimate_Usd,
   }
@@ -197,15 +275,82 @@ const getRamPrice = async () => {
 const successPrice = (priceEstimate) => {
   console.log(chalk.bold.blue(
     `
-    #################################
+    ###########################################
     Number of Accounts: ${priceEstimate.numberOfAccounts}       
     RAM Required (kb): ${priceEstimate.ramRequiredKb}     
+    CPU-Stake Rough Estimate*: ${priceEstimate.cpuStakeEstimate_EOSLow}-${priceEstimate.cpuStakeEstimate_EOSHigh} EOS   
+    NET-Stake Rough Estimate*: ${priceEstimate.netStakeEstimate_EOS} EOS    
     Price Estimate EOS: ${priceEstimate.priceEstimate_Eos}    
     Price Estimate USD: $${priceEstimate.priceEstimate_Usd}    
-    #################################` + '\n'))
+    ###########################################` + '\n'))
 
   console.log(chalk.blue(`The estimated cost of the Airdrop with these settings will be: ` + chalk.bold.red('$'+priceEstimate.priceEstimate_Usd+' USD\n')));
 };
+
+
+
+const nodeChecker = async (node) => {
+  // var nodeCheck = await axios.get('http://jungle.cryptolions.io:8888/v1/chain/get_info') // This server is down, use for testing faulty node cases
+
+  var nodeCheck = await axios.get(node + 'v1/chain/get_info')
+  .then(response => {
+    console.log('Step 4a)) Successfully connected to node')
+    return true
+    // return response.data.head_block_num
+  }).catch(error => {
+    console.log('Error Connecting with node')
+    return false
+  })
+  
+  if (nodeCheck) {
+    // console.log('Step 4b)) nodeCheck - Current Block Number: ', nodeCheck)
+  }
+  
+  return nodeCheck
+}
+
+const nodeSelector = async (snapshotMonth) => {
+  var workingNodes = {};
+  var jungleNodes = {
+    'jungleTiger': 'http://193.93.219.219:8888/', // Jungle CryptoLions.io Tiger
+    'jungleBitfinex': "http://eos-bp.bitfinex.com:8888/", // Jungle Bitfinex
+    'broken': "http://jungle.cryptolions.io:8888/", // Broken Jungle Server (for testing)
+  }
+  // console.log('All jungleNodes', jungleNodes)
+  var mainnetNodes = {
+    'Greymass': "https://eos.greymass.com/", // Greymass Mainnet
+    'Libertyblock': "http://mainnet.libertyblock.io:8888/", // LibertyBlock Mainnet
+  }
+  // console.log('All mainnetNodes', mainnetNodes)
+
+
+  if (snapshotMonth === 'Jungle Testnet') {
+    if (await nodeChecker(jungleNodes.jungleBitfinex)) {
+      console.log('Step Step 4b)) Choosing Available Node:', jungleNodes['jungleBitfinex']) 
+      return jungleNodes['jungleBitfinex']
+    }
+    if (await nodeChecker(jungleNodes.jungleTiger)) {
+      console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleTiger']) 
+      return jungleNodes['jungleTiger']      
+    }
+    if (await nodeChecker(jungleNodes.broken)) {
+      console.log('Step 4b)) Choosing Available Node:', jungleNodes['broken']) 
+      return jungleNodes['broken']
+    }
+    
+  } else {
+    for (node in mainnetNodes) {
+      if (await nodeChecker(mainnetNodes[node])) {
+        console.log(`Step 4b)) Choosing Available Node:, ${mainnetNodes[node]}`);
+        workingNodes[node] = mainnetNodes[node];
+        return workingNodes[node];
+      }
+    }
+  }
+
+  console.log('Error: Nodes are all down or unavailable, please try again later')
+  // throw new Error("Nodes are all down or unavailable, please try again later")
+}
 
 const formatOutput = (filtered, airdropRatio, precision) => {
   var arr = []; 
@@ -225,7 +370,7 @@ const generateAirdropCsv = (formatted) => {
   // });
   try {
     fs.writeFileSync('airdrop.csv', formatted);
-    console.log('Step 4)) airdrop.csv file has been saved!');
+    console.log('Step 5)) airdrop.csv file has been saved!');
     return true
   } catch(err) {
     console.log(err)
@@ -246,6 +391,7 @@ const generateAirdropSh = (airdropParams) => {
   AIRDROP_RATIO="${airdropParams.airdropRatio}"
   MAX_TOKEN_SUPPLY="${airdropParams.maxTokenSupply}.0000"
   INITIAL_TOKEN_SUPPLY="${airdropParams.initialTokenSupply}.0000"
+  NUMBER_OF_ACCOUNTS="${airdropParams.numberOfAccounts}"
   NODE_URL="${airdropParams.nodeUrl}"
   CONTRACT_DIR="${airdropParams.contractDir}"
   SNAPSHOT_FILE="airdrop.csv"
@@ -281,11 +427,11 @@ const generateAirdropSh = (airdropParams) => {
       AMOUNT=$(echo $line | tr "," "\\n" | tail -1)
       CURRENT_BALANCE=$(cleos -u $NODE_URL get table $ISSUER_ACCOUNT $ACCOUNT accounts | grep $TOKEN_SYMBOL) 
       if [[ -z $CURRENT_BALANCE ]]; then
-          echo "$count Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
+          echo "$count/$NUMBER_OF_ACCOUNTS Airdropping $AMOUNT $TOKEN_SYMBOL to $ACCOUNT"
           echo cleos -u $NODE_URL push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
           cleos -u $NODE_URL push action $ISSUER_ACCOUNT transfer "[\\"$ISSUER_ACCOUNT\\", \\"$ACCOUNT\\", \\"$AMOUNT $TOKEN_SYMBOL\\", \\"airdrop\\"]" -p $ISSUER_ACCOUNT@active
       else
-          echo "Skipping $ACCOUNT"
+          echo "$count Skipping $ACCOUNT"
       fi 
   done
 
@@ -294,7 +440,7 @@ const generateAirdropSh = (airdropParams) => {
   `
   try {
     fs.writeFileSync('airdrop.sh', fullAirdropStr)
-    console.log('Step 5)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
+    console.log('Step 6)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
     shell.exec('chmod 755 airdrop.sh');
     return true
   } catch (err) {
@@ -380,11 +526,13 @@ const run = async () => {
 
   /* Price Estimator Portion */
   const snapshotJson = await snapshotCsvToJson(SNAPSHOT_MONTH) // Csv to Json
+  const accountEstimate = await snapshotAccountEstimator(snapshotJson) // accountEstimator
   const filteredSnapshotData = await snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // Filtering Accounts by user params
   const PRICE_ESTIMATE = await getPriceEstimate(filteredSnapshotData.length) // Price Estimate Calculations
   successPrice(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
+  const NODE_URL = await nodeSelector(SNAPSHOT_MONTH) || 'http://mainnet.libertyblock.io:8888/';
   var AIRDROP_PARAMS = {
     'accountName': ACCOUNT_NAME,
     'tokenName': TOKEN_NAME,
@@ -393,7 +541,9 @@ const run = async () => {
     'ratioOrFlat': RATIO_OR_FLAT,
     'airdropRatio': AIRDROP_RATIO,
     'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
-    'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
+    'numberOfAccounts':filteredSnapshotData.length,
+    'nodeUrl': NODE_URL, // Jungle CryptoLions.io
+    // 'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
     // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/", // Bitfinex Testnet
     'contractDir': "./eosio.token",
   }
@@ -407,7 +557,7 @@ const run = async () => {
   // await runShell()
 };
 
-module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
+module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, nodeChecker, nodeSelector, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
 // module.exports = run();
 
 
