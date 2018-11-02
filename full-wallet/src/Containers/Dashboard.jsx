@@ -310,11 +310,6 @@ class Dashboard extends Component {
         margin: auto 0;
         z-index: 5;`;
 
-        var options = {
-            strings: ["<i>First</i> sentence.", "&amp; a second sentence."],
-            typeSpeed: 40
-        }
-
 
         let percentage = this.props.progress;
         const progressCir = this.props.loading ? <div className='ProgressCirc'>
@@ -355,6 +350,7 @@ class Dashboard extends Component {
                     </div>
 
                     {this.props.account && this.props.loading ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}
+                    {/* <Message/>  */}
                     {this.props.csvData ? <Message/> : null}
                     
                 </div>

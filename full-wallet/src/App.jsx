@@ -1,7 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
-import AccountCreate from './Containers/AccountCreate';
 import Dashboard from './Containers/Dashboard';
 import Vote from './Containers/Vote';
 import * as actions from './actions/actions';
