@@ -23,7 +23,7 @@ const init = () => {
 };
 
 const askQuestions = async () => {
-  const questions = [
+  const questions0 = [
       {
         name: "ACCOUNT_NAME",
         type: "input",
@@ -39,53 +39,31 @@ const askQuestions = async () => {
         type: "input",
         message: "What is the Maximum Token Supply? (Enter a Number):"
       },
+    ]
+    const questions1 = [    
       {
         name: "SNAPSHOT_MONTH",
         type: "list",
         message: "Which Snapshot wouldyou like to use?:",
         choices: ["Genesis", "Jungle Testnet", "July", "August", "September", "October", "November"],
       },
-      {
-        type: "list",
-        name: "MIN_EOS_HELD",
-        message: "Minimum of number of EOS held for accounts you want to Airdrop to?",
-        choices: ["0", "1", "10", "100", "1000", "10000", "100000", "1000000"],
-      },
-      {
-        type: "list",
-        name: "MAX_EOS_HELD",
-        message: "Maximum of number of EOS held for accounts you want to Airdrop to?",
-        choices: ["No Max", "1", "10", "100", "1000", "10000", "100000", "1000000"],
-      },
-      {
-        name: "RATIO_OR_FLAT",
-        type: "list",
-        message: "Would you like an Airdrop Ratio or an Equal Flat Amount to all users",
-        choices: ["Airdrop Ratio", "Airdrop Flat Amount"],
-      },
-  ];
-  const questions2_ratio = [
-    {
-      name: "AIRDROP_RATIO",
-      type: "input",
-      message: "Airdrop Ratio - How many tokens to give per 1 EOS? (Enter a Number or Decimal):"
-    },
-  ];
-  const questions2_flat = [
-    {
-      name: "AIRDROP_RATIO",
-      type: "input",
-      message: "Airdrop Flat Amount - How many tokens to give every user? (Enter a Number or Decimal):"
-    },
-  ];
-  
-  var answers1 = await inquirer.prompt(questions);
-  
-  console.log('answers1 in Questions', answers1)
-  var estimateSnapshotJson = await snapshotCsvToJson(answers1.SNAPSHOT_MONTH);
-  var accountEstimate = await snapshotAccountEstimator(estimateSnapshotJson);
-  console.log('accountEstimate in Questions', accountEstimate);
-  const questions_min = [
+    ];
+
+  //   const questions2 = [    
+  //     {
+  //       type: "list",
+  //       name: "MIN_EOS_HELD",
+  //       message: "Minimum of number of EOS held for accounts you want to Airdrop to?",
+  //       choices: ["0", "1", "10", "100", "1000", "10000", "100000", "1000000"],
+  //     },
+  //     {
+  //       type: "list",
+  //       name: "MAX_EOS_HELD",
+  //       message: "Maximum of number of EOS held for accounts you want to Airdrop to?",
+  //       choices: ["No Max", "1", "10", "100", "1000", "10000", "100000", "1000000"],
+  //     },
+  //   ];
+  const questions2_min = [
     {
       type: "list",
       name: "MIN_EOS_HELD",
@@ -93,41 +71,93 @@ const askQuestions = async () => {
       choices: ["0", "1", "10", "100", "1000", "10000", "100000", "1000000"],
     }
   ];
-  questions_min[0]['choices'] = [];
+  const questions2_max = [
+    {
+      type: "list",
+      name: "MAX_EOS_HELD",
+      message: "Maximum of number of EOS held for accounts you want to Airdrop to?",
+      choices: ["No Max", "1", "10", "100", "1000", "10000", "100000", "1000000"],
+    }
+  ];  
+  const questions3 = [    
+    {
+      name: "RATIO_OR_FLAT",
+      type: "list",
+      message: "Would you like an Airdrop Ratio or an Equal Flat Amount to all users",
+      choices: ["Airdrop Ratio", "Airdrop Flat Amount"],
+    },
+  ];
+  const questions4_ratio = [
+    {
+      name: "AIRDROP_RATIO",
+      type: "input",
+      message: "Airdrop Ratio - How many tokens to give per 1 EOS? (Enter a Number or Decimal):"
+    },
+  ];
+  const questions4_flat = [
+    {
+      name: "AIRDROP_RATIO",
+      type: "input",
+      message: "Airdrop Flat Amount - How many tokens to give every user? (Enter a Number or Decimal):"
+    },
+  ];
+  
+  var answersFinal = {};
+  var answers0 = await inquirer.prompt(questions0); // Name, Symbol, MaxSupply
+  var answers1 = await inquirer.prompt(questions1); // Snapshot Month
+  // console.log('3 in Questions', answers1)
+    var estimateSnapshotJson = await snapshotCsvToJson(answers1.SNAPSHOT_MONTH);
+    var accountEstimate = await snapshotAccountEstimator(estimateSnapshotJson);
+  // console.log('accountEstimate in Questions', accountEstimate);
+  
+  questions2_min[0]['choices'] = [];
   var arr = [];
   for (key in accountEstimate) {
     arr.push(key.toString() + ': (' + accountEstimate[key].toString() + ' accounts)')
-    // questions_min[0]['choices'].push(accountEstimate[key])
+    // questions2_min[0]['choices'].push(accountEstimate[key])
   }
-  console.log('arr', arr)
-  questions_min[0]['choices'] = arr
-  // questions_min[0]['choices'] = ["Test", "TestB", "TestC"]
-  var answers_min = await inquirer.prompt(questions_min)
+  // console.log('arr', arr)
+  questions2_min[0]['choices'] = arr
+  var answers2_min = await inquirer.prompt(questions2_min)
+  var answers2_max = await inquirer.prompt(questions2_max)  
+  // questions2_min[0]['choices'] = ["Test", "TestB", "TestC"]
   
-
-  if (answers1.RATIO_OR_FLAT === 'Airdrop Ratio') {
-    var answers2 = await inquirer.prompt(questions2_ratio);
-  } else if (answers1.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
-    var answers2 = await inquirer.prompt(questions2_flat);
+  // Asking Questions 3 and 4 (Ratio/Flat)
+  var answers3 = await inquirer.prompt(questions3); // Ratio or Flat
+  if (answers3.RATIO_OR_FLAT === 'Airdrop Ratio') {
+    var answers4 = await inquirer.prompt(questions4_ratio);
+  } else if (answers3.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
+    var answers4 = await inquirer.prompt(questions4_flat);
   }
 
-  for (var key in answers2) {
-    answers1[key] = answers2[key];
+  // Copying all answers into answersFinal
+  answersFinal['SNAPSHOT_MONTH'] = answers1['SNAPSHOT_MONTH'];
+  answersFinal['MIN_EOS_HELD'] = answers2_min['MIN_EOS_HELD'];
+  answersFinal['MAX_EOS_HELD'] = answers2_max['MAX_EOS_HELD'];
+  for (var key in answers0) {
+    answersFinal[key] = answers0[key]; // ACCOUNT_NAME, TOKEN_NAME, MAX_TOKEN_SUPPLY
   }
+  for (var key in answers1) {
+    answersFinal[key] = answers1[key];
+  }
+  for (var key in answers4) {
+    answersFinal[key] = answers4[key];
+  }
+
   // Adding Default values
   // if (answers1['ACCOUNT_NAME'] = '') {answers1['ACCOUNT_NAME']='junglefoxfox';} // Default to junglefoxfox test account
   // if (answers1['TOKEN_NAME'] = '') {answers1['TOKEN_NAME']='TESTA';} // Default to test coin symbol
   // if (answers1['MAX_TOKEN_SUPPLY'] = '') {answers1['MAX_TOKEN_SUPPLY']='1000000000';} // Default to 1 Billion
 
-  // console.log('answers1', answers1)
-  return answers1
+  console.log('answersFinal', answersFinal)
+  return answersFinal
 };
 
 const snapshotCsvToJson = async (snapshotMonth) => {
 // const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
   var csvFilePath;
   if (snapshotMonth === 'Genesis') {
-    console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
+    // console.log('Step 2a)) Converting Genesis Snapshot to Fitted Json...')
     return genesisSnapshotJson
   } else if (snapshotMonth === 'Jungle Testnet') { 
     return genesisSnapshotJson // Genesis until Up-to-date Jungle snapshot located
@@ -144,7 +174,7 @@ const snapshotCsvToJson = async (snapshotMonth) => {
   }
   var snapshotJson = await csv()
   .fromFile(csvFilePath).then((jsonObj)=>{
-    console.log(`Step 2b)) Converting Csv to Json for ${snapshotMonth} Snapshot...`)
+    // console.log(`Step 2b)) Converting Csv to Json for ${snapshotMonth} Snapshot...`)
     // console.log('jsonObj', jsonObj);
     return jsonObj
   }) 
@@ -152,7 +182,7 @@ const snapshotCsvToJson = async (snapshotMonth) => {
 } 
 
 const snapshotAccountEstimator = async (snapshot) => {
-  console.log(`Out of ${snapshot.length} total accounts, Estimating number of Accounts above X EOS...\n`);
+  // console.log(`Out of ${snapshot.length} total accounts, Estimating number of Accounts above X EOS...\n`);
   var accountsWithOverXEos = {
     '0': 0,
     '1': 0,
@@ -162,6 +192,7 @@ const snapshotAccountEstimator = async (snapshot) => {
     '10000': 0,
     '100000': 0,
     '1000000': 0,
+    '10000000': 0,
   };
   var snapshotCopy = snapshot.slice(0);
   var filtered = [];
@@ -182,11 +213,11 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   var snapshotCopy = snapshot.slice(0);
   if (isNaN(maxEosHeld)) {
     maxEosHeld = 1000000000;
-    console.log('No Maximum EOS Value')
+    // console.log('No Maximum EOS Value')
   }
   if (isNaN(minEosHeld)) {
     minEosHeld = 0;
-    console.log('No Minimum EOS Value')
+    // console.log('No Minimum EOS Value')
   }
   console.log(`Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS...\n`);
   var filtered = [];
@@ -326,7 +357,7 @@ const nodeSelector = async (snapshotMonth) => {
 
   if (snapshotMonth === 'Jungle Testnet') {
     if (await nodeChecker(jungleNodes.jungleBitfinex)) {
-      console.log('Step Step 4b)) Choosing Available Node:', jungleNodes['jungleBitfinex']) 
+      console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleBitfinex']) 
       return jungleNodes['jungleBitfinex']
     }
     if (await nodeChecker(jungleNodes.jungleTiger)) {
@@ -503,6 +534,18 @@ const run = async () => {
   //     MAX_EOS_HELD,
   // }
   
+  var userParams = {
+  'ACCOUNT_NAME': '',
+  'TOKEN_NAME': '',
+  'MAX_TOKEN_SUPPLY': '',
+  'SNAPSHOT_MONTH': '',
+  'MIN_EOS_HELD': '',
+  'MAX_EOS_HELD': '',
+  'RATIO_OR_FLAT': '',
+  'AIRDROP_RATIO': '',
+  'AIRDROP_FLAT': '',
+  }
+
   /* Actual Questions */
   const answers = await askQuestions();
   var {
@@ -514,6 +557,7 @@ const run = async () => {
     MAX_EOS_HELD,
     RATIO_OR_FLAT,
     AIRDROP_RATIO,
+    AIRDROP_FLAT,
   } = answers;
   var INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
   ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
