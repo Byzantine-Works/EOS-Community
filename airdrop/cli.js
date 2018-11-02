@@ -244,15 +244,15 @@ const nodeChecker = async (node) => {
 
   var nodeCheck = await axios.get(node + 'v1/chain/get_info')
   .then(response => {
-    // console.log('2)) Axios Node get_info Is: ', response.data)
-    console.log('2a)) Successfully connected to node')
+    // console.log('4)) Axios Node get_info Is: ', response.data)
+    console.log('Step 4a)) Successfully connected to node')
     return response.data.head_block_num
   }).catch(error => {
     console.log('Error Connecting with node')
   })
   
   if (nodeCheck) {
-    console.log('2b)) nodeCheck - Current Block Number: ', nodeCheck)
+    // console.log('Step 4b)) nodeCheck - Current Block Number: ', nodeCheck)
   }
   
   return nodeCheck
@@ -267,35 +267,37 @@ const nodeSelector = async (snapshotMonth) => {
     'mainnetGreymass': "https://eos.greymass.com/", // Greymass Mainnet
     'broken': "http://jungle.cryptolions.io:8888/" // Broken Jungle Server (for testing)
   }
-  console.log('All nodes', nodes)
+  // console.log('All nodes', nodes)
 
 
   if (snapshotMonth === 'Jungle Testnet') {
-    if (await nodeChecker(nodes.jungleTiger)) {
-      console.log('2c)) Returning Working Node :', nodes['jungleTiger']) 
-      return nodes['jungleTiger']      
-    }
     if (await nodeChecker(nodes.jungleBitfinex)) {
-      console.log('2c)) Returning Working Node :', nodes['jungleBitfinex']) 
+      console.log('Step Step 4b)) Choosing Available Node:', nodes['jungleBitfinex']) 
       return nodes['jungleBitfinex']
     }
+    if (await nodeChecker(nodes.jungleTiger)) {
+      console.log('Step 4b)) Choosing Available Node:', nodes['jungleTiger']) 
+      return nodes['jungleTiger']      
+    }
     if (await nodeChecker(nodes.broken)) {
-      console.log('2c)) Returning Working Node :', nodes['broken']) 
+      console.log('Step 4b)) Choosing Available Node:', nodes['broken']) 
       return nodes['broken']
     }
     
   } else {
     if (await nodeChecker(nodes.mainnetLibertyblock)) {
-      console.log('2c)) Returning Working Node :', nodes['mainnetLibertyblock']) 
+      console.log('Step 4b)) Choosing Available Node:', nodes['mainnetLibertyblock']) 
       return nodes['mainnetLibertyblock']      
     }
     if (await nodeChecker(nodes.mainnetGreymass)) {
-      console.log('2c)) Returning Working Node :', nodes['mainnetGreymass']) 
+      console.log('Step 4b)) Choosing Available Node:', nodes['mainnetGreymass']) 
       return nodes['mainnetGreymass']
     }
 
   }
-  throw new Error("Nodes are all down or unavailable, please try again later")
+
+  console.log('Error: Nodes are all down or unavailable, please try again later')
+  // throw new Error("Nodes are all down or unavailable, please try again later")
 }
 
 const formatOutput = (filtered, airdropRatio, precision) => {
@@ -316,7 +318,7 @@ const generateAirdropCsv = (formatted) => {
   // });
   try {
     fs.writeFileSync('airdrop.csv', formatted);
-    console.log('Step 4)) airdrop.csv file has been saved!');
+    console.log('Step 5)) airdrop.csv file has been saved!');
     return true
   } catch(err) {
     console.log(err)
@@ -386,7 +388,7 @@ const generateAirdropSh = (airdropParams) => {
   `
   try {
     fs.writeFileSync('airdrop.sh', fullAirdropStr)
-    console.log('Step 5)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
+    console.log('Step 6)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
     shell.exec('chmod 755 airdrop.sh');
     return true
   } catch (err) {
@@ -477,6 +479,7 @@ const run = async () => {
   successPrice(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
+  const NODE_URL = await nodeSelector(SNAPSHOT_MONTH) || 'http://mainnet.libertyblock.io:8888/';
   var AIRDROP_PARAMS = {
     'accountName': ACCOUNT_NAME,
     'tokenName': TOKEN_NAME,
@@ -486,7 +489,8 @@ const run = async () => {
     'airdropRatio': AIRDROP_RATIO,
     'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
     'numberOfAccounts':filteredSnapshotData.length,
-    'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
+    'nodeUrl': NODE_URL, // Jungle CryptoLions.io
+    // 'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
     // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/", // Bitfinex Testnet
     'contractDir': "./eosio.token",
   }
