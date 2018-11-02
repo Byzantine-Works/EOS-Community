@@ -178,10 +178,10 @@ const getRamPrice = async () => {
 
   
   // Staking Values CPU
-  // 1 EOS = 8916.9603 microseconds - Estimate 
-  // 650 microseconds = 0.07289480 EOS Average Low
-  // 2000 microseconds = 0.22429168 EOS Average High (With Outliers)
-  // 12000 microeconds = 1.34575008  EOS High Outlier
+  // 1 EOS = 8916.9603 microseconds - 262026.3546 microseconds Estimate 
+  // 650 microseconds = 0.07289480 - 0.00248067 EOS Average Low
+  // 2000 microseconds = 0.22429168 - 0.00763282 EOS Average High (With Outliers)
+  // 12000 microeconds = 1.34575008  - 0.04579692 EOS High Outlier
   var cpuCostPerAccountLow = 0.07289480 // EOS High End
   var cpuStakeEstimate_EOSLow = numberOfAccounts * cpuCostPerAccountLow
   cpuStakeEstimate_EOSLow = Math.floor(cpuStakeEstimate_EOSLow * 1) / 1;    // Rounding to 0 digits
@@ -225,17 +225,78 @@ const getRamPrice = async () => {
 const successPrice = (priceEstimate) => {
   console.log(chalk.bold.blue(
     `
-    #################################
+    ###########################################
     Number of Accounts: ${priceEstimate.numberOfAccounts}       
     RAM Required (kb): ${priceEstimate.ramRequiredKb}     
     CPU-Stake Rough Estimate*: ${priceEstimate.cpuStakeEstimate_EOSLow}-${priceEstimate.cpuStakeEstimate_EOSHigh} EOS   
     NET-Stake Rough Estimate*: ${priceEstimate.netStakeEstimate_EOS} EOS    
     Price Estimate EOS: ${priceEstimate.priceEstimate_Eos}    
     Price Estimate USD: $${priceEstimate.priceEstimate_Usd}    
-    #################################` + '\n'))
+    ###########################################` + '\n'))
 
   console.log(chalk.blue(`The estimated cost of the Airdrop with these settings will be: ` + chalk.bold.red('$'+priceEstimate.priceEstimate_Usd+' USD\n')));
 };
+
+
+
+const nodeChecker = async (node) => {
+  // var nodeCheck = await axios.get('http://jungle.cryptolions.io:8888/v1/chain/get_info') // This server is down, use for testing faulty node cases
+
+  var nodeCheck = await axios.get(node + 'v1/chain/get_info')
+  .then(response => {
+    // console.log('2)) Axios Node get_info Is: ', response.data)
+    console.log('2a)) Successfully connected to node')
+    return response.data.head_block_num
+  }).catch(error => {
+    console.log('Error Connecting with node')
+  })
+  
+  if (nodeCheck) {
+    console.log('2b)) nodeCheck - Current Block Number: ', nodeCheck)
+  }
+  
+  return nodeCheck
+}
+
+const nodeSelector = async (snapshotMonth) => {
+  var workingNodes = {};
+  var nodes = {
+    'jungleTiger': 'http://193.93.219.219:8888/', // Jungle CryptoLions.io Tiger
+    'jungleBitfinex': "http://eos-bp.bitfinex.com:8888/", // Jungle Bitfinex
+    'mainnetLibertyblock': "http://mainnet.libertyblock.io:8888/", // LibertyBlock Mainnet
+    'mainnetGreymass': "https://eos.greymass.com/", // Greymass Mainnet
+    'broken': "http://jungle.cryptolions.io:8888/" // Broken Jungle Server (for testing)
+  }
+  console.log('All nodes', nodes)
+
+
+  if (snapshotMonth === 'Jungle Testnet') {
+    if (await nodeChecker(nodes.jungleTiger)) {
+      console.log('2c)) Returning Working Node :', nodes['jungleTiger']) 
+      return nodes['jungleTiger']      
+    }
+    if (await nodeChecker(nodes.jungleBitfinex)) {
+      console.log('2c)) Returning Working Node :', nodes['jungleBitfinex']) 
+      return nodes['jungleBitfinex']
+    }
+    if (await nodeChecker(nodes.broken)) {
+      console.log('2c)) Returning Working Node :', nodes['broken']) 
+      return nodes['broken']
+    }
+    
+  } else {
+    if (await nodeChecker(nodes.mainnetLibertyblock)) {
+      console.log('2c)) Returning Working Node :', nodes['mainnetLibertyblock']) 
+      return nodes['mainnetLibertyblock']      
+    }
+    if (await nodeChecker(nodes.mainnetGreymass)) {
+      console.log('2c)) Returning Working Node :', nodes['mainnetGreymass']) 
+      return nodes['mainnetGreymass']
+    }
+
+  }
+  throw new Error("Nodes are all down or unavailable, please try again later")
+}
 
 const formatOutput = (filtered, airdropRatio, precision) => {
   var arr = []; 
@@ -439,7 +500,7 @@ const run = async () => {
   // await runShell()
 };
 
-module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
+module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, nodeSelector, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
 // module.exports = run();
 
 
