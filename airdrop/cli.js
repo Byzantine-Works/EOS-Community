@@ -78,9 +78,33 @@ const askQuestions = async () => {
       message: "Airdrop Flat Amount - How many tokens to give every user? (Enter a Number or Decimal):"
     },
   ];
-
+  
   var answers1 = await inquirer.prompt(questions);
   
+  console.log('answers1 in Questions', answers1)
+  var estimateSnapshotJson = await snapshotCsvToJson(answers1.SNAPSHOT_MONTH);
+  var accountEstimate = await snapshotAccountEstimator(estimateSnapshotJson);
+  console.log('accountEstimate in Questions', accountEstimate);
+  const questions_min = [
+    {
+      type: "list",
+      name: "MIN_EOS_HELD",
+      message: "Minimum of number of EOS held for accounts you want to Airdrop to?",
+      choices: ["0", "1", "10", "100", "1000", "10000", "100000", "1000000"],
+    }
+  ];
+  questions_min[0]['choices'] = [];
+  var arr = [];
+  for (key in accountEstimate) {
+    arr.push(key.toString() + ': (' + accountEstimate[key].toString() + ' accounts)')
+    // questions_min[0]['choices'].push(accountEstimate[key])
+  }
+  console.log('arr', arr)
+  questions_min[0]['choices'] = arr
+  // questions_min[0]['choices'] = ["Test", "TestB", "TestC"]
+  var answers_min = await inquirer.prompt(questions_min)
+  
+
   if (answers1.RATIO_OR_FLAT === 'Airdrop Ratio') {
     var answers2 = await inquirer.prompt(questions2_ratio);
   } else if (answers1.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
@@ -149,7 +173,8 @@ const snapshotAccountEstimator = async (snapshot) => {
     }
   }
 
-  console.log('accountsWithOverXEos', accountsWithOverXEos)
+  // console.log('accountsWithOverXEos', accountsWithOverXEos)
+  return accountsWithOverXEos
 }
 
 const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
