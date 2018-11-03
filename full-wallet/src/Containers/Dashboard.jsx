@@ -15,6 +15,7 @@ import Message from '../Components/Message.jsx';
 import { css } from 'react-emotion';
 import Typed from 'react-typed';
 import CircularProgressbar from 'react-circular-progressbar';
+require('dotenv').config();
 
 
 console.log(abi);
@@ -28,11 +29,11 @@ abi.structs.forEach(x => {
 console.log(types);
 
 
-const eos = Eos({
-    keyProvider: '5KjDGssHn6aYBs32NwWiGvh2Aa7FbRpu7RGXv9ToNgj8FyS1vyw',// private key
-    httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://13.57.210.230:8888',
-    chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
 
+const eos = Eos({
+    keyProvider: process.env.KEY_PROVIDER,// private key
+    httpEndpoint: process.env.HTTP_ENDPOINT,
+    chainId: process.env.CHAIN_ID
 })
 
 // const eos = Eos({
@@ -134,6 +135,7 @@ class Dashboard extends Component {
         }
         console.log(text);
         this.props.updateState(["progress", 2]);
+        console.log("eos: ", eos);
 
         // let options = {
         //     authorization: 'victor@active',
@@ -146,24 +148,24 @@ class Dashboard extends Component {
 
         let accCreate = await eos.transaction(tr => {
             tr.newaccount({
-                creator: 'victor',
+                creator: process.env.ACCOUNT,
                 name: text,
-                owner: 'EOS7AyWifeevBwdZamViPcboQC8k9nT86q6merJELVGBhq35PU7J6',
-                active: 'EOS5vdEYmN5ftnhWGrKyCMHGsSA7zjApx9js3hUFEZzyDZKWMijtK'
+                owner: process.env.PUB_OWNER,
+                active: process.env.PUB_ACTIVE
             })
-            tr.buyrambytes({
-                payer: 'victor',
-                receiver: text,
-                bytes: 500000
-            })
+            // tr.buyrambytes({
+            //     payer: 'ideos',
+            //     receiver: text,
+            //     bytes: 500000
+            // })
 
-            tr.delegatebw({
-                from: 'victor',
-                receiver: text,
-                stake_net_quantity: '3.0000 EOS',
-                stake_cpu_quantity: '3.0000 EOS',
-                transfer: 0
-            })
+            // tr.delegatebw({
+            //     from: 'ideos',
+            //     receiver: text,
+            //     stake_net_quantity: '3.0000 EOS',
+            //     stake_cpu_quantity: '3.0000 EOS',
+            //     transfer: 0
+            // })
         });
         console.log(accCreate)
         this.props.updateState(["progress", 5])

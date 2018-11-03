@@ -6,6 +6,7 @@ import EosApi from 'eosjs-api';
 import lodash from 'lodash';
 import async from 'async-es';
 import DataTypes from './datatypes.js';
+require('dotenv').config();
 
 // import fetch from 'node-fetch';
 // import { TextDecoder, TextEncoder } from 'text-encoding';
@@ -28,9 +29,9 @@ require('dotenv').config();
 // let eosApi = EosApi(options)
 
 const eos = Eos({
-    keyProvider: '5KjDGssHn6aYBs32NwWiGvh2Aa7FbRpu7RGXv9ToNgj8FyS1vyw',// private key
-    httpEndpoint: 'https://cors-anywhere.herokuapp.com/http://13.57.210.230:8888',
-    chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+    keyProvider: process.env.KEY_PROVIDER,// private key
+    httpEndpoint: process.env.HTTP_ENDPOINT,
+    chainId: process.env.CHAIN_ID
 })
 
 
@@ -75,7 +76,7 @@ export const loadWASM = data => ({
 export const getResourcesPrice = () => {
     return async dispatch => {
         const eosMain = Eos({
-            keyProvider: '5KDJZqtbfyJZmrAx97C8WB2b2V92NBm2rVi7WMFVBFuGdb5dWwQ',// private key
+            keyProvider: process.env.MAIN_KEY,// private key
             httpEndpoint: 'https://proxy.eosnode.tools',
             chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
         })
@@ -84,7 +85,7 @@ export const getResourcesPrice = () => {
         console.log("balance vicisnotvern: ", balance);
         await dispatch(updateState(["cpuRate", (balance.cpu_weight / balance.cpu_limit.max) / 1000]));
         await dispatch(updateState(["netRate", (balance.net_weight / balance.net_limit.max) / 1000]));
-        let price = await axios('http://api.byzanti.ne:8902/getRamPrice?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
+        let price = await axios('http://dev.byzanti.ne:8902/getRamPrice?api_key='+process.env.API_KEY);
         await dispatch(updateState(["ramPrice", (price.data.price_per_kb_eos) / 1000]));
 
         //     console.log(e.target)
@@ -103,7 +104,7 @@ export const loadDataAccount = e => {
     return async dispatch => {
         dispatch(updateState(["account", account]));
         try {
-            let balance = await axios(process.env.URL_ACCOUNT_RESOURCES + account + '?api_key=' + config.apikey);
+            let balance = await axios(process.env.URL_ACCOUNT_RESOURCES + account + '?api_key=' + process.env.API_KEY);
             console.log(balance);
             await dispatch(updateState(["balance", balance.data.core_liquid_balance]));
             await dispatch(updateState(["cpu", balance.data.cpu_limit]));
