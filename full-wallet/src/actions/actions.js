@@ -85,7 +85,7 @@ export const getResourcesPrice = () => {
         console.log("balance vicisnotvern: ", balance);
         await dispatch(updateState(["cpuRate", (balance.cpu_weight / balance.cpu_limit.max) / 1000]));
         await dispatch(updateState(["netRate", (balance.net_weight / balance.net_limit.max) / 1000]));
-        let price = await axios('http://dev.byzanti.ne:8902/getRamPrice?api_key='+process.env.API_KEY);
+        let price = await axios(process.env.API_URL+'/getRamPrice?api_key='+process.env.API_KEY);
         await dispatch(updateState(["ramPrice", (price.data.price_per_kb_eos) / 1000]));
 
         //     console.log(e.target)
