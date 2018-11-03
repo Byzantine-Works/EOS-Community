@@ -44,7 +44,7 @@ const askQuestions = async () => {
       {
         name: "SNAPSHOT_MONTH",
         type: "list",
-        message: "Which Snapshot wouldyou like to use?:",
+        message: "Which Snapshot would you like to use?:",
         choices: ["Genesis", "Jungle Testnet", "July", "August", "September", "October", "November"],
       },
     ];
@@ -96,7 +96,7 @@ const askQuestions = async () => {
   ];
   const questions4_flat = [
     {
-      name: "AIRDROP_RATIO",
+      name: "AIRDROP_FLAT",
       type: "input",
       message: "Airdrop Flat Amount - How many tokens to give every user? (Enter a Number or Decimal):"
     },
@@ -146,7 +146,7 @@ const askQuestions = async () => {
   // if (answers1['TOKEN_NAME'] = '') {answers1['TOKEN_NAME']='TESTA';} // Default to test coin symbol
   // if (answers1['MAX_TOKEN_SUPPLY'] = '') {answers1['MAX_TOKEN_SUPPLY']='1000000000';} // Default to 1 Billion
 
-  console.log('answersFinal', answersFinal)
+  // console.log('answersFinal', answersFinal)
   return answersFinal
 };
 
@@ -346,8 +346,8 @@ const nodeSelector = async (snapshotMonth) => {
   }
   // console.log('All jungleNodes', jungleNodes)
   var mainnetNodes = {
-    'Greymass': "https://eos.greymass.com/", // Greymass Mainnet
     'Libertyblock': "http://mainnet.libertyblock.io:8888/", // LibertyBlock Mainnet
+    'Greymass': "https://eos.greymass.com/", // Greymass Mainnet
   }
   // console.log('All mainnetNodes', mainnetNodes)
 
@@ -369,7 +369,7 @@ const nodeSelector = async (snapshotMonth) => {
   } else {
     for (node in mainnetNodes) {
       if (await nodeChecker(mainnetNodes[node])) {
-        console.log(`Step 4b)) Choosing Available Node:, ${mainnetNodes[node]}`);
+        console.log(`Step 4b)) Choosing Available Node: ${mainnetNodes[node]}`);
         workingNodes[node] = mainnetNodes[node];
         return workingNodes[node];
       }
@@ -380,10 +380,22 @@ const nodeSelector = async (snapshotMonth) => {
   // throw new Error("Nodes are all down or unavailable, please try again later")
 }
 
-const formatOutput = (filtered, airdropRatio, precision) => {
+const formatOutput = (filtered, airdropParams) => {
   var arr = []; 
+  if (airdropParams.ratioOrFlat === 'Airdrop Ratio') {
+    airdropParams.airdropRatio = parseInt(airdropParams.airdropRatio);
+    airdropParams.airdropFlat = 0;
+  } else if (airdropParams.ratioOrFlat === 'Airdrop Flat Amount') {
+    airdropParams.airdropRatio = 0;
+    airdropParams.airdropFlat = parseInt(airdropParams.airdropFlat); 
+  }
+
+  var tokenAmount
   for (let i=0; i<filtered.length; i++) {
-    arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + (filtered[i]['total_eos']*airdropRatio).toFixed(precision))
+    // tokenAmount = (filtered[i]['total_eos']*airdropParams.airdropRatio).toFixed(airdropParams.precision) // Ratio Only
+    // tokenAmount = (parseInt(airdropParams.airdropFlat)).toFixed(airdropParams.precision)  // Fixed Only
+    tokenAmount = (filtered[i]['total_eos']*airdropParams.airdropRatio + airdropParams.airdropFlat).toFixed(airdropParams.precision)
+    arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + tokenAmount)
   }
   var str = arr.join('\n')
   // console.log('formatted output: ', str)
@@ -392,10 +404,6 @@ const formatOutput = (filtered, airdropRatio, precision) => {
 }
 
 const generateAirdropCsv = (formatted) => {
-  // await fs.writeFile('airdrop.csv', formatted, (err) => {
-  //   if (err) throw err;
-  //   console.log('4)) airdrop.csv file has been saved!');
-  // });
   try {
     fs.writeFileSync('airdrop.csv', formatted);
     console.log('Step 5)) airdrop.csv file has been saved!');
@@ -417,8 +425,10 @@ const generateAirdropSh = (airdropParams) => {
   ISSUER_ACCOUNT="${airdropParams.accountName}"
   TOKEN_SYMBOL="${airdropParams.tokenName}"
   AIRDROP_RATIO="${airdropParams.airdropRatio}"
+  AIRDROP_FLAT="${airdropParams.airdropFlat}"
   MAX_TOKEN_SUPPLY="${airdropParams.maxTokenSupply}.0000"
   INITIAL_TOKEN_SUPPLY="${airdropParams.initialTokenSupply}.0000"
+  PRECISION="${airdropParams.precision}"
   NUMBER_OF_ACCOUNTS="${airdropParams.numberOfAccounts}"
   NODE_URL="${airdropParams.nodeUrl}"
   CONTRACT_DIR="${airdropParams.contractDir}"
@@ -520,6 +530,7 @@ const run = async () => {
   // const MAX_EOS_HELD= '9999999';
   // const RATIO_OR_FLAT= 'Airdrop Flat Amount'
   // const AIRDROP_RATIO= '5';
+  // const AIRDROP_FLAT= '0';
   // const INITIAL_TOKEN_SUPPLY= MAX_TOKEN_SUPPLY;
   // const answers = {
   //     ACCOUNT_NAME,
@@ -557,6 +568,7 @@ const run = async () => {
     AIRDROP_FLAT,
   } = answers;
   var INITIAL_TOKEN_SUPPLY = MAX_TOKEN_SUPPLY;
+  var PRECISION = 4;
   ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
   TOKEN_NAME = TOKEN_NAME.toUpperCase();
     
@@ -578,6 +590,7 @@ const run = async () => {
     'accountName': ACCOUNT_NAME,
     'tokenName': TOKEN_NAME,
     'maxTokenSupply': MAX_TOKEN_SUPPLY,
+    'precision': PRECISION,
     'snapshotMonth': SNAPSHOT_MONTH,
     'ratioOrFlat': RATIO_OR_FLAT,
     'airdropRatio': AIRDROP_RATIO,
@@ -589,7 +602,8 @@ const run = async () => {
     // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/", // Bitfinex Testnet
     'contractDir': "./eosio.token",
   }
-  const formattedSnapshotData = await formatOutput(filteredSnapshotData, AIRDROP_RATIO, 4);
+  // console.log('AIRDROP_PARAMS', AIRDROP_PARAMS)
+  const formattedSnapshotData = await formatOutput(filteredSnapshotData, AIRDROP_PARAMS);
   const isCsvGenerated = generateAirdropCsv(formattedSnapshotData);
   const isShGenerated = generateAirdropSh(AIRDROP_PARAMS);
   successFinal(isCsvGenerated, isShGenerated);
