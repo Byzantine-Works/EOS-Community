@@ -103,27 +103,26 @@ const askQuestions = async () => {
   ];
   
   var answersFinal = {};
-  var answers0 = await inquirer.prompt(questions0); // Name, Symbol, MaxSupply
-  var answers1 = await inquirer.prompt(questions1); // Snapshot Month
-  // console.log('3 in Questions', answers1)
+  var answers0 = await inquirer.prompt(questions0); // Asking Question 0 (Name, Symbol, MaxSupply)
+  var answers1 = await inquirer.prompt(questions1); // Asking Question 1 (Snapshot Month)
+
+    // Gettiing account estimate for Questions 2 (Min/Max)
     var estimateSnapshotJson = await snapshotCsvToJson(answers1.SNAPSHOT_MONTH);
     var accountEstimate = await snapshotAccountEstimator(estimateSnapshotJson);
-  // console.log('accountEstimate in Questions', accountEstimate);
+    // console.log('accountEstimate in Questions', accountEstimate);
+    questions2_min[0]['choices'] = [];
+    var minChoicesArr = [];
+    for (key in accountEstimate) {
+      minChoicesArr.push(key.toString() + ': (' + accountEstimate[key].toString() + ' accounts)')
+    }
+    questions2_min[0]['choices'] = minChoicesArr
+
+  var answers2_min = await inquirer.prompt(questions2_min); // Asking Question 2 (Min/Max)
+  var answers2_max = await inquirer.prompt(questions2_max); 
+    answers2_min['MIN_EOS_HELD'] = answers2_min['MIN_EOS_HELD'].split(':')[0]
+  // console.log('answers2_min', answers2_min);
   
-  questions2_min[0]['choices'] = [];
-  var arr = [];
-  for (key in accountEstimate) {
-    arr.push(key.toString() + ': (' + accountEstimate[key].toString() + ' accounts)')
-    // questions2_min[0]['choices'].push(accountEstimate[key])
-  }
-  // console.log('arr', arr)
-  questions2_min[0]['choices'] = arr
-  var answers2_min = await inquirer.prompt(questions2_min)
-  var answers2_max = await inquirer.prompt(questions2_max)  
-  // questions2_min[0]['choices'] = ["Test", "TestB", "TestC"]
-  
-  // Asking Questions 3 and 4 (Ratio/Flat)
-  var answers3 = await inquirer.prompt(questions3); // Ratio or Flat
+  var answers3 = await inquirer.prompt(questions3); // Asking Questions 3 and 4 (Ratio/Flat)
   if (answers3.RATIO_OR_FLAT === 'Airdrop Ratio') {
     var answers4 = await inquirer.prompt(questions4_ratio);
   } else if (answers3.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
@@ -131,17 +130,15 @@ const askQuestions = async () => {
   }
 
   // Copying all answers into answersFinal
-  answersFinal['SNAPSHOT_MONTH'] = answers1['SNAPSHOT_MONTH'];
-  answersFinal['MIN_EOS_HELD'] = answers2_min['MIN_EOS_HELD'];
-  answersFinal['MAX_EOS_HELD'] = answers2_max['MAX_EOS_HELD'];
   for (var key in answers0) {
     answersFinal[key] = answers0[key]; // ACCOUNT_NAME, TOKEN_NAME, MAX_TOKEN_SUPPLY
   }
-  for (var key in answers1) {
-    answersFinal[key] = answers1[key];
-  }
+  answersFinal['SNAPSHOT_MONTH'] = answers1['SNAPSHOT_MONTH'];
+  answersFinal['MIN_EOS_HELD'] = answers2_min['MIN_EOS_HELD'];
+  answersFinal['MAX_EOS_HELD'] = answers2_max['MAX_EOS_HELD'];
+  answersFinal['RATIO_OR_FLAT'] = answers3['RATIO_OR_FLAT'];
   for (var key in answers4) {
-    answersFinal[key] = answers4[key];
+    answersFinal[key] = answers4[key]; // AIRDROP_RATIO or AIRDROP_FLAT
   }
 
   // Adding Default values
@@ -584,6 +581,7 @@ const run = async () => {
     'snapshotMonth': SNAPSHOT_MONTH,
     'ratioOrFlat': RATIO_OR_FLAT,
     'airdropRatio': AIRDROP_RATIO,
+    'airdropFlat': AIRDROP_FLAT,
     'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
     'numberOfAccounts':filteredSnapshotData.length,
     'nodeUrl': NODE_URL, // Jungle CryptoLions.io
