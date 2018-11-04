@@ -1,5 +1,6 @@
 # Welcome to the EOS-Airdrop-Tool
-![ratio_or_flat.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/ratio_or_flat.PNG?raw=true)
+![full_airdrop.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/full_airdrop.PNG?raw=true)
+
 
 
 - EOS-Airdrop-Utility (wallet++)
@@ -32,10 +33,12 @@ node run.js
 - You will be given the option to choose which Snapshot you want to use, along with options to filter between EOS Accounts holding different token amounts
 - You may airdrop X Ratio of your tokens to users based on their EOS Holdings, or you may airdrop a flat amount to all users.
 - A full demo of the questionare and price estimate process is shown below: 
-![full_airdrop.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/full_airdrop.PNG?raw=true)
+
+![ratio_or_flat.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/ratio_or_flat.PNG?raw=true)
 
 
 - Airdrop Generator will tell you the estiamted resource cost to run the airdrop. 
+
 ![price_estimate.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/price_estimate.PNG?raw=true)
 
 
