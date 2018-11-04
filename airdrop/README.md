@@ -1,5 +1,5 @@
 # Welcome to the EOS-Airdrop-Tool
-![full_airdrop.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/full_airdrop.PNG?raw=true)
+![ratio_or_flat.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/ratio_or_flat.PNG?raw=true)
 
 
 - EOS-Airdrop-Utility (wallet++)
@@ -27,7 +27,20 @@ npm install
 node run.js
 ```
 
-Airdrop Generator will tell you the estiamted resource cost to run the airdrop. Once your account is ready with sufficient RAM bought and CPU/Net Staked, go into a cleos enabled terminal and run the airdrop script 
+# Usage Instructions 
+- Run through the series of questions to input your airdrop parameters
+- You will be given the option to choose which Snapshot you want to use, along with options to filter between EOS Accounts holding different token amounts
+- You may airdrop X Ratio of your tokens to users based on their EOS Holdings, or you may airdrop a flat amount to all users.
+- A full demo of the questionare and price estimate process is shown below: 
+![full_airdrop.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/full_airdrop.PNG?raw=true)
+
+
+- Airdrop Generator will tell you the estiamted resource cost to run the airdrop. 
+![price_estimate.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/price_estimate.PNG?raw=true)
+
+
+Once your account is ready with sufficient RAM bought and CPU/Net Staked, go into a cleos enabled terminal and run the airdrop script 
+
 ```
 ./airdrop.sh
 ```
