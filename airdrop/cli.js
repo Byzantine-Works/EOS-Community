@@ -167,7 +167,7 @@ const snapshotCsvToJson = async (snapshotMonth) => {
   } else if (snapshotMonth === 'October') { 
     csvFilePath = './airdrop-snapshots/20181001_account_snapshot.csv'; // October 1st
   } else if (snapshotMonth === 'November') { 
-    csvFilePath = './airdrop-snapshots/20181030_account_snapshot.csv'; // October 30th (closest to November)
+    csvFilePath = './airdrop-snapshots/20181101_account_snapshot.csv'; // October 30th (closest to November)
   }
   var snapshotJson = await csv()
   .fromFile(csvFilePath).then((jsonObj)=>{
@@ -341,7 +341,7 @@ const nodeSelector = async (snapshotMonth) => {
   var workingNodes = {};
   var jungleNodes = {
     'jungleTiger': 'http://193.93.219.219:8888/', // Jungle CryptoLions.io Tiger
-    'jungleBitfinex': "http://eos-bp.bitfinex.com:8888/", // Jungle Bitfinex
+    // 'jungleBitfinex': "http://eos-bp.bitfinex.com:8888/", // Jungle Bitfinex
     'broken': "http://jungle.cryptolions.io:8888/", // Broken Jungle Server (for testing)
   }
   // console.log('All jungleNodes', jungleNodes)
@@ -353,10 +353,6 @@ const nodeSelector = async (snapshotMonth) => {
 
 
   if (snapshotMonth === 'Jungle Testnet') {
-    if (await nodeChecker(jungleNodes.jungleBitfinex)) {
-      console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleBitfinex']) 
-      return jungleNodes['jungleBitfinex']
-    }
     if (await nodeChecker(jungleNodes.jungleTiger)) {
       console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleTiger']) 
       return jungleNodes['jungleTiger']      
@@ -365,6 +361,10 @@ const nodeSelector = async (snapshotMonth) => {
       console.log('Step 4b)) Choosing Available Node:', jungleNodes['broken']) 
       return jungleNodes['broken']
     }
+/*     if (await nodeChecker(jungleNodes.jungleBitfinex)) {
+      console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleBitfinex']) 
+      return jungleNodes['jungleBitfinex']
+    } */
     
   } else {
     for (node in mainnetNodes) {
