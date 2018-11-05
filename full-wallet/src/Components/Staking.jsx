@@ -11,11 +11,6 @@ const Staking = props => {
             backgroundColor: 'rgb(255,255, 255)',
             data: [props.staking.staked/(props.staking.unstaked+props.staking.staked)]
           },
-        //   {
-        //    label: 'deployment',  
-        //    backgroundColor: 'rgb(199, 7, 0)',
-        //    data: [props.totalDeployment/(props.staking.unstaked+props.staking.staked)]
-        //  },
           {
             label: 'unstaked',  
             backgroundColor: 'rgba(255, 255, 255, 0.658)',
@@ -73,7 +68,6 @@ const Staking = props => {
     return (
         <div className="StakingContainer">
             {props.staking ? <HorizontalBar data={data} options={options} height={20}/> : null}
-            {/* Staking <div key="balContainer" style={StyleContainer}><div style={Style} key="balanceVisual" id="balanceVisual"></div></div> */}
         </div>
     )
 

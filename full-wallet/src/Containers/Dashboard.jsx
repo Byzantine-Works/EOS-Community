@@ -66,7 +66,9 @@ const mapStateToProps = store => ({
     cpuRate: store.cpuRate,
     netRate: store.netRate,
     ramPrice: store.ramPrice,
-    progress: store.progress
+    progress: store.progress,
+    wasmName: store.wasmName,
+    abiName: store.abiName
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -257,12 +259,8 @@ class Dashboard extends Component {
             await this.deployContract(account);
             await this.props.estimateContract(account);
         }
-
-        // this.props.updateState(["progress", this.props.progress+1])
-        // this.props.updateState(["bill", bill]);
-        // await this.generateCsv(bill); 
-
     }
+
     async conversion(e) {
         console.log(e.target)
         let price = this.props.ramPrice ? this.props.ramPrice : await this.props.getRamPrice();
@@ -277,6 +275,9 @@ class Dashboard extends Component {
         let filereader = new FileReader();
         let that = this
         let id = e.target.id;
+        if(id === 'abi') this.props.updateState(["abiName", e.target.files[0].name]);
+        else if(id === 'wasm') this.props.updateState(["wasmName", e.target.files[0].name]);
+
         filereader.onloadend = function () {
             let content = filereader.result;
             if (id === 'abi') that.props.loadABI(content);
@@ -343,9 +344,9 @@ class Dashboard extends Component {
                     {this.props.csvData ? <ContractBill csvData={this.props.csvData} totalDeployment={totalDeployment} netRate={this.props.netRate} ramPrice={this.props.ramPrice} cpuRate={this.props.cpuRate} abi={this.props.abi}></ContractBill> : null}
                     {this.props.csvData ? <div className="ActionsCost"><h4>Actions cost</h4>{actionsCost}</div> : null}
 
-                    <div className="Params" style={this.props.csvData ? {marginTop:'750px'}: null}>
-                        <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.contractName + ".abi" : "Load your ABI file"}<input id="abi" type="file" accept=".json, .abi" placeholder="abi" onChange={this.readFile}></input></label><br />
-                        <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.contractName + ".wasm" : "Load your WASM file"}<input id="wasm" type="file" accept=".wasm" placeholder="wasm" onChange={this.readFile}></input></label><br />
+                    <div className="Params" style={this.props.csvData ? {marginTop:'40px'}: null}>
+                        <label className="Abi"><div className="plus-button"></div>  {this.props.abi ? this.props.abiName : "Load your ABI file"}<input id="abi" type="file" accept=".json, .abi" placeholder="abi" onChange={this.readFile}></input></label><br />
+                        <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.wasmName : "Load your WASM file"}<input id="wasm" type="file" accept=".wasm" placeholder="wasm" onChange={this.readFile}></input></label><br />
                         {/* <input id="accountInput" onChange={this.props.loadDataAccount} placeholder="Compare to your account"></input> */}
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
                         {progressCir}

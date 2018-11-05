@@ -11,21 +11,6 @@ const Net = props => {
             backgroundColor: 'rgb(255, 215, 35)',
             data: [props.net.used/props.net.max]
           },
-        //   {
-        //   label: 'deployment',  
-        //   backgroundColor: 'rgb(199, 7, 0)',
-        //   data: [props.deploymentNet/props.net.max]
-        //  },
-        //   props.bill ? {
-        //     label: 'Contract cost estimation',
-        //     backgroundColor: 'red',
-        //     borderColor: 'green',
-        //     borderWidth: 1,
-        //     data: [Object.keys(props.bill).map(x => {
-        //       return props.bill[x].net;
-        //   }).reduce((a, b) => { a = a + b
-        //   return a;})]
-        // } : null,
           {
             label: 'available',  
             backgroundColor: 'rgba(255, 215, 35, 0.4)',

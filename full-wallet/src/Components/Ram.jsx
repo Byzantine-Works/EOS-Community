@@ -105,7 +105,6 @@ const Ram = props => {
     return (
         <div className="RamContainer">
         {props.ram ? <HorizontalBar data={data} options={options} height={20} /> : null}
-            {/* RAM <div className="balContainer" key="balContainer" style={StyleContainer}><div style={Style} key="balanceVisual" id="balanceVisual"></div>{props.ram ? actions : null}</div> */}
         </div>
     )
 

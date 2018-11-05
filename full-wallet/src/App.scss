@@ -31,6 +31,7 @@ img {
     margin-left: 5%;
     margin-top: -24%;
     width: 100%;
+    
 }
 
 .typedContainer{
@@ -146,16 +147,17 @@ img {
 // Contract Bill
 
 .ContractBill{
-    position: absolute;
+    position: relative;
     float: left;
     color: white;
     top: 15px;
     left: 3%;
+    margin-right: 3%;
     padding: 25px;
     background-color: #152c3d;
     border-radius: 10px;
     height: auto;
-    width: 310px;
+    width: 20%;
 }
 
 .RTContainer {
@@ -177,18 +179,55 @@ img {
     display: inline-block;
     padding: 5px;
     background-color: #152c3d;
-    top: 100px;
     color: white;
     font-family: Courier;
     font-size: 1vw;
-    width: 350px;
+    width: 22%;
     height: 400px;
-    margin-left: 3%;
+    left: 3%;
     border-radius: 10px;
     text-align: center;
 }
 
+.Abi {
+    color: white;
+    cursor: pointer;
+    margin: 30px;
+    // border: solid;
+    border-radius: 20px;
+    &:hover {
+        color: rgb(155, 154, 154);
+    }
+}
+.Wasm {
+    color: white;
+    cursor: pointer;
+    margin: 30px;
+    // border: solid;
+    border-radius: 20px;
+    &:hover {
+        color: rgb(155, 154, 154);
+    }
+}
 
+
+.Params input {
+    position: relative;
+    display: none;
+    border: none;
+    transform: translateY(10%);
+    background: rgb(134, 198, 221);
+    width: 200px;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    &:focus {
+        outline: none;
+    }
+    &:active {
+        border: none;
+    }
+}
 
 #estimate {
     position: relative;
@@ -230,45 +269,7 @@ img {
 
 
 
-.Abi {
-    color: white;
-    cursor: pointer;
-    margin: 30px;
-    // border: solid;
-    border-radius: 20px;
-    &:hover {
-        color: rgb(155, 154, 154);
-    }
-}
-.Wasm {
-    color: white;
-    cursor: pointer;
-    margin: 30px;
-    // border: solid;
-    border-radius: 20px;
-    &:hover {
-        color: rgb(155, 154, 154);
-    }
-}
 
-
-.Params input {
-    position: relative;
-    display: none;
-    border: none;
-    transform: translateY(10%);
-    background: rgb(134, 198, 221);
-    width: 200px;
-    border: none;
-    border-radius: 10px;
-    overflow: hidden;
-    &:focus {
-        outline: none;
-    }
-    &:active {
-        border: none;
-    }
-}
 
 
 .byzantine {
@@ -352,14 +353,15 @@ a {
 //Message Box
 
 .MessageBox {
-    position: absolute;
+    position: relative;
+    float: right;
     right: 5%;
     width: 640px;
     color: white;
     border-radius: 10px;
     background-color: #152c3d;
     height: 870px;
-    top: 550px;
+    margin-top: 40px;
     text-align: center;
     padding: 20px;
 }

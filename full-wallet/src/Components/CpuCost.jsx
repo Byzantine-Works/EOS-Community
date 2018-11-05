@@ -99,7 +99,6 @@ const CpuCost = props => {
     return (
         <div className="CpuCostContainer">
             {props.bill ? <HorizontalBar data={data} options={options} height={20} /> : null}
-            {/* CPU <div key="balContainer" style={StyleContainer}><div style={Style} key="balanceVisual" id="balanceVisual"></div></div> */}
         </div>
     )
 

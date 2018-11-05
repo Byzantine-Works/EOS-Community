@@ -11,21 +11,6 @@ const Cpu = props => {
             backgroundColor: 'rgb(37, 84, 185)',
             data: [props.cpu.used/props.cpu.max]
           },
-        //   {
-        //     label: 'deployment',  
-        //     backgroundColor: 'rgb(199, 7, 0)',
-        //     data: [props.deploymentCpu/props.cpu.max]
-        //    },
-        //   props.bill ? {
-        //     label: 'Contract cost estimation',
-        //     backgroundColor: 'red',
-        //     borderColor: 'green',
-        //     borderWidth: 1,
-        //     data: [Object.keys(props.bill).map(x => {
-        //       return props.bill[x].cpu;
-        //   }).reduce((a, b) => { a = a + b
-        //   return a;})/props.cpu.max]
-        // } : null,
           {
             label: 'available',  
             backgroundColor: 'rgba(37, 84, 185, 0.4)',
@@ -86,7 +71,6 @@ const Cpu = props => {
     return (
         <div className="CpuContainer">
             {props.cpu ? <HorizontalBar data={data} options={options} height={20}/> : null}
-            {/* CPU <div key="balContainer" style={StyleContainer}><div style={Style} key="balanceVisual" id="balanceVisual"></div></div> */}
         </div>
     )
 

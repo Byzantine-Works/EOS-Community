@@ -28,7 +28,6 @@ class App extends React.Component {
             {/* <img className="byzantine" src={byzantine} width="200"></img> */}
             <img src={logo}></img>
                 <Dashboard updateState={this.props.updateState} ></Dashboard>
-
             </div>
 
         );
