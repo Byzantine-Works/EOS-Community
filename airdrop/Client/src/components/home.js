@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import Header from './header';
 import Footer from './footer';
 import $ from "jquery";
+import axios from 'axios';
+
 function handleClick(e) {
     e.preventDefault();
     $('.formInner').css('display', 'block');
@@ -9,31 +11,33 @@ function handleClick(e) {
     console.log('submit button clicked')
 
     var dummydata = {
-    'ACCOUNT_NAME': '',
-    'TOKEN_NAME': '',
-    'MAX_TOKEN_SUPPLY': '',
-    'SNAPSHOT_MONTH': '',
-    'MIN_EOS_HELD': '',
-    'MAX_EOS_HELD': '',
-    'RATIO_OR_FLAT': '',
-    'AIRDROP_RATIO': '',
-    'AIRDROP_FLAT': '',
-    }      
+        'ACCOUNT_NAME': '',
+        'TOKEN_NAME': '',
+        'MAX_TOKEN_SUPPLY': '',
+        'SNAPSHOT_MONTH': '',
+        'MIN_EOS_HELD': '',
+        'MAX_EOS_HELD': '',
+        'RATIO_OR_FLAT': '',
+        'AIRDROP_RATIO': '',
+        'AIRDROP_FLAT': '',
+    };
+    
+    
   }
 
 function downloadButton(e) {
     console.log('downloadButton clicked')
 
     var userParams = {
-    'ACCOUNT_NAME': '',
-    'TOKEN_NAME': '',
-    'MAX_TOKEN_SUPPLY': '',
-    'SNAPSHOT_MONTH': '',
-    'MIN_EOS_HELD': '',
-    'MAX_EOS_HELD': '',
-    'RATIO_OR_FLAT': '',
-    'AIRDROP_RATIO': '',
-    'AIRDROP_FLAT': '',
+        'ACCOUNT_NAME': '',
+        'TOKEN_NAME': '',
+        'MAX_TOKEN_SUPPLY': '',
+        'SNAPSHOT_MONTH': '',
+        'MIN_EOS_HELD': '',
+        'MAX_EOS_HELD': '',
+        'RATIO_OR_FLAT': '',
+        'AIRDROP_RATIO': '',
+        'AIRDROP_FLAT': '',
     }      
 }
 
@@ -110,9 +114,13 @@ class Home extends Component{
                                 <li>Ram Required (kb) <span>22725.253</span></li>
                                 <li>CPU-Stake Rough Estimate <span>5.14 EOS</span></li>
                                 <li>Price Estimate EOS <span>2195.6348</span></li>
-                                <li> Price Estimate USD <span>$10978.17</span></li>
+                                <li> Price Estimate USD <span>1337.17</span></li>
                             </ul>
-                            <p>The estimated cost of the airdrop with these settings will be $ 10978.17 USD</p>
+                            <p>The estimated cost of the airdrop with these settings will be $ 1337.17 USD</p>
+
+                            <button onClick={downloadButton}>
+                                Download
+                            </button>
                         </div>
 
                     </div>
