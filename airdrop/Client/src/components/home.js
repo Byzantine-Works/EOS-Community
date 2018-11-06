@@ -21,21 +21,21 @@ function handleClick(e) {
         'AIRDROP_RATIO': '',
         'AIRDROP_FLAT': '',
     };
-    // axios('http://localhost:9001/get_price',{
-    //     method: 'POST',
-    //     data : dummydata,
-    //     headers: {
-    //      // 'Authorization': `bearer ${token}`,
-    //      'Content-Type': 'application/json'
-    //    }
-    // })
-    // axios.post('http://localhost:3000/get_price', dummydata)
-    axios.post('http://localhost:9001/get_price', dummydata)
+
+    // axios.get('http://localhost:9001/get_price')
+    // .then((res) => {
+    //     console.log('Client GET Res :', res);
+    //     })
+    // .catch((err) => {
+    //    console.log('axios GET err: ', err);
+    //   })
+
+    axios.post('http://localhost:9001/get_estimate', dummydata)
     .then((res) => {
-        console.log('res :', res);
+        console.log('Client POST Res :', res);
         })
     .catch((err) => {
-       console.log('axios err: ', err);
+       console.log('axios POST err: ', err);
       })
     
   }

@@ -7,13 +7,20 @@ const cli = require('../../cli.js');
 // router.get('/download_csv', cli.generateAirdropCsv.get);
 // router.get('/download_sh', cli.generateAirdropSh.get);
 
-router.post('/get_price', (req, res) => {
-  var airdropParams = req.body.AIRDROP_PARAMS
 
-
+router.get('/get_price', (req, res) => {
+  // var airdropParams = req.body.AIRDROP_PARAMS
   // res.send(req.body);
-  console.log('Server: GET request to /get_price received');
-  res.send('Client: GET request to /get_price received');
+  console.log('Server: GET request to /get_price received -- req.body:', req.body);
+  res.send('Server Res: GET request to /get_price received');
+})
+
+
+router.post('/get_estimate', (req, res) => {
+  // var airdropParams = req.body.AIRDROP_PARAMS
+  // res.send(req.body);
+  console.log('Server: POST request to /get_estimate received -- req.body', req.body);
+  res.send('Server: POST request to /get_estimate received');
 })
 
 router.get('/download', (req, res) => {
