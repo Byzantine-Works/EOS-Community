@@ -476,5 +476,10 @@ body {
 .formDetail .formInner {
   border-radius: 6px;
 }
+.detailInner {display:none;}
 
-
+.formDetail .formInner .formWrap input.submitButton {cursor: pointer;}
+.formDetail .formInner .formWrap input.submitButton.actives {
+  cursor: not-allowed;
+  opacity: .7;
+}
