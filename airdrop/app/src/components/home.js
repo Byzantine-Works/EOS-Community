@@ -10,6 +10,10 @@ function handleClick(e) {
     $('.detailInner').css('display', 'block');
     console.log('submit button clicked')
 
+    var userParams = {
+        // Need this to populate from React Front End forms (sample dummy data below)
+    }
+
     var dummydata = {
         'ACCOUNT_NAME': 'junglefoxfox',
         'TOKEN_NAME': 'AIRSIX',
@@ -22,27 +26,33 @@ function handleClick(e) {
         'AIRDROP_FLAT': '0',
     };
 
-    // axios.get('http://localhost:9001/get_price')
-    // .then((res) => {
-    //     console.log('Client GET Res :', res);
-    //     })
-    // .catch((err) => {
-    //    console.log('axios GET err: ', err);
-    //   })
 
     axios.post('http://localhost:9001/get_estimate', dummydata)
     .then((res) => {
         console.log('Client POST Res :', res);
-        })
+        var PRICE_ESTIMATE = res.data
+        console.log('PRICE_ESTIMATE', PRICE_ESTIMATE)
+
+        // Sample Response Below: 
+        // PRICE_ESTIMATE = { numberOfAccounts: 88871,
+        //     ramRequiredKb: 12619.681,
+        //     cpuStakeEstimate_EOSLow: 6478,
+        //     cpuStakeEstimate_EOSHigh: 19933,
+        //     netStakeEstimate_EOS: 2.85,
+        //     priceEstimate_Eos: 1210.4415,
+        //     priceEstimate_Usd: 6052.2 }
+
+        // Need to pull ^ into response form, with possibly some sort of "Loading..." message during the async Submit button call
+
+    })
     .catch((err) => {
        console.log('axios POST err: ', err);
-      })
+    })
     
 }
 
 function downloadButton(e) {
     console.log('downloadButton clicked')
-
     var userParams = {
         'ACCOUNT_NAME': '',
         'TOKEN_NAME': '',

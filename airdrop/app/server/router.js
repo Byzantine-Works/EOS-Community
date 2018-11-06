@@ -17,21 +17,23 @@ router.get('/get_price', (req, res) => {
 
 
 router.post('/get_estimate', (req, res) => {
-  // var airdropParams = req.body.AIRDROP_PARAMS
-  var airdropParams = req.body
-  console.log('server: airdropParams', airdropParams)
-  // res.send(req.body);
-console.log('post dirname', __dirname)
-
-  const snapshotJson = cli.snapshotCsvToJson(airdropParams.SNAPSHOT_MONTH) // Csv to Json
-  // const accountEstimate = await cli.snapshotAccountEstimator(snapshotJson) // accountEstimator
-  // const filteredSnapshotData = await cli.snapshotFilter(snapshotJson, MIN_EOS_HELD, MAX_EOS_HELD); // Filtering Accounts by user params
-  // const PRICE_ESTIMATE = await cli.getPriceEstimate(filteredSnapshotData.length) // Price Estimate Calculations
-  // cli.successPrice(PRICE_ESTIMATE);
-  
-  
   console.log('Server: POST request to /get_estimate received -- req.body', req.body);
-  res.send('Server: POST request to /get_estimate received');
+  var userParams = req.body
+  // console.log('server: userParams', userParams)
+
+  const runPost_getPriceEstimate = async () => {
+    const snapshotJson = await cli.snapshotCsvToJson(userParams.SNAPSHOT_MONTH) // Csv to Json
+    const filteredSnapshotData = await cli.snapshotFilter(snapshotJson, userParams.MIN_EOS_HELD, userParams.MAX_EOS_HELD); // Filtering Accounts by user params
+    const PRICE_ESTIMATE = await cli.getPriceEstimate(filteredSnapshotData.length) // Price Estimate Calculations
+    cli.successPrice(PRICE_ESTIMATE);
+    
+    // res.send('Server: POST request to /get_estimate received');
+    console.log(PRICE_ESTIMATE)
+    res.send(PRICE_ESTIMATE);
+  }
+
+  console.log('initiating async run in POST')
+  runPost_getPriceEstimate()
 })
 
 router.get('/download', (req, res) => {

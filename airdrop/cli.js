@@ -171,8 +171,8 @@ const snapshotCsvToJson = async (snapshotMonth) => {
     csvFilePath = './airdrop-snapshots/20181101_account_snapshot.csv'; // November 1st
   }
   var snapshotJson = await csv()
-  // .fromFile(csvFilePath).then((jsonObj)=>{
   .fromFile(path.resolve(__dirname, csvFilePath)).then((jsonObj)=>{
+  // .fromFile(csvFilePath).then((jsonObj)=>{
       // console.log('dirname', __dirname)
     // console.log(`Step 2b)) Converting Csv to Json for ${snapshotMonth} Snapshot...`)
     // console.log('jsonObj', jsonObj);
