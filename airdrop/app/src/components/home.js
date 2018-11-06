@@ -144,7 +144,7 @@ class Home extends Component{
                             <p>The estimated cost of the airdrop with these settings will be $ 1337.17 USD</p>
 
                             <button onClick={downloadButton}>
-                                Download
+                                Download Airdrop Scripts
                             </button>
                         </div>
 
