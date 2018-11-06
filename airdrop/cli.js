@@ -5,6 +5,7 @@ const request = require("request");
 const axios = require("axios");
 const shell = require("shelljs");
 const csv = require("csvtojson");
+const path = require('path');
 const fs = require('fs');
 const genesisSnapshotJson = require("./airdrop-snapshots/genesis-snapshot-fitted.json") // Fitted Genesis Snapshot, or .csv file of daily EOS NewYork Snapshots
 
@@ -167,10 +168,12 @@ const snapshotCsvToJson = async (snapshotMonth) => {
   } else if (snapshotMonth === 'October') { 
     csvFilePath = './airdrop-snapshots/20181001_account_snapshot.csv'; // October 1st
   } else if (snapshotMonth === 'November') { 
-    csvFilePath = './airdrop-snapshots/20181101_account_snapshot.csv'; // October 30th (closest to November)
+    csvFilePath = './airdrop-snapshots/20181101_account_snapshot.csv'; // November 1st
   }
   var snapshotJson = await csv()
-  .fromFile(csvFilePath).then((jsonObj)=>{
+  .fromFile(path.resolve(__dirname, csvFilePath)).then((jsonObj)=>{
+  // .fromFile(csvFilePath).then((jsonObj)=>{
+      // console.log('dirname', __dirname)
     // console.log(`Step 2b)) Converting Csv to Json for ${snapshotMonth} Snapshot...`)
     // console.log('jsonObj', jsonObj);
     return jsonObj

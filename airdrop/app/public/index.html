@@ -45,6 +45,14 @@
 
 
   $(document).ready(function(){
+    $('.fields').on('keyup',function () {
+          if ($(this).val().length>0) {
+              $('.submitButton').removeClass('actives');
+          } else {
+              $('.submitButton').addClass('actives');
+          }
+      });
+
       
 $(".dropzone").dropzone();
 
