@@ -1,3 +1,6 @@
 airdrop.csv
 airdrop.sh
 node_modules
+airdrop/combineattempt-package.json
+airdrop/backup-package.json
+airdrop/backup-package-lock.json

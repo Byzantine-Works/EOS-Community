@@ -1,5 +1,5 @@
 {
-  "name": "airdrop-ui",
+  "name": "airdroptool",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -28,7 +28,7 @@
     "request": "^2.88.0",
     "shelljs": "^0.8.2"
   },
-    "devDependencies": {
+  "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^5.2.0"
   },

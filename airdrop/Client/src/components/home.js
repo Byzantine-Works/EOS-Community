@@ -4,7 +4,7 @@ import Footer from './footer';
 import $ from "jquery";
 function handleClick(e) {
     e.preventDefault();
-    $('.formInner').css('display', 'none');
+    $('.formInner').css('display', 'block');
     $('.detailInner').css('display', 'block');
   }
 
@@ -32,7 +32,7 @@ class Home extends Component{
                                     <select>
                                         <option value="">Select</option>
                                         <option value="">Genesis</option>
-                                        <option value="">jungle Testent</option>
+                                        <option value="">Jungle Testent</option>
                                         <option value="">July</option>
                                         <option value="">August</option>
                                         <option value="">September</option>
