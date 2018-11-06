@@ -1,5 +1,4 @@
-# EOS-Full-Wallet
-- EOS-Full-Wallet (fat wallet)
+# EOS Contract TCO
 Comprehensive EOS full wallet to enable all EOS related on-chain functionality such as account creation, voting, delegating, undelegating, buy/sell RAM, transfer and staking.
 
 # Technical Synopsis
@@ -33,11 +32,11 @@ npm start
 ```
 
 # Demo
-Find the wasm and abi files of a smart contract in ./full-wallet/src/contract to test the tool.
+Find the wasm and abi files of a smart contract in ./contract-tco/src/contract to test the tool.
 
 
 # Design
-- EOS Full Wallet
+- EOS Contract TCO
 
 
 ### Todos
