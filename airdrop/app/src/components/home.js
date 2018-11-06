@@ -11,15 +11,15 @@ function handleClick(e) {
     console.log('submit button clicked')
 
     var dummydata = {
-        'ACCOUNT_NAME': '',
-        'TOKEN_NAME': '',
-        'MAX_TOKEN_SUPPLY': '',
-        'SNAPSHOT_MONTH': '',
-        'MIN_EOS_HELD': '',
-        'MAX_EOS_HELD': '',
-        'RATIO_OR_FLAT': '',
-        'AIRDROP_RATIO': '',
-        'AIRDROP_FLAT': '',
+        'ACCOUNT_NAME': 'junglefoxfox',
+        'TOKEN_NAME': 'AIRSIX',
+        'MAX_TOKEN_SUPPLY': '1000000',
+        'SNAPSHOT_MONTH': 'November',
+        'MIN_EOS_HELD': '100',
+        'MAX_EOS_HELD': '9999999',
+        'RATIO_OR_FLAT': 'Airdrop Flat Amount',
+        'AIRDROP_RATIO': '5',
+        'AIRDROP_FLAT': '0',
     };
 
     // axios.get('http://localhost:9001/get_price')
@@ -38,7 +38,7 @@ function handleClick(e) {
        console.log('axios POST err: ', err);
       })
     
-  }
+}
 
 function downloadButton(e) {
     console.log('downloadButton clicked')
