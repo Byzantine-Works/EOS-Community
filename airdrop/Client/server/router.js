@@ -11,8 +11,9 @@ router.post('/get_price', (req, res) => {
   var airdropParams = req.body.AIRDROP_PARAMS
 
 
-  res.send(req.body);
-
+  // res.send(req.body);
+  console.log('Server: GET request to /get_price received');
+  res.send('Client: GET request to /get_price received');
 })
 
 router.get('/download', (req, res) => {

@@ -21,7 +21,22 @@ function handleClick(e) {
         'AIRDROP_RATIO': '',
         'AIRDROP_FLAT': '',
     };
-    
+    // axios('http://localhost:9001/get_price',{
+    //     method: 'POST',
+    //     data : dummydata,
+    //     headers: {
+    //      // 'Authorization': `bearer ${token}`,
+    //      'Content-Type': 'application/json'
+    //    }
+    // })
+    // axios.post('http://localhost:3000/get_price', dummydata)
+    axios.post('http://localhost:9001/get_price', dummydata)
+    .then((res) => {
+        console.log('res :', res);
+        })
+    .catch((err) => {
+       console.log('axios err: ', err);
+      })
     
   }
 
