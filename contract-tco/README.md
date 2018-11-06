@@ -1,5 +1,5 @@
 # EOS Contract TCO
-Comprehensive EOS full wallet to enable all EOS related on-chain functionality such as account creation, voting, delegating, undelegating, buy/sell RAM, transfer and staking.
+Comprehensive contract estimator to assess the design and runtime cost of a smart contract on the EOS chain.
 
 # Technical Synopsis
 - Uses the Byzantine API Gateway, to abstract away on-chain integrations. Currently supports EOS and support for TRON, ADA, LISK, ETH, XLM and more DPOS ecosystems is in the works.

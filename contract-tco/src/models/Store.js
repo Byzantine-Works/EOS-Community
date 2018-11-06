@@ -8,6 +8,7 @@ export default class State {
         this.ram = { used: null, max: null};
         this.indexString = 0;
         this.loading = false;
+        this.csvData = false;
         // this.bill =
         // this.csvData = [
         //     {

@@ -247,6 +247,8 @@ export const estimateContract = (account) => {
                     data.push(obj);
     
                 }
+
+                try {
     
                 let cT = cpuT.reduce((a, b) => { a = a + b; return a; });
                 let rT = ramT.reduce((a, b) => { a = a + b; return a; });
@@ -269,6 +271,9 @@ export const estimateContract = (account) => {
                     return a;
                 }, 0)
                 console.log("ramTotal: ", ramTotal);
+            } catch(error) {
+                console.log(error)
+            }
     
                 
     

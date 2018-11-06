@@ -273,6 +273,8 @@ class Dashboard extends Component {
 
     async readFile(e) {
         this.props.updateState(["csvData", false]);
+        this.props.updateState(["loading", false]);
+        if(this.props.csvData) e.target.id === 'abi' ? this.props.updateState(["wasm", false]) : this.props.updateState(["abi", false]);
         console.log(e.target.files)
         let filereader = new FileReader();
         let that = this
@@ -351,12 +353,13 @@ class Dashboard extends Component {
                         <label className="Wasm"><div className="plus-button"></div>  {this.props.wasm ? this.props.wasmName : "Load your WASM file"}<input id="wasm" type="file" accept=".wasm" placeholder="wasm" onChange={this.readFile}></input></label><br />
                         {/* <input id="accountInput" onChange={this.props.loadDataAccount} placeholder="Compare to your account"></input> */}
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
-                        {progressCir}
+                        {progressCir}<br/><br/>
+                        {!this.props.csvData && this.props.progress === 100 ? <span>We are sorry, we were not able to estimate your contract.</span> : null}
                     </div>
 
                     {this.props.account && this.props.loading ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}
                     {/* <Message/>  */}
-                    {this.props.csvData ? <Message/> : null}
+                    {this.props.progress === 100 ? <Message/> : null}
                     
                 </div>
             </div>
