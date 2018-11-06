@@ -254,6 +254,7 @@ class Dashboard extends Component {
 
     async estimate() {
         if (this.props.wasm && this.props.abi) {
+            this.props.updateState(["csvData", false]);
             this.props.updateState(["loading", true]);
             let account = await this.pushTransaction();
             await this.deployContract(account);
@@ -271,6 +272,7 @@ class Dashboard extends Component {
 
 
     async readFile(e) {
+        this.props.updateState(["csvData", false]);
         console.log(e.target.files)
         let filereader = new FileReader();
         let that = this
@@ -305,7 +307,7 @@ class Dashboard extends Component {
         let actionsCost = [
             <span>CPU: {(this.props.cpuTotal) / 1000} ms ({(this.props.cpuTotal * this.props.cpuRate).toFixed(4)} EOS)<CpuCost style={{ display: 'inline' }} cpu={this.props.cpu} bill={this.props.bill} height={100}></CpuCost></span>,
             <span>Net: {(this.props.netTotal) / 1000} KB ({(this.props.netTotal * this.props.netRate).toFixed(4)} EOS)<NetCost net={this.props.net} bill={this.props.bill}></NetCost></span>,
-            <span>Ram: {((this.props.ramTotal) / 1000).toFixed(3)} KB ({(this.props.ramTotal * this.props.ramPrice).toFixed(4)} EOS)<RamCost bill={this.props.bill} ram={this.props.ram}></RamCost></span>
+            <span>Ram: {(this.props.ramTotal) / 1000} KB ({(this.props.ramTotal * this.props.ramPrice).toFixed(4)} EOS)<RamCost bill={this.props.bill} ram={this.props.ram}></RamCost></span>
         ];
         const override = css`
         position: absolute;

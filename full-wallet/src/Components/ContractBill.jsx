@@ -5,11 +5,11 @@ import lodash from 'lodash';
 
 const ContractBill = props => {
     let entries = props.csvData.map(action => {
-        if(action.action === "Deployment" || action.action === "Total" || action.action === "Total runtime cost" || action.action === "Total EOS" || action.action === "EOS Equivalent") return null;
+        if (action.action === "Total design cost" || action.action === "Overall cost (EOS)" || action.action === "EOS Equivalent" || action.action === "Total runtime cost")  return null;
         else return <span key={action.action} style={{display:"inline-block", width: "100%", textAlign: "right", marginTop: "15px"}}>{action.action}: {((action.cpu*props.cpuRate)+(action.net*props.netRate)+(action.ram*props.ramPrice)).toFixed(4)} EOS</span>
     })
     let runTimeA = props.csvData.map(action => {
-        if(action.action === "Deployment" || action.action === "Total" || action.action === "Total runtime cost" || action.action === "Total EOS" || action.action === "EOS Equivalent") return null;
+        if (action.action === "Total design cost" || action.action === "Overall cost (EOS)" || action.action === "EOS Equivalent" || action.action === "Total runtime cost")  return null;
         else return Number(action.total_EOS);
     });
     console.log(runTimeA);

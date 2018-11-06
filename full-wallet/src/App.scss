@@ -269,11 +269,6 @@ img {
 }
 
 
-
-
-
-
-
 .byzantine {
     position: absolute 
 }
@@ -358,23 +353,20 @@ a {
     position: relative;
     float: right;
     right: 5%;
-    width: 640px;
+    width: auto;
     color: white;
     border-radius: 10px;
     background-color: #152c3d;
-    height: 870px;
+    height: auto;
     margin-top: 40px;
     margin-left: 3%;
     text-align: center;
-    padding: 20px;
+    padding: 10px;
 }
 
-.MessageBox #message  {
-    height: 200px;
-    width: 90%;
-    margin: auto 0;
-    border-radius: 8px;
-    padding: 10px;
+.formPage {
+    width: 640px;
+    height: 876px;
 }
 
 #send {

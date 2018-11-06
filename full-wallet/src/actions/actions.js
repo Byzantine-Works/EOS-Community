@@ -83,7 +83,7 @@ export const getResourcesPrice = () => {
 
         let balance = await eosMain.getAccount('vicisnotvern');
         console.log("balance vicisnotvern: ", balance);
-        await dispatch(updateState(["cpuRate", (balance.cpu_weight / balance.cpu_limit.max) / 1000]));
+        await dispatch(updateState(["cpuRate", (balance.cpu_weight / balance.cpu_limit.max) / 10000]));
         await dispatch(updateState(["netRate", (balance.net_weight / balance.net_limit.max) / 1000]));
         let price = await axios(process.env.API_URL+'/getRamPrice?api_key='+process.env.API_KEY);
         await dispatch(updateState(["ramPrice", (price.data.price_per_kb_eos) / 1000]));
@@ -186,6 +186,7 @@ export const estimateContract = (account) => {
                     dispatch(updateState(["progress", getState().progress + 3]));
                     ramBefore = await eos.getAccount(account);
                     respTransac = await eos.transaction({ actions: acts });
+                    console.log("resp Transac: ", respTransac);
                     ramAfter = await eos.getAccount(account);
                 }
         
@@ -253,14 +254,15 @@ export const estimateContract = (account) => {
                 let eT = eosT.reduce((a, b) => { a = a + b; return a; });
                 data.push({ action: 'Total runtime cost', cpu: cT, ram: rT, net: nT, total_EOS: eT });
                 data.push({ action: 'EOS Equivalent', ram: (rT*getState().ramPrice).toFixed(4), cpu: (cT*getState().cpuRate).toFixed(4), net: (nT*getState().netRate).toFixed(4)})
-                data.push({ action: 'Deployment', ram: props.deploymentRam, cpu: props.deploymentCpu, net: props.deploymentNet, total_EOS: (props.totalDeployment).toFixed(4) });
-                data.push({ action: 'Total EOS', total_EOS: (((cT+props.deploymentCpu) * getState().cpuRate) + ((rT+props.deploymentRam) * getState().ramPrice) + ((nT+props.deploymentNet) * getState().netRate)).toFixed(4)});
+                data.push({ action: 'Total design cost', ram: props.deploymentRam, cpu: props.deploymentCpu, net: props.deploymentNet, total_EOS: (props.totalDeployment).toFixed(4) });
+                data.push({ action: 'Overall cost (EOS)', total_EOS: (((cT+props.deploymentCpu) * getState().cpuRate) + ((rT+props.deploymentRam) * getState().ramPrice) + ((nT+props.deploymentNet) * getState().netRate)).toFixed(4)});
                 
                 dispatch(updateState(["cpuTotal", cT]));
+                dispatch(updateState(["ramTotal", rT]));
                 dispatch(updateState(["netTotal", nT]));
                 dispatch(updateState(["csvData", data]));
                 let ramTotal = getState().csvData.map(x => {
-                    if (x.action === "Deployment" || x.action === "Total" || x.action === "Total Resources EOS" || x.action === "Total EOS") return 0;
+                    if (x.action === "Total design cost" || x.action === "Overall EOS" || x.action === "EOS Equivalent" || x.action === "Total runtime cost") return 0;
                     else return x.ram;
                 }).reduce((a, b) => {
                     a = a + b;
@@ -268,7 +270,7 @@ export const estimateContract = (account) => {
                 }, 0)
                 console.log("ramTotal: ", ramTotal);
     
-                dispatch(updateState(["ramTotal", ramTotal]));
+                
     
     
                 dispatch(updateState(["progress", 100]));
