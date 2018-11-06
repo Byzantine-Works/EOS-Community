@@ -6,8 +6,36 @@ function handleClick(e) {
     e.preventDefault();
     $('.formInner').css('display', 'block');
     $('.detailInner').css('display', 'block');
+    console.log('submit button clicked')
+
+    var dummydata = {
+    'ACCOUNT_NAME': '',
+    'TOKEN_NAME': '',
+    'MAX_TOKEN_SUPPLY': '',
+    'SNAPSHOT_MONTH': '',
+    'MIN_EOS_HELD': '',
+    'MAX_EOS_HELD': '',
+    'RATIO_OR_FLAT': '',
+    'AIRDROP_RATIO': '',
+    'AIRDROP_FLAT': '',
+    }      
   }
 
+function downloadButton(e) {
+    console.log('downloadButton clicked')
+
+    var userParams = {
+    'ACCOUNT_NAME': '',
+    'TOKEN_NAME': '',
+    'MAX_TOKEN_SUPPLY': '',
+    'SNAPSHOT_MONTH': '',
+    'MIN_EOS_HELD': '',
+    'MAX_EOS_HELD': '',
+    'RATIO_OR_FLAT': '',
+    'AIRDROP_RATIO': '',
+    'AIRDROP_FLAT': '',
+    }      
+}
 
 class Home extends Component{
     render(){
@@ -27,10 +55,10 @@ class Home extends Component{
                                     <label>Token Name</label>
                                     <input type="text" maxlength='7' />
                                     <label>Max token supply</label>
-                                    <input type="text" />
+                                    <input type="text" placeholder="1000000" />
                                     <label>Snapshot month</label>
                                     <select>
-                                        <option value="">Select</option>
+                                        {/* <option value="">Select</option> */}
                                         <option value="">Genesis</option>
                                         <option value="">Jungle Testent</option>
                                         <option value="">July</option>
@@ -52,6 +80,7 @@ class Home extends Component{
                                     </select>
                                     <label>Max EOS held</label>
                                     <select>
+                                        <option value="">No Max</option>
                                         <option value="">0</option>
                                         <option value="">1</option>
                                         <option value="">10</option>
