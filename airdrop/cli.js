@@ -311,7 +311,7 @@ const successPrice = (priceEstimate) => {
     RAM Required (kb): ${priceEstimate.ramRequiredKb}     
     CPU-Stake Rough Estimate*: ${priceEstimate.cpuStakeEstimate_EOSLow}-${priceEstimate.cpuStakeEstimate_EOSHigh} EOS   
     NET-Stake Rough Estimate*: ${priceEstimate.netStakeEstimate_EOS} EOS    
-    Price Estimate EOS: ${priceEstimate.priceEstimate_Eos}    
+    Price Estimate EOS: ${priceEstimate.priceEstimate_Eos} EOS    
     Price Estimate USD: $${priceEstimate.priceEstimate_Usd}    
     ###########################################` + '\n'))
 
@@ -588,7 +588,8 @@ const run = async () => {
   successPrice(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
-  const NODE_URL = await nodeSelector(SNAPSHOT_MONTH) || 'http://mainnet.libertyblock.io:8888/';
+  const NODE_URL = 'http://mainnet.libertyblock.io:8888/';
+  // const NODE_URL = await nodeSelector(SNAPSHOT_MONTH) || 'http://mainnet.libertyblock.io:8888/';
   var AIRDROP_PARAMS = {
     'accountName': ACCOUNT_NAME,
     'tokenName': TOKEN_NAME,
