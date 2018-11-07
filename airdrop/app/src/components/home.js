@@ -1,19 +1,42 @@
 import React, {Component} from 'react';
 import Header from './header';
 import Footer from './footer';
+import loader from './loading.gif';
 import $ from "jquery";
 import axios from 'axios';
 
 function handleClick(e) {
     e.preventDefault();
     $('.formInner').css('display', 'block');
-    $('.detailInner').css('display', 'block');
+    $('.loader').fadeIn();
+    $('.detailInner').fadeIn('5000');
+    $('.loader').fadeOut();
     console.log('submit button clicked')
+
+    var accountName = $('#accountName').val();
+    var tokenName = $('#tokenName').val();
+    var tokenSupply = $('#tokenSupply').val();
+    var snapshot = $('#snapshot').val();
+    var minEOS = $('#minEOS').val();
+    var maxEOS = $('#maxEOS').val();
+    var option = $("input[name='option']:checked").val()
+    var ratio = $('#ratio').val();
+    var flat = $('#flat').val();
 
     var userParams = {
         // Need this to populate from React Front End forms (sample dummy data below)
+        'ACCOUNT_NAME': accountName,
+        'TOKEN_NAME': tokenName,
+        'MAX_TOKEN_SUPPLY': tokenSupply,
+        'SNAPSHOT_MONTH': snapshot,
+        'MIN_EOS_HELD': minEOS,
+        'MAX_EOS_HELD': maxEOS,
+        'RATIO_OR_FLAT': 'Airdrop '+option+' Amount',
+        'AIRDROP_RATIO': ratio,
+        'AIRDROP_FLAT': flat,
     }
-
+    console.log(userParams);
+ 
     var dummydata = {
         'ACCOUNT_NAME': 'junglefoxfox',
         'TOKEN_NAME': 'AIRSIX',
@@ -80,58 +103,63 @@ class Home extends Component{
                             <div className="formWrap">
                                 <form>
                                     <label>Account Name</label>
-                                    <input type="text" maxlength='12' />
+                                    <input type="text" id="accountName" maxlength='12' />
                                     <label>Token Name</label>
-                                    <input type="text" maxlength='7' />
+                                    <input type="text" id="tokenName" maxlength='7' />
                                     <label>Max token supply</label>
-                                    <input type="text" placeholder="1000000" />
+                                    <input type="text" id="tokenSupply" placeholder="1000000" />
                                     <label>Snapshot month</label>
-                                    <select>
+                                    <select id="snapshot">
                                         {/* <option value="">Select</option> */}
-                                        <option value="">Genesis</option>
-                                        <option value="">Jungle Testnet</option>
-                                        <option value="">July</option>
-                                        <option value="">August</option>
-                                        <option value="">September</option>
-                                        <option value="">October</option>
-                                        <option value="">November</option>
+                                        <option value="Genesis">Genesis</option>
+                                        <option value="Jungle Testnet">Jungle Testnet</option>
+                                        <option value="July">July</option>
+                                        <option value="August">August</option>
+                                        <option value="September">September</option>
+                                        <option value="October">October</option>
+                                        <option value="November">November</option>
                                     </select>
                                     <label>Min EOS held</label>
-                                    <select>
-                                        <option value="">0</option>
-                                        <option value="">1</option>
-                                        <option value="">10</option>
-                                        <option value="">100</option>
-                                        <option value="">1000</option>
-                                        <option value="">10000</option>
-                                        <option value="">100000</option>
-                                        <option value="">1000000</option>
+                                    <select id="minEOS">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="10">10</option>
+                                        <option value="100">100</option>
+                                        <option value="1000">1000</option>
+                                        <option value="10000">10000</option>
+                                        <option value="100000">100000</option>
+                                        <option value="1000000">1000000</option>
                                     </select>
                                     <label>Max EOS held</label>
-                                    <select>
+                                    <select id="maxEOS">
                                         <option value="">No Max</option>
-                                        <option value="">0</option>
-                                        <option value="">1</option>
-                                        <option value="">10</option>
-                                        <option value="">100</option>
-                                        <option value="">1000</option>
-                                        <option value="">10000</option>
-                                        <option value="">100000</option>
-                                        <option value="">1000000</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="10">10</option>
+                                        <option value="100">100</option>
+                                        <option value="1000">1000</option>
+                                        <option value="10000">10000</option>
+                                        <option value="100000">100000</option>
+                                        <option value="1000000">1000000</option>
                                     </select>
                                     <label>Ratio or flat</label>
                                     <p>
-                                        <label><input type="radio" name="option" checked /> <span>Ratio</span></label>
-                                        <label><input type="radio" name="option" /> <span>Flat</span></label>
+                                        <label><input type="radio" value="Ratio" name="option" checked /> <span>Ratio</span></label>
+                                        <label><input type="radio" value="Flat" name="option" /> <span>Flat</span></label>
                                     </p>
                                     <label>Airdrop ratio</label>
-                                    <input type="number" />
+                                    <input type="number" id="ratio" />
                                     <label>Airdrop flat</label>
-                                    <input type="number" className="fields" />
+                                    <input type="number" className="fields" id="flat" />
                                     <input type="submit" className="submitButton actives" onClick={handleClick} />
                                 </form>
                             </div>
                         </div>
+
+                        <div className="loader">
+                            <img src={loader} />
+                        </div>
+
                         <div className="formInner detailInner">
                             <h4>Price Calculation</h4>
                             <ul>
@@ -139,13 +167,14 @@ class Home extends Component{
                                 <li>Ram Required (kb) <span>22725.253</span></li>
                                 <li>CPU-Stake Rough Estimate <span>5.14 EOS</span></li>
                                 <li>Price Estimate EOS <span>2195.6348</span></li>
-                                <li> Price Estimate USD <span>1337.17</span></li>
+                                <li>Price Estimate USD <span>1337.17</span></li>
                             </ul>
                             <p>The estimated cost of the airdrop with these settings will be $ 1337.17 USD</p>
 
                             <button onClick={downloadButton}>
                                 Download Airdrop Scripts
                             </button>
+                            <div className="clearfix"></div>
                         </div>
 
                     </div>
