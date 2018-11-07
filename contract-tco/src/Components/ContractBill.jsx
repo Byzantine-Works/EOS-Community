@@ -22,10 +22,10 @@ const ContractBill = props => {
 
     let sucActions = props.csvData.map(el=>{return el.action});
 
-    props.abi.actions.forEach(el => {
-        if(!sucActions.includes(el.name)) entries.push(<span key={el.name} style={{display:"inline-block", width: "100%", textAlign: "right", marginTop: "15px"}}>{el.name}: N/A</span>)
+    // props.abi.actions.forEach(el => {
+    //     if(!sucActions.includes(el.name)) entries.push(<span key={el.name} style={{display:"inline-block", width: "100%", textAlign: "right", marginTop: "15px"}}>{el.name}: N/A</span>)
 
-    })
+    // })
     
 
 

@@ -274,6 +274,7 @@ class Dashboard extends Component {
     async readFile(e) {
         this.props.updateState(["csvData", false]);
         this.props.updateState(["loading", false]);
+        this.props.updateState(["progress", false]);
         if(this.props.csvData) e.target.id === 'abi' ? this.props.updateState(["wasm", false]) : this.props.updateState(["abi", false]);
         console.log(e.target.files)
         let filereader = new FileReader();
