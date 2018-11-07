@@ -47,6 +47,12 @@ Once your account is ready with sufficient RAM bought and CPU/Net Staked, go int
 ```
 ./airdrop.sh
 ```
+
+The shell script in airdrop.sh will automatically do the following:
+- Deploy the token contract
+- Create and Issue the token to the creator account
+- Airdrop the appropriate amount of tokens to each user
+
 ![run_shellscript0.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/run_shellscript0.PNG?raw=true)
 
 # Unit Testing
@@ -54,6 +60,8 @@ Once your account is ready with sufficient RAM bought and CPU/Net Staked, go int
 ```
 npm test
 ```
+
+![unit_tests.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/unit_tests.PNG?raw=true)
 
 # Design
 - EOS Airdrop Utility
