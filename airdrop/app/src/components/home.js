@@ -89,7 +89,7 @@ class Home extends Component{
                                     <select>
                                         {/* <option value="">Select</option> */}
                                         <option value="">Genesis</option>
-                                        <option value="">Jungle Testent</option>
+                                        <option value="">Jungle Testnet</option>
                                         <option value="">July</option>
                                         <option value="">August</option>
                                         <option value="">September</option>
