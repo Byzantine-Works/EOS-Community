@@ -47,6 +47,7 @@ Once your account is ready with sufficient RAM bought and CPU/Net Staked, go int
 ```
 ./airdrop.sh
 ```
+![run_shellscript0.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/run_shellscript0.PNG?raw=true)
 
 # Unit Testing
 - Unit Tests for each subfunction of the airdrop price estimator + script generator. 

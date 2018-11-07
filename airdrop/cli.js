@@ -253,7 +253,7 @@ const getRamPrice = async () => {
 
   const RAM_PRICE = await getRamPrice()
   // console.log("Step 3)) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
-  console.log("Current Ram Price Is: ", RAM_PRICE)
+  // console.log("Current Ram Price Is: ", RAM_PRICE)
   var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
   var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
 
@@ -311,7 +311,7 @@ const successPrice = (priceEstimate) => {
     RAM Required (kb): ${priceEstimate.ramRequiredKb}     
     CPU-Stake Rough Estimate*: ${priceEstimate.cpuStakeEstimate_EOSLow}-${priceEstimate.cpuStakeEstimate_EOSHigh} EOS   
     NET-Stake Rough Estimate*: ${priceEstimate.netStakeEstimate_EOS} EOS    
-    Price Estimate EOS: ${priceEstimate.priceEstimate_Eos}    
+    Price Estimate EOS: ${priceEstimate.priceEstimate_Eos} EOS    
     Price Estimate USD: $${priceEstimate.priceEstimate_Usd}    
     ###########################################` + '\n'))
 
