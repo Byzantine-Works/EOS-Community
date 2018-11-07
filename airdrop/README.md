@@ -13,7 +13,10 @@ Utility tool to simplify the process of Airdrops for token launchers. Provides a
 # Build
 - EOS Aidrop Utility. Download the EOS Wallet
 ```sh
-//Codes
+// Requires nodejs and git
+//   To install git see https://git-scm.com/downloads
+//   To install nodejs see https://nodejs.org/en/download/
+
 git clone https://github.com/Byzantine-Works/EOS-Wallet-Integrations.git
 npm install
 ```
@@ -63,9 +66,7 @@ npm test
 
 ![unit_tests.PNG](https://github.com/Byzantine-Works/EOS-Wallet-Integrations/blob/master/airdrop/screenshots/unit_tests.PNG?raw=true)
 
-# Design
-- EOS Airdrop Utility
-
-
 ### Todos
- - Add Synopsis, design aspects esp security, self-service api-key, the inner workings, etc for maintainability & supportability
+ Possible future features include:
+ - Ability to search for users who interact with a specific dApp or smart contract
+ - UI Or Backend for those who aren't familiar with command line / Cleos
