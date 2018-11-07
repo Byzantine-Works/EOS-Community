@@ -253,7 +253,7 @@ const getRamPrice = async () => {
 
   const RAM_PRICE = await getRamPrice()
   // console.log("Step 3)) getPriceEstimate RAM_PRICE IS: ", RAM_PRICE)
-  // console.log("Current Ram Price Is: ", RAM_PRICE)
+  console.log("Current Ram Price Is: ", RAM_PRICE)
   var ramPrice_EosPerKb = RAM_PRICE['price_per_kb_eos'];
   var ramPrice_UsdPerKb = RAM_PRICE['price_per_kb_usd']
 
@@ -588,7 +588,8 @@ const run = async () => {
   successPrice(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
-  const NODE_URL = await nodeSelector(SNAPSHOT_MONTH) || 'http://mainnet.libertyblock.io:8888/';
+  const NODE_URL = 'http://mainnet.libertyblock.io:8888/';
+  // const NODE_URL = await nodeSelector(SNAPSHOT_MONTH) || 'http://mainnet.libertyblock.io:8888/';
   var AIRDROP_PARAMS = {
     'accountName': ACCOUNT_NAME,
     'tokenName': TOKEN_NAME,
