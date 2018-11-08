@@ -15,7 +15,7 @@ require('dotenv').config();
 // const { TextDecoder, TextEncoder } = require('text-encoding');
 // const rpc = new eosjs.Rpc.JsonRpc('http://41.161.77.154:8888');
 // const api = new eosjs.Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
-require('dotenv').config();
+
 // import Int64 from 'node-int64';
 // var UINT64 = require('cuint').UINT64;
 
