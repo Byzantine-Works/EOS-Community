@@ -20,7 +20,7 @@ const init = () => {
         )
     );
 
-  console.log('Airdrop Price Calculator initialzed...\n')
+  // console.log('Airdrop Price Calculator initialzed...\n')
 };
 
 const askQuestions = async () => {
@@ -85,14 +85,14 @@ const askQuestions = async () => {
       name: "RATIO_OR_FLAT",
       type: "list",
       message: "Would you like an Airdrop Ratio or an Equal Flat Amount to all users",
-      choices: ["Airdrop Ratio", "Airdrop Flat Amount"],
+      choices: ["Airdrop Ratio Amount", "Airdrop Flat Amount"],
     },
   ];
   const questions4_ratio = [
     {
       name: "AIRDROP_RATIO",
       type: "input",
-      message: "Airdrop Ratio - How many tokens to give per 1 EOS? (Enter a Number or Decimal):"
+      message: "Airdrop Ratio Amount - How many tokens to give per 1 EOS? (Enter a Number or Decimal):"
     },
   ];
   const questions4_flat = [
@@ -124,7 +124,7 @@ const askQuestions = async () => {
   // console.log('answers2_min', answers2_min);
   
   var answers3 = await inquirer.prompt(questions3); // Asking Questions 3 and 4 (Ratio/Flat)
-  if (answers3.RATIO_OR_FLAT === 'Airdrop Ratio') {
+  if (answers3.RATIO_OR_FLAT === 'Airdrop Ratio Amount') {
     var answers4 = await inquirer.prompt(questions4_ratio);
   } else if (answers3.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
     var answers4 = await inquirer.prompt(questions4_flat);
@@ -219,7 +219,7 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
     minEosHeld = 0;
     // console.log('No Minimum EOS Value')
   }
-  console.log(`Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS...\n`);
+  console.log(`Step 2)) Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS...\n`);
   var filtered = [];
   for (let i=0; i<snapshotCopy.length; i++) {
     if ((parseInt(snapshotCopy[i]['total_eos']) >= minEosHeld) && (parseInt(snapshotCopy[i]['total_eos']) <= maxEosHeld)) {
@@ -311,7 +311,7 @@ const successPrice = (priceEstimate) => {
     RAM Required (kb): ${priceEstimate.ramRequiredKb}     
     CPU-Stake Rough Estimate*: ${priceEstimate.cpuStakeEstimate_EOSLow}-${priceEstimate.cpuStakeEstimate_EOSHigh} EOS   
     NET-Stake Rough Estimate*: ${priceEstimate.netStakeEstimate_EOS} EOS    
-    Price Estimate EOS: ${priceEstimate.priceEstimate_Eos} EOS    
+    Price Estimate EOS: ${priceEstimate.priceEstimate_Eos} EOS   
     Price Estimate USD: $${priceEstimate.priceEstimate_Usd}    
     ###########################################` + '\n'))
 
@@ -385,7 +385,7 @@ const nodeSelector = async (snapshotMonth) => {
 
 const formatOutput = (filtered, airdropParams) => {
   var arr = []; 
-  if (airdropParams.ratioOrFlat === 'Airdrop Ratio') {
+  if (airdropParams.ratioOrFlat === 'Airdrop Ratio Amount') {
     airdropParams.airdropRatio = parseInt(airdropParams.airdropRatio);
     airdropParams.airdropFlat = 0;
   } else if (airdropParams.ratioOrFlat === 'Airdrop Flat Amount') {
@@ -588,8 +588,8 @@ const run = async () => {
   successPrice(PRICE_ESTIMATE);
   
   /* Airdrop Portion */
-  const NODE_URL = 'http://mainnet.libertyblock.io:8888/';
-  // const NODE_URL = await nodeSelector(SNAPSHOT_MONTH) || 'http://mainnet.libertyblock.io:8888/';
+  // const NODE_URL = 'http://mainnet.libertyblock.io:8888/';
+  const NODE_URL = await nodeSelector(SNAPSHOT_MONTH) || 'http://mainnet.libertyblock.io:8888/';
   var AIRDROP_PARAMS = {
     'accountName': ACCOUNT_NAME,
     'tokenName': TOKEN_NAME,
