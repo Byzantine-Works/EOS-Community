@@ -265,10 +265,10 @@ const getRamPrice = async () => {
   // 12000 microeconds = 1.34575008  - 0.04579692 EOS High Outlier
   var cpuCostPerAccountLow = 0.07289480 // EOS High End
   var cpuStakeEstimate_EOSLow = numberOfAccounts * cpuCostPerAccountLow
-  cpuStakeEstimate_EOSLow = Math.floor(cpuStakeEstimate_EOSLow * 1) / 1;    // Rounding to 0 digits
+  cpuStakeEstimate_EOSLow = Math.floor(cpuStakeEstimate_EOSLow * 10000) / 10000;    // Rounding to 4 digits
   var cpuCostPerAccountHigh = 0.22429168 // EOS High End
   var cpuStakeEstimate_EOSHigh = numberOfAccounts * cpuCostPerAccountHigh
-  cpuStakeEstimate_EOSHigh = Math.floor(cpuStakeEstimate_EOSHigh * 1) / 1;    // Rounding to 0 digits
+  cpuStakeEstimate_EOSHigh = Math.floor(cpuStakeEstimate_EOSHigh * 10000) / 10000;    // Rounding to 4 digits
 
   // Bandwidth 
   // 66~ Bytes per account = 0.00003217 EOS 
@@ -360,14 +360,14 @@ const nodeSelector = async (snapshotMonth) => {
       console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleTiger']) 
       return jungleNodes['jungleTiger']      
     }
-    if (await nodeChecker(jungleNodes.broken)) {
-      console.log('Step 4b)) Choosing Available Node:', jungleNodes['broken']) 
-      return jungleNodes['broken']
+
+    for (node in jungleNodes) {
+      if (await nodeChecker(jungleNodes[node])) {
+        console.log(`Step 4b)) Choosing Available Node: ${jungleNodes[node]}`);
+        workingNodes[node] = jungleNodes[node];
+        return workingNodes[node];
+      }
     }
-/*     if (await nodeChecker(jungleNodes.jungleBitfinex)) {
-      console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleBitfinex']) 
-      return jungleNodes['jungleBitfinex']
-    } */
     
   } else {
     for (node in mainnetNodes) {
@@ -386,18 +386,21 @@ const nodeSelector = async (snapshotMonth) => {
 const formatOutput = (filtered, airdropParams) => {
   var arr = []; 
   if (airdropParams.ratioOrFlat === 'Airdrop Ratio Amount') {
-    airdropParams.airdropRatio = parseInt(airdropParams.airdropRatio);
-    airdropParams.airdropFlat = 0;
+    var airdropRatio = airdropParams.airdropRatio;
+    var airdropFlat = 0;
   } else if (airdropParams.ratioOrFlat === 'Airdrop Flat Amount') {
-    airdropParams.airdropRatio = 0;
-    airdropParams.airdropFlat = parseInt(airdropParams.airdropFlat); 
+    var airdropRatio = 0;
+    var airdropFlat = airdropParams.airdropFlat; 
   }
 
   var tokenAmount
   for (let i=0; i<filtered.length; i++) {
     // tokenAmount = (filtered[i]['total_eos']*airdropParams.airdropRatio).toFixed(airdropParams.precision) // Ratio Only
     // tokenAmount = (parseInt(airdropParams.airdropFlat)).toFixed(airdropParams.precision)  // Fixed Only
-    tokenAmount = (filtered[i]['total_eos']*airdropParams.airdropRatio + airdropParams.airdropFlat).toFixed(airdropParams.precision)
+    console.log("filtered[i]['total_eos']", filtered[i]['total_eos'])
+    tokenAmount = (filtered[i]['total_eos']*parseFloat(airdropRatio) + parseFloat(airdropFlat))
+    tokenAmount = tokenAmount.toFixed(airdropParams.precision)
+    console.log('tokenAmount', tokenAmount)
     arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + tokenAmount)
   }
   var str = arr.join('\n')
@@ -616,6 +619,15 @@ const run = async () => {
 
   // await runShell()
 };
+
+const assert = function(expectedBehavior, descriptionOfCorrectBehavior) {
+  if (!expectedBehavior) {
+    console.log('test failed', descriptionOfCorrectBehavior);
+    throw new Error(descriptionOfCorrectBehavior);
+  } else {
+    console.log('test passed')
+  }
+}
 
 module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, nodeChecker, nodeSelector, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
 // module.exports = run();
