@@ -151,6 +151,43 @@ const askQuestions = async () => {
   return answersFinal
 };
 
+const assert = function(expectedBehavior, descriptionOfCorrectBehavior) {
+  if (!expectedBehavior) {
+    console.log('test failed', descriptionOfCorrectBehavior);
+    // throw new Error(descriptionOfCorrectBehavior);
+  } else {
+    console.log('test passed')
+  }
+}
+
+const runQuestionAssertions = async (answers) => {
+  var errors = [];
+
+  if (answers.ACCOUNT_NAME.length !== 12) {
+    // console.log('Account name must be 12 characters')
+    errors.push('Account name must be 12 characters')
+  }
+  if (answers.TOKEN_NAME.length > 7) {
+    // console.log('Token Name must be 7 characters or less')
+    errors.push('Token Name must be 7 characters or less')
+  }
+
+  if (errors.length > 0) {
+
+    console.log(chalk.red('\nERROR: Please re-enter airdrop params and fix errors!'))
+    console.log(chalk.red('\nAmount of Errors: ', errors.length))
+
+    for (let i=0; i<errors.length; i++) {
+      console.log(chalk.red(`Error ${i}:`, errors[i]))
+    }
+
+    var answers = await askQuestions()
+    await runQuestionAssertions(answers);
+
+  }
+
+}
+
 const snapshotCsvToJson = async (snapshotMonth) => {
 // const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
   var csvFilePath;
@@ -397,10 +434,8 @@ const formatOutput = (filtered, airdropParams) => {
   for (let i=0; i<filtered.length; i++) {
     // tokenAmount = (filtered[i]['total_eos']*airdropParams.airdropRatio).toFixed(airdropParams.precision) // Ratio Only
     // tokenAmount = (parseInt(airdropParams.airdropFlat)).toFixed(airdropParams.precision)  // Fixed Only
-    console.log("filtered[i]['total_eos']", filtered[i]['total_eos'])
     tokenAmount = (filtered[i]['total_eos']*parseFloat(airdropRatio) + parseFloat(airdropFlat))
     tokenAmount = tokenAmount.toFixed(airdropParams.precision)
-    console.log('tokenAmount', tokenAmount)
     arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + tokenAmount)
   }
   var str = arr.join('\n')
@@ -524,6 +559,9 @@ const runShell = () => {
   // shell.exec('cleos -u http://193.93.219.219:8888/ get table junglefoxfox junglefoxfox accounts')
 }
 
+const runAssertions = () => {
+}
+
 const run = async () => {
   init();
   
@@ -561,7 +599,8 @@ const run = async () => {
   }
 
   /* Actual Questions */
-  const answers = await askQuestions();
+  var answers = await askQuestions();
+  await runQuestionAssertions(answers);
   var {
     ACCOUNT_NAME,
     TOKEN_NAME,
@@ -577,6 +616,8 @@ const run = async () => {
   var PRECISION = 4;
   ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
   TOKEN_NAME = TOKEN_NAME.toUpperCase();
+
+  assert(ACCOUNT_NAME === 'junglefoxfox', 'Account Name Should be junglefoxfox')
     
   console.log('\nStep 1)) User Selected Inputs:\n')
   for (var key in answers) {
@@ -620,14 +661,7 @@ const run = async () => {
   // await runShell()
 };
 
-const assert = function(expectedBehavior, descriptionOfCorrectBehavior) {
-  if (!expectedBehavior) {
-    console.log('test failed', descriptionOfCorrectBehavior);
-    throw new Error(descriptionOfCorrectBehavior);
-  } else {
-    console.log('test passed')
-  }
-}
+
 
 module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, nodeChecker, nodeSelector, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
 // module.exports = run();
