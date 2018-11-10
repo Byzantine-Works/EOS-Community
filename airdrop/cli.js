@@ -121,6 +121,10 @@ const askQuestions = async () => {
   var answers2_min = await inquirer.prompt(questions2_min); // Asking Question 2 (Min/Max)
   var answers2_max = await inquirer.prompt(questions2_max); 
     answers2_min['MIN_EOS_HELD'] = answers2_min['MIN_EOS_HELD'].split(':')[0]
+  if (isNaN(answers2_max)) {
+    answers2_max['MAX_EOS_HELD'] = 1000000000;
+    // console.log('No Maximum EOS Value, defaulting Max to 1000000000')
+  }
   // console.log('answers2_min', answers2_min);
   
   var answers3 = await inquirer.prompt(questions3); // Asking Questions 3 and 4 (Ratio/Flat)
@@ -151,29 +155,38 @@ const askQuestions = async () => {
   return answersFinal
 };
 
-const assert = function(expectedBehavior, descriptionOfCorrectBehavior) {
-  if (!expectedBehavior) {
-    console.log('test failed', descriptionOfCorrectBehavior);
-    // throw new Error(descriptionOfCorrectBehavior);
-  } else {
-    console.log('test passed')
-  }
-}
+
 
 const runQuestionAssertions = async (answers) => {
-  var errors = [];
 
-  if (answers.ACCOUNT_NAME.length !== 12) {
-    // console.log('Account name must be 12 characters')
-    errors.push('Account name must be 12 characters')
+  var errors = [];
+  const assert = function(expectedBehavior, descriptionOfCorrectBehavior) {
+    if (!expectedBehavior) {
+      console.log('test failed ', descriptionOfCorrectBehavior);
+      errors.push(descriptionOfCorrectBehavior)
+    } else {
+      console.log('test passed')
+    }
   }
-  if (answers.TOKEN_NAME.length > 7) {
-    // console.log('Token Name must be 7 characters or less')
-    errors.push('Token Name must be 7 characters or less')
+  
+  assert(answers.ACCOUNT_NAME.length === 12, 'Account name must be 12 characters')
+  assert(answers.TOKEN_NAME.length <= 7, 'Token Name must be 7 characters or less')
+  assert(!isNaN(parseFloat(answers.MAX_TOKEN_SUPPLY)), 'Max Token Supply should be a number')
+  assert(parseFloat(answers.MAX_TOKEN_SUPPLY) > 0, 'Max Token Supply should be > 0')
+  console.log('MIN EOS Assertions', parseFloat(answers.MIN_EOS_HELD))
+  // console.log('MAX EOS Assertions', parseFloat(answers.MAX_EOS_HELD))
+  console.log('MAX EOS Assertions', answers.MAX_EOS_HELD)
+  assert(parseFloat(answers.MIN_EOS_HELD) <= parseFloat(answers.MAX_EOS_HELD), 'MIN EOS Held must be <= MAX EOS Held')
+  if (answers.RATIO_OR_FLAT === 'Airdrop Ratio Amount') {
+    // console.log('AIRDROP_RATIO', answers.AIRDROP_RATIO)
+    // console.log('isNumber', !isNaN(parseFloat(answers.AIRDROP_RATIO)))
+    assert(!isNaN(parseFloat(answers.AIRDROP_RATIO)), 'Airdrop Ratio should be a number')
+  }
+  if (answers.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
+    assert(!isNaN(parseFloat(answers.AIRDROP_FLAT)), 'Airdrop Flat should be a number')
   }
 
   if (errors.length > 0) {
-
     console.log(chalk.red('\nERROR: Please re-enter airdrop params and fix errors!'))
     console.log(chalk.red('\nAmount of Errors: ', errors.length))
 
@@ -259,7 +272,7 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   console.log(`Step 2)) Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS...\n`);
   var filtered = [];
   for (let i=0; i<snapshotCopy.length; i++) {
-    if ((parseInt(snapshotCopy[i]['total_eos']) >= minEosHeld) && (parseInt(snapshotCopy[i]['total_eos']) <= maxEosHeld)) {
+    if ((parseFloat(snapshotCopy[i]['total_eos']) >= parseFloat(minEosHeld)) && (parseFloat(snapshotCopy[i]['total_eos']) <= parseFloat(maxEosHeld))) {
       filtered.push(snapshotCopy[i]);
     }
   }
@@ -617,7 +630,6 @@ const run = async () => {
   ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
   TOKEN_NAME = TOKEN_NAME.toUpperCase();
 
-  assert(ACCOUNT_NAME === 'junglefoxfox', 'Account Name Should be junglefoxfox')
     
   console.log('\nStep 1)) User Selected Inputs:\n')
   for (var key in answers) {
