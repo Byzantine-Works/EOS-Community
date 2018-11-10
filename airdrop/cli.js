@@ -173,18 +173,15 @@ const runQuestionAssertions = async (answers) => {
   assert(answers.TOKEN_NAME.length <= 7, 'Token Name must be 7 characters or less')
   assert(!isNaN(parseFloat(answers.MAX_TOKEN_SUPPLY)), 'Max Token Supply should be a number')
   assert(parseFloat(answers.MAX_TOKEN_SUPPLY) > 0, 'Max Token Supply should be > 0')
-  console.log('MIN EOS Assertions', parseFloat(answers.MIN_EOS_HELD))
-  // console.log('MAX EOS Assertions', parseFloat(answers.MAX_EOS_HELD))
-  console.log('MAX EOS Assertions', answers.MAX_EOS_HELD)
   assert(parseFloat(answers.MIN_EOS_HELD) <= parseFloat(answers.MAX_EOS_HELD), 'MIN EOS Held must be <= MAX EOS Held')
+  
   if (answers.RATIO_OR_FLAT === 'Airdrop Ratio Amount') {
-    // console.log('AIRDROP_RATIO', answers.AIRDROP_RATIO)
-    // console.log('isNumber', !isNaN(parseFloat(answers.AIRDROP_RATIO)))
     assert(!isNaN(parseFloat(answers.AIRDROP_RATIO)), 'Airdrop Ratio should be a number')
   }
   if (answers.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
     assert(!isNaN(parseFloat(answers.AIRDROP_FLAT)), 'Airdrop Flat should be a number')
   }
+
 
   if (errors.length > 0) {
     console.log(chalk.red('\nERROR: Please re-enter airdrop params and fix errors!'))
@@ -195,9 +192,16 @@ const runQuestionAssertions = async (answers) => {
     }
 
     var answers = await askQuestions()
-    await runQuestionAssertions(answers);
+    console.log('1) Answers AFTER assertion errors', answers)
+    answers = await runQuestionAssertions(answers);
+    console.log('3) Final Returning AFTER assertion errors', answers)
+    return answers
 
+    
   }
+  console.log("2) RETURNING No Errors Base Case", answers)
+  return answers
+
 
 }
 
@@ -613,7 +617,7 @@ const run = async () => {
 
   /* Actual Questions */
   var answers = await askQuestions();
-  await runQuestionAssertions(answers);
+  answers = await runQuestionAssertions(answers);
   var {
     ACCOUNT_NAME,
     TOKEN_NAME,
