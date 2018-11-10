@@ -103,7 +103,7 @@ class Home extends Component{
         // 'AIRDROP_RATIO': '',
         // 'AIRDROP_FLAT': '',
         // }
-        var userParams = {
+        var defaultParams = {
         'ACCOUNT_NAME': '',
         'TOKEN_NAME': '',
         'MAX_TOKEN_SUPPLY': '999111222',
@@ -115,7 +115,7 @@ class Home extends Component{
         'AIRDROP_FLAT': '',
         }
         this.state = {
-            'userParams': userParams,
+            'userParams': defaultParams,
             'priceEstimate': false
         }
         
@@ -177,19 +177,18 @@ class Home extends Component{
             // console.log('Client POST Res :', res);
             var PRICE_ESTIMATE = res.data
             console.log('Client POST res.data = PRICE_ESTIMATE', PRICE_ESTIMATE)
+            /*     example PRICE_ESTIMATE = { numberOfAccounts: 88871, */ 
+            //     ramRequiredKb: 12619.681,
+            //     cpuStakeEstimate_EOSLow: 6478,
+            //     cpuStakeEstimate_EOSHigh: 19933,
+            //     netStakeEstimate_EOS: 2.85,
+            //     priceEstimate_Eos: 1210.4415,
+            //     priceEstimate_Usd: 6052.2 }
 
             // console.log('AXIOS that.state BEFORE ', that.state.priceEstimate)
             that.setState({priceEstimate: PRICE_ESTIMATE})
             // console.log('AXIOS that.state AFTER: ', that.state.priceEstimate)
-            console.log('Post Request Updated that.state: ', that.state)
 
-//         // PRICE_ESTIMATE = { numberOfAccounts: 88871,
-//         //     ramRequiredKb: 12619.681,
-//         //     cpuStakeEstimate_EOSLow: 6478,
-//         //     cpuStakeEstimate_EOSHigh: 19933,
-//         //     netStakeEstimate_EOS: 2.85,
-//         //     priceEstimate_Eos: 1210.4415,
-//         //     priceEstimate_Usd: 6052.2 }
 
         })
         .catch((err) => {
@@ -279,14 +278,7 @@ class Home extends Component{
 
                         <div className="formInner detailInner">
                             <h4>Price Calculation</h4>
-                            {/* <ul>
-                                <li>Number of account <span>160037</span></li>
-                                <li>Ram Required (kb) <span>22725.253</span></li>
-                                <li>CPU-Stake Rough Estimate <span>5.14 EOS</span></li>
-                                <li>Price Estimate EOS <span>2195.6348</span></li>
-                                <li>Price Estimate USD <span>1337.17</span></li>
-                            </ul> */}                            
-                            {/* //         // PRICE_ESTIMATE = { numberOfAccounts: 88871,
+                            {/* //         // Example PRICE_ESTIMATE = { numberOfAccounts: 88871,
                             //         //     ramRequiredKb: 12619.681,
                             //         //     cpuStakeEstimate_EOSLow: 6478,
                             //         //     cpuStakeEstimate_EOSHigh: 19933,
@@ -300,7 +292,7 @@ class Home extends Component{
                                 <li>Price Estimate EOS <span>{this.state.priceEstimate.priceEstimate_Eos} EOS</span></li>
                                 <li>Price Estimate USD <span>${this.state.priceEstimate.priceEstimate_Usd}</span></li>
                             </ul>
-                            <p>The estimated cost of the airdrop with these settings will be $ 1337.17 USD</p>
+                            <p>The estimated cost of the airdrop with these settings will be ${this.state.priceEstimate.priceEstimate_Usd} USD</p>
 
                             <button onClick={downloadButton}>
                                 Download Airdrop Scripts

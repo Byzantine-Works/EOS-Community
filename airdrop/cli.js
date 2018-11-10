@@ -121,6 +121,10 @@ const askQuestions = async () => {
   var answers2_min = await inquirer.prompt(questions2_min); // Asking Question 2 (Min/Max)
   var answers2_max = await inquirer.prompt(questions2_max); 
     answers2_min['MIN_EOS_HELD'] = answers2_min['MIN_EOS_HELD'].split(':')[0]
+  if (isNaN(answers2_max)) {
+    answers2_max['MAX_EOS_HELD'] = 1000000000;
+    // console.log('No Maximum EOS Value, defaulting Max to 1000000000')
+  }
   // console.log('answers2_min', answers2_min);
   
   var answers3 = await inquirer.prompt(questions3); // Asking Questions 3 and 4 (Ratio/Flat)
@@ -150,6 +154,52 @@ const askQuestions = async () => {
   // console.log('answersFinal', answersFinal)
   return answersFinal
 };
+
+
+
+const runQuestionAssertions = async (answers) => {
+
+  var errors = [];
+  const assert = function(expectedBehavior, descriptionOfCorrectBehavior) {
+    if (!expectedBehavior) {
+      console.log('test failed ', descriptionOfCorrectBehavior);
+      errors.push(descriptionOfCorrectBehavior)
+    } else {
+      console.log('test passed')
+    }
+  }
+  
+  assert(answers.ACCOUNT_NAME.length === 12, 'Account name must be 12 characters')
+  assert(answers.TOKEN_NAME.length <= 7, 'Token Name must be 7 characters or less')
+  assert(!isNaN(parseFloat(answers.MAX_TOKEN_SUPPLY)), 'Max Token Supply should be a number')
+  assert(parseFloat(answers.MAX_TOKEN_SUPPLY) > 0, 'Max Token Supply should be > 0')
+  console.log('MIN EOS Assertions', parseFloat(answers.MIN_EOS_HELD))
+  // console.log('MAX EOS Assertions', parseFloat(answers.MAX_EOS_HELD))
+  console.log('MAX EOS Assertions', answers.MAX_EOS_HELD)
+  assert(parseFloat(answers.MIN_EOS_HELD) <= parseFloat(answers.MAX_EOS_HELD), 'MIN EOS Held must be <= MAX EOS Held')
+  if (answers.RATIO_OR_FLAT === 'Airdrop Ratio Amount') {
+    // console.log('AIRDROP_RATIO', answers.AIRDROP_RATIO)
+    // console.log('isNumber', !isNaN(parseFloat(answers.AIRDROP_RATIO)))
+    assert(!isNaN(parseFloat(answers.AIRDROP_RATIO)), 'Airdrop Ratio should be a number')
+  }
+  if (answers.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
+    assert(!isNaN(parseFloat(answers.AIRDROP_FLAT)), 'Airdrop Flat should be a number')
+  }
+
+  if (errors.length > 0) {
+    console.log(chalk.red('\nERROR: Please re-enter airdrop params and fix errors!'))
+    console.log(chalk.red('\nAmount of Errors: ', errors.length))
+
+    for (let i=0; i<errors.length; i++) {
+      console.log(chalk.red(`Error ${i}:`, errors[i]))
+    }
+
+    var answers = await askQuestions()
+    await runQuestionAssertions(answers);
+
+  }
+
+}
 
 const snapshotCsvToJson = async (snapshotMonth) => {
 // const csvFilePath = './airdrop-snapshots/20181005_account_snapshot.csv'; // UNCOMMENT TO USE EOS NEW YORK DAILY SNAPSHOTS
@@ -222,7 +272,7 @@ const snapshotFilter = (snapshot, minEosHeld, maxEosHeld) => {
   console.log(`Step 2)) Filtering for EOS Accounts holding between ${minEosHeld} and ${maxEosHeld} EOS...\n`);
   var filtered = [];
   for (let i=0; i<snapshotCopy.length; i++) {
-    if ((parseInt(snapshotCopy[i]['total_eos']) >= minEosHeld) && (parseInt(snapshotCopy[i]['total_eos']) <= maxEosHeld)) {
+    if ((parseFloat(snapshotCopy[i]['total_eos']) >= parseFloat(minEosHeld)) && (parseFloat(snapshotCopy[i]['total_eos']) <= parseFloat(maxEosHeld))) {
       filtered.push(snapshotCopy[i]);
     }
   }
@@ -265,10 +315,10 @@ const getRamPrice = async () => {
   // 12000 microeconds = 1.34575008  - 0.04579692 EOS High Outlier
   var cpuCostPerAccountLow = 0.07289480 // EOS High End
   var cpuStakeEstimate_EOSLow = numberOfAccounts * cpuCostPerAccountLow
-  cpuStakeEstimate_EOSLow = Math.floor(cpuStakeEstimate_EOSLow * 1) / 1;    // Rounding to 0 digits
+  cpuStakeEstimate_EOSLow = Math.floor(cpuStakeEstimate_EOSLow * 10000) / 10000;    // Rounding to 4 digits
   var cpuCostPerAccountHigh = 0.22429168 // EOS High End
   var cpuStakeEstimate_EOSHigh = numberOfAccounts * cpuCostPerAccountHigh
-  cpuStakeEstimate_EOSHigh = Math.floor(cpuStakeEstimate_EOSHigh * 1) / 1;    // Rounding to 0 digits
+  cpuStakeEstimate_EOSHigh = Math.floor(cpuStakeEstimate_EOSHigh * 10000) / 10000;    // Rounding to 4 digits
 
   // Bandwidth 
   // 66~ Bytes per account = 0.00003217 EOS 
@@ -360,14 +410,14 @@ const nodeSelector = async (snapshotMonth) => {
       console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleTiger']) 
       return jungleNodes['jungleTiger']      
     }
-    if (await nodeChecker(jungleNodes.broken)) {
-      console.log('Step 4b)) Choosing Available Node:', jungleNodes['broken']) 
-      return jungleNodes['broken']
+
+    for (node in jungleNodes) {
+      if (await nodeChecker(jungleNodes[node])) {
+        console.log(`Step 4b)) Choosing Available Node: ${jungleNodes[node]}`);
+        workingNodes[node] = jungleNodes[node];
+        return workingNodes[node];
+      }
     }
-/*     if (await nodeChecker(jungleNodes.jungleBitfinex)) {
-      console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleBitfinex']) 
-      return jungleNodes['jungleBitfinex']
-    } */
     
   } else {
     for (node in mainnetNodes) {
@@ -386,18 +436,19 @@ const nodeSelector = async (snapshotMonth) => {
 const formatOutput = (filtered, airdropParams) => {
   var arr = []; 
   if (airdropParams.ratioOrFlat === 'Airdrop Ratio Amount') {
-    airdropParams.airdropRatio = parseInt(airdropParams.airdropRatio);
-    airdropParams.airdropFlat = 0;
+    var airdropRatio = airdropParams.airdropRatio;
+    var airdropFlat = 0;
   } else if (airdropParams.ratioOrFlat === 'Airdrop Flat Amount') {
-    airdropParams.airdropRatio = 0;
-    airdropParams.airdropFlat = parseInt(airdropParams.airdropFlat); 
+    var airdropRatio = 0;
+    var airdropFlat = airdropParams.airdropFlat; 
   }
 
   var tokenAmount
   for (let i=0; i<filtered.length; i++) {
     // tokenAmount = (filtered[i]['total_eos']*airdropParams.airdropRatio).toFixed(airdropParams.precision) // Ratio Only
     // tokenAmount = (parseInt(airdropParams.airdropFlat)).toFixed(airdropParams.precision)  // Fixed Only
-    tokenAmount = (filtered[i]['total_eos']*airdropParams.airdropRatio + airdropParams.airdropFlat).toFixed(airdropParams.precision)
+    tokenAmount = (filtered[i]['total_eos']*parseFloat(airdropRatio) + parseFloat(airdropFlat))
+    tokenAmount = tokenAmount.toFixed(airdropParams.precision)
     arr.push(filtered[i]['account_name'] + ',' + filtered[i]['total_eos'] + ',' + tokenAmount)
   }
   var str = arr.join('\n')
@@ -521,6 +572,9 @@ const runShell = () => {
   // shell.exec('cleos -u http://193.93.219.219:8888/ get table junglefoxfox junglefoxfox accounts')
 }
 
+const runAssertions = () => {
+}
+
 const run = async () => {
   init();
   
@@ -558,7 +612,8 @@ const run = async () => {
   }
 
   /* Actual Questions */
-  const answers = await askQuestions();
+  var answers = await askQuestions();
+  await runQuestionAssertions(answers);
   var {
     ACCOUNT_NAME,
     TOKEN_NAME,
@@ -574,6 +629,7 @@ const run = async () => {
   var PRECISION = 4;
   ACCOUNT_NAME = ACCOUNT_NAME.toLowerCase();
   TOKEN_NAME = TOKEN_NAME.toUpperCase();
+
     
   console.log('\nStep 1)) User Selected Inputs:\n')
   for (var key in answers) {
@@ -616,6 +672,8 @@ const run = async () => {
 
   // await runShell()
 };
+
+
 
 module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, nodeChecker, nodeSelector, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
 // module.exports = run();

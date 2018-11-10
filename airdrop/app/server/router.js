@@ -39,6 +39,25 @@ router.post('/get_estimate', (req, res) => {
 router.get('/download', (req, res) => {
   var airdropParams = req.body.AIRDROP_PARAMS
 
+  
+  const NODE_URL = 'http://mainnet.libertyblock.io:8888/';
+  var AIRDROP_PARAMS = {
+    'accountName': airdropParams.ACCOUNT_NAME,
+    'tokenName': airdropParams.TOKEN_NAME,
+    'maxTokenSupply': airdropParams.MAX_TOKEN_SUPPLY,
+    'precision': '4',
+    'snapshotMonth': airdropParams.SNAPSHOT_MONTH,
+    'ratioOrFlat': airdropParams.RATIO_OR_FLAT,
+    'airdropRatio': airdropParams.AIRDROP_RATIO,
+    'airdropFlat': airdropParams.AIRDROP_FLAT,
+    'initialTokenSupply': airdropParams.MAX_TOKEN_SUPPLY,
+    'numberOfAccounts':filteredSnapshotData.length,
+    'nodeUrl': NODE_URL, // Jungle CryptoLions.io
+    // 'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
+    // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/", // Bitfinex Testnet
+    'contractDir': "./eosio.token",
+  }
+
   const isCsvGenerated = cli.generateAirdropCsv(formattedSnapshotData);
   const isShGenerated = cli.generateAirdropSh(AIRDROP_PARAMS);
 
