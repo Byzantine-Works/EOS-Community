@@ -33,7 +33,7 @@ const askQuestions = async () => {
       {
           name: "TOKEN_NAME",
           type: "input",
-          message: "Enter the name of Token?"
+          message: "Enter the name of Token? (Enter 7 Letters or less):"
       },
       {
         name: "MAX_TOKEN_SUPPLY",
@@ -158,8 +158,6 @@ const askQuestions = async () => {
 
 
 const runQuestionAssertions = async (answers) => {
-
-  var errors = [];
   const assert = function(expectedBehavior, descriptionOfCorrectBehavior) {
     if (!expectedBehavior) {
       console.log('test failed ', descriptionOfCorrectBehavior);
@@ -169,6 +167,7 @@ const runQuestionAssertions = async (answers) => {
     }
   }
   
+  var errors = [];
   assert(answers.ACCOUNT_NAME.length === 12, 'Account name must be 12 characters')
   assert(answers.TOKEN_NAME.length <= 7, 'Token Name must be 7 characters or less')
   assert(!isNaN(parseFloat(answers.MAX_TOKEN_SUPPLY)), 'Max Token Supply should be a number')
@@ -192,17 +191,14 @@ const runQuestionAssertions = async (answers) => {
     }
 
     var answers = await askQuestions()
-    console.log('1) Answers AFTER assertion errors', answers)
+    // console.log('1) Answers AFTER assertion errors', answers)
     answers = await runQuestionAssertions(answers);
-    console.log('3) Final Returning AFTER assertion errors', answers)
+    // console.log('3) Final Returning AFTER assertion errors', answers)
     return answers
 
-    
   }
-  console.log("2) RETURNING No Errors Base Case", answers)
+  // console.log("2) RETURNING No Errors Base Case", answers)
   return answers
-
-
 }
 
 const snapshotCsvToJson = async (snapshotMonth) => {
@@ -603,17 +599,6 @@ const run = async () => {
   //     MAX_EOS_HELD,
   // }
   
-  var userParams = {
-  'ACCOUNT_NAME': '',
-  'TOKEN_NAME': '',
-  'MAX_TOKEN_SUPPLY': '',
-  'SNAPSHOT_MONTH': '',
-  'MIN_EOS_HELD': '',
-  'MAX_EOS_HELD': '',
-  'RATIO_OR_FLAT': '',
-  'AIRDROP_RATIO': '',
-  'AIRDROP_FLAT': '',
-  }
 
   /* Actual Questions */
   var answers = await askQuestions();
