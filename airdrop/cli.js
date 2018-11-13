@@ -397,6 +397,9 @@ const nodeSelector = async (snapshotMonth) => {
     'jungleTiger': 'http://193.93.219.219:8888/', // Jungle CryptoLions.io Tiger
     // 'jungleBitfinex': "http://eos-bp.bitfinex.com:8888/", // Jungle Bitfinex
     'broken': "http://jungle.cryptolions.io:8888/", // Broken Jungle Server (for testing)
+    'jungleLion': "http://jungle.cryptolions.io:8890/",
+    'jungleVolcano': "http://jungle.cryptolions.io:8888/",
+    'EOSNYJaguar': "http://	jungle.eosnewyork.io:8888/",
   }
   // console.log('All jungleNodes', jungleNodes)
   var mainnetNodes = {
@@ -407,10 +410,10 @@ const nodeSelector = async (snapshotMonth) => {
 
 
   if (snapshotMonth === 'Jungle Testnet') {
-    if (await nodeChecker(jungleNodes.jungleTiger)) {
-      console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleTiger']) 
-      return jungleNodes['jungleTiger']      
-    }
+    // if (await nodeChecker(jungleNodes.jungleTiger)) {
+    //   console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleTiger']) 
+    //   return jungleNodes['jungleTiger']      
+    // }
 
     for (node in jungleNodes) {
       if (await nodeChecker(jungleNodes[node])) {
@@ -431,6 +434,7 @@ const nodeSelector = async (snapshotMonth) => {
   }
 
   console.log('Error: Nodes are all down or unavailable, please try again later')
+  return false
   // throw new Error("Nodes are all down or unavailable, please try again later")
 }
 

@@ -95,7 +95,6 @@ describe('RAM Price Calculator', function() {
 });
 
 describe('Airdrop Script Generator', function () {
-
   describe('nodeChecker', function() {
     it('should exist', function() {
       should.exist(cli.nodeChecker);
@@ -112,6 +111,7 @@ describe('Airdrop Script Generator', function () {
       (typeof cli.nodeSelector).should.equal('function')
     });
   });
+
   describe('formatOutput', function() {
     it('should exist', function() {
       should.exist(cli.formatOutput);
@@ -189,6 +189,33 @@ describe('Airdrop Script Generator', function () {
   
 });
 
+
+// describe('Node Checker', async function () {
+
+
+//   describe('Mainnet Status', function() {
+//     it('Mainnet Nodes Working?', async function() {
+//       var output = await cli.nodeSelector('Genesis')
+//       console.log('Mainnet Output -------', typeof output)
+//       (typeof output).should.equal('string')
+//       // (typeof cli.nodeSelector('Genesis')).should.equal('object')
+//     });
+//     // it('Should return false if Mainnet nodes are down', function() {
+//     //   (cli.nodeSelector('Genesis')).should.equal('false')
+//     // });
+//   });
+
+//   describe('Jungle Testnet Status', function() {
+//     it('Jungle Testnet Nodes Working?', async function() {
+//       var output = await cli.nodeSelector('Jungle Testnet')
+//       console.log('Jungle Output -------', output)
+//       (typeof output).should.equal('string')
+//     });
+//     // it('Should return false if Jungle Testnet nodes are down', function() {
+//     //   ( cli.nodeSelector('Jungle Testnet')).should.equal('false')
+//     // });
+//   });
+// });
 
 // describe('Basic Mocha String Test', function () {
 //   it('should return number of charachters in a string', function () {
