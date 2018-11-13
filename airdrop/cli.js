@@ -189,6 +189,7 @@ const runQuestionAssertions = async (answers) => {
     for (let i=0; i<errors.length; i++) {
       console.log(chalk.red(`Error ${i}:`, errors[i]))
     }
+    console.log('\n')
 
     var answers = await askQuestions()
     // console.log('1) Answers AFTER assertion errors', answers)

@@ -96,6 +96,22 @@ describe('RAM Price Calculator', function() {
 
 describe('Airdrop Script Generator', function () {
 
+  describe('nodeChecker', function() {
+    it('should exist', function() {
+      should.exist(cli.nodeChecker);
+    });
+    it('should be a function', function() {
+      (typeof cli.nodeChecker).should.equal('function')
+    });
+  });
+  describe('nodeSelector', function() {
+    it('should exist', function() {
+      should.exist(cli.nodeSelector);
+    });
+    it('should be a function', function() {
+      (typeof cli.nodeSelector).should.equal('function')
+    });
+  });
   describe('formatOutput', function() {
     it('should exist', function() {
       should.exist(cli.formatOutput);
