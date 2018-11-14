@@ -33,7 +33,7 @@ const askQuestions = async () => {
       {
           name: "TOKEN_NAME",
           type: "input",
-          message: "Enter the name of Token?"
+          message: "Enter the name of Token? (Enter 1-7 Letters):"
       },
       {
         name: "MAX_TOKEN_SUPPLY",
@@ -158,33 +158,29 @@ const askQuestions = async () => {
 
 
 const runQuestionAssertions = async (answers) => {
-
-  var errors = [];
   const assert = function(expectedBehavior, descriptionOfCorrectBehavior) {
     if (!expectedBehavior) {
-      console.log('test failed ', descriptionOfCorrectBehavior);
+      // console.log('test failed ', descriptionOfCorrectBehavior);
       errors.push(descriptionOfCorrectBehavior)
     } else {
-      console.log('test passed')
+      // console.log('test passed')
     }
   }
   
+  var errors = [];
   assert(answers.ACCOUNT_NAME.length === 12, 'Account name must be 12 characters')
   assert(answers.TOKEN_NAME.length <= 7, 'Token Name must be 7 characters or less')
   assert(!isNaN(parseFloat(answers.MAX_TOKEN_SUPPLY)), 'Max Token Supply should be a number')
   assert(parseFloat(answers.MAX_TOKEN_SUPPLY) > 0, 'Max Token Supply should be > 0')
-  console.log('MIN EOS Assertions', parseFloat(answers.MIN_EOS_HELD))
-  // console.log('MAX EOS Assertions', parseFloat(answers.MAX_EOS_HELD))
-  console.log('MAX EOS Assertions', answers.MAX_EOS_HELD)
   assert(parseFloat(answers.MIN_EOS_HELD) <= parseFloat(answers.MAX_EOS_HELD), 'MIN EOS Held must be <= MAX EOS Held')
+  
   if (answers.RATIO_OR_FLAT === 'Airdrop Ratio Amount') {
-    // console.log('AIRDROP_RATIO', answers.AIRDROP_RATIO)
-    // console.log('isNumber', !isNaN(parseFloat(answers.AIRDROP_RATIO)))
     assert(!isNaN(parseFloat(answers.AIRDROP_RATIO)), 'Airdrop Ratio should be a number')
   }
   if (answers.RATIO_OR_FLAT === 'Airdrop Flat Amount') {
     assert(!isNaN(parseFloat(answers.AIRDROP_FLAT)), 'Airdrop Flat should be a number')
   }
+
 
   if (errors.length > 0) {
     console.log(chalk.red('\nERROR: Please re-enter airdrop params and fix errors!'))
@@ -193,12 +189,17 @@ const runQuestionAssertions = async (answers) => {
     for (let i=0; i<errors.length; i++) {
       console.log(chalk.red(`Error ${i}:`, errors[i]))
     }
+    console.log('\n')
 
     var answers = await askQuestions()
-    await runQuestionAssertions(answers);
+    // console.log('1) Answers AFTER assertion errors', answers)
+    answers = await runQuestionAssertions(answers);
+    // console.log('3) Final Returning AFTER assertion errors', answers)
+    return answers
 
   }
-
+  // console.log("2) RETURNING No Errors Base Case", answers)
+  return answers
 }
 
 const snapshotCsvToJson = async (snapshotMonth) => {
@@ -396,6 +397,9 @@ const nodeSelector = async (snapshotMonth) => {
     'jungleTiger': 'http://193.93.219.219:8888/', // Jungle CryptoLions.io Tiger
     // 'jungleBitfinex': "http://eos-bp.bitfinex.com:8888/", // Jungle Bitfinex
     'broken': "http://jungle.cryptolions.io:8888/", // Broken Jungle Server (for testing)
+    'jungleLion': "http://jungle.cryptolions.io:8890/",
+    'jungleVolcano': "http://jungle.cryptolions.io:8888/",
+    'EOSNYJaguar': "http://jungle.eosnewyork.io:8888/",
   }
   // console.log('All jungleNodes', jungleNodes)
   var mainnetNodes = {
@@ -406,10 +410,10 @@ const nodeSelector = async (snapshotMonth) => {
 
 
   if (snapshotMonth === 'Jungle Testnet') {
-    if (await nodeChecker(jungleNodes.jungleTiger)) {
-      console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleTiger']) 
-      return jungleNodes['jungleTiger']      
-    }
+    // if (await nodeChecker(jungleNodes.jungleTiger)) {
+    //   console.log('Step 4b)) Choosing Available Node:', jungleNodes['jungleTiger']) 
+    //   return jungleNodes['jungleTiger']      
+    // }
 
     for (node in jungleNodes) {
       if (await nodeChecker(jungleNodes[node])) {
@@ -430,6 +434,7 @@ const nodeSelector = async (snapshotMonth) => {
   }
 
   console.log('Error: Nodes are all down or unavailable, please try again later')
+  return false
   // throw new Error("Nodes are all down or unavailable, please try again later")
 }
 
@@ -599,21 +604,10 @@ const run = async () => {
   //     MAX_EOS_HELD,
   // }
   
-  var userParams = {
-  'ACCOUNT_NAME': '',
-  'TOKEN_NAME': '',
-  'MAX_TOKEN_SUPPLY': '',
-  'SNAPSHOT_MONTH': '',
-  'MIN_EOS_HELD': '',
-  'MAX_EOS_HELD': '',
-  'RATIO_OR_FLAT': '',
-  'AIRDROP_RATIO': '',
-  'AIRDROP_FLAT': '',
-  }
 
   /* Actual Questions */
   var answers = await askQuestions();
-  await runQuestionAssertions(answers);
+  answers = await runQuestionAssertions(answers);
   var {
     ACCOUNT_NAME,
     TOKEN_NAME,
