@@ -139,11 +139,7 @@ class Dashboard extends Component {
         this.props.updateState(["progress", 2]);
         console.log("eos: ", eos);
 
-        // let options = {
-        //     authorization: 'victor@active',
-        //     broadcast: true,
-        //     sign: true,
-        //   }
+
 
 
 
@@ -155,65 +151,10 @@ class Dashboard extends Component {
                 owner: process.env.PUB_OWNER,
                 active: process.env.PUB_ACTIVE
             })
-            // tr.buyrambytes({
-            //     payer: 'ideos',
-            //     receiver: text,
-            //     bytes: 500000
-            // })
-
-            // tr.delegatebw({
-            //     from: 'ideos',
-            //     receiver: text,
-            //     stake_net_quantity: '3.0000 EOS',
-            //     stake_cpu_quantity: '3.0000 EOS',
-            //     transfer: 0
-            // })
+    
         });
         console.log(accCreate)
         this.props.updateState(["progress", 5])
-
-        // let ramBefore = await eos.getAccount(text);
-        // this.props.updateState(["progress", 8])
-        // let respTransac = await eos.transfer({
-        //     from: 'victor',
-        //     to: text,
-        //     quantity: '0.0002 EOS',
-        //     memo: 'first transaction'
-        // });
-        // await console.log("deposit is Dashboard :", respTransac)
-        // let ramAfter = await eos.getAccount(text);
-        // this.props.updateState(["progress", 12])
-        // console.log(respTransac)
-
-        // this.props.updateState(["deposit", { ramBefore: ramBefore, ramAfter: ramAfter, respTransac: respTransac }]);
-
-        // ramBefore = await eos.getAccount(text);
-        // this.props.updateState(["progress", 16])
-
-        // // let options = {
-        // //     authorization: text+'@active',
-        // //   };
-
-        // try {
-        //     respTransac = await eos.transfer({
-        //         from: text,
-        //         to: 'eoseos',
-        //         quantity: '0.0001 EOS',
-        //         memo: 'first transaction'
-        //     });
-        //     console.log("respTransac: ", respTransac);
-
-        // } catch (err) {
-        //     console.log(JSON.parse(err));
-        // }
-        // this.props.updateState(["progress", 19])
-        // ramAfter = await eos.getAccount(text);
-        // this.props.updateState(["progress", 23])
-        // console.log("ramAfter: ", ramAfter);
-
-
-        // this.props.updateState(["withdraw", { ramBefore: ramBefore, ramAfter: ramAfter, respTransac: respTransac }]);
-
 
         this.props.getResourcesPrice();
         this.props.updateState(["progress", 25]);

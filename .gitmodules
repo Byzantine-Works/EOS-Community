@@ -1,0 +1,3 @@
+[submodule "iDeos"]
+	path = iDeos
+	url = https://github.com/Byzantine-Works/iDeos

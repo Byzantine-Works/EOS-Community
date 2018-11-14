@@ -129,6 +129,17 @@ export const loadDataAccount = e => {
     }
 }
 
+function array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+};
+
 
 
 export const estimateContract = (account) => {
@@ -137,6 +148,21 @@ export const estimateContract = (account) => {
         let abi = getState().abi;
         let bill = {};
         let actions = [...abi.actions];
+        let actionName = actions.map(el => {
+            return el.name;
+        })
+        if(actionName.includes('transfer') && actionName.includes('create') && actionName.includes('issue')) {
+            let oldIndexCreate = actions.indexOf(lodash.find(actions, ['name', 'create']));
+            array_move(actions, oldIndexCreate, 0);
+
+            let oldIndexIssue = actions.indexOf(lodash.find(actions, ['name', 'issue']));
+            array_move(actions, oldIndexIssue, 1);
+
+            let oldIndexTransfer = actions.indexOf(lodash.find(actions, ['name', 'transfer']));
+            array_move(actions, oldIndexTransfer, 2);
+
+        }
+        console.log(actions);
         // if (lodash.find(actions, ['name', 'withdraw']) === undefined) actions.push({ name: "withdraw" });
         // if (lodash.find(actions, ['name', 'deposit']) === undefined) actions.push({ name: "deposit" });
 
@@ -172,23 +198,25 @@ export const estimateContract = (account) => {
                 let respTransac;
                 let ramBefore;
                 let ramAfter;
-                if (action.name === 'deposit') {
-                    respTransac = getState().deposit.respTransac;
-                    ramBefore = getState().deposit.ramBefore;
-                    ramAfter = getState().deposit.ramAfter;
-                }
-                else if (action.name === 'withdraw') {
-                    respTransac = getState().withdraw.respTransac;
-                    ramBefore = getState().withdraw.ramBefore;
-                    ramAfter = getState().withdraw.ramAfter;
-                }
-                else {
-                    dispatch(updateState(["progress", getState().progress + 3]));
-                    ramBefore = await eos.getAccount(account);
-                    respTransac = await eos.transaction({ actions: acts });
-                    console.log("resp Transac: ", respTransac);
-                    ramAfter = await eos.getAccount(account);
-                }
+                if (action.name === 'create') {
+                    acts[0].data.maximum_supply = '1.0000 SYS';
+
+                } else if (action.name === 'issue') {
+                    acts[0].data.quantity = '0.0010 SYS';
+
+                } else if (action.name === 'transfer') {
+                    acts[0].data.to = 'ideos';
+                    acts[0].data.quantity = '0.0001 SYS';
+
+                }  
+                console.log(acts);
+    
+                
+                dispatch(updateState(["progress", getState().progress + 3]));
+                ramBefore = await eos.getAccount(account);
+                respTransac = await eos.transaction({ actions: acts });
+                ramAfter = await eos.getAccount(account);
+                
         
                 usage.ram = ramAfter.ram_usage - ramBefore.ram_usage;
                 usage.net = respTransac.processed.net_usage;
