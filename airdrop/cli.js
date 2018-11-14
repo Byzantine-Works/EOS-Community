@@ -33,7 +33,7 @@ const askQuestions = async () => {
       {
           name: "TOKEN_NAME",
           type: "input",
-          message: "Enter the name of Token? (Enter 7 Letters or less):"
+          message: "Enter the name of Token? (Enter 1-7 Letters):"
       },
       {
         name: "MAX_TOKEN_SUPPLY",
@@ -160,10 +160,10 @@ const askQuestions = async () => {
 const runQuestionAssertions = async (answers) => {
   const assert = function(expectedBehavior, descriptionOfCorrectBehavior) {
     if (!expectedBehavior) {
-      console.log('test failed ', descriptionOfCorrectBehavior);
+      // console.log('test failed ', descriptionOfCorrectBehavior);
       errors.push(descriptionOfCorrectBehavior)
     } else {
-      console.log('test passed')
+      // console.log('test passed')
     }
   }
   
@@ -399,7 +399,7 @@ const nodeSelector = async (snapshotMonth) => {
     'broken': "http://jungle.cryptolions.io:8888/", // Broken Jungle Server (for testing)
     'jungleLion': "http://jungle.cryptolions.io:8890/",
     'jungleVolcano': "http://jungle.cryptolions.io:8888/",
-    'EOSNYJaguar': "http://	jungle.eosnewyork.io:8888/",
+    'EOSNYJaguar': "http://jungle.eosnewyork.io:8888/",
   }
   // console.log('All jungleNodes', jungleNodes)
   var mainnetNodes = {
