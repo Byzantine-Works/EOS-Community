@@ -1,6 +1,6 @@
 require('dotenv').config();
 import React from 'react';
-import Config from './config.json';
+// import Config from './config.json';
 import { connect } from 'react-redux';
 import openSocket from 'socket.io-client';
 import ScatterJS from 'scatter-js/dist/scatter.esm';
@@ -161,8 +161,6 @@ class App extends React.Component {
     
 
     async scatterPair(e){
-        console.log(window.scatter);
-
 
         if(this.props.scatter) {
             this.props.updateScatter();
@@ -223,6 +221,7 @@ class App extends React.Component {
 
 
     async scatterSend(e) {
+        if(!this.props.scatter) return this.scatterPair(e);
         this.props.updateState(["loading", true]);
 
                 const account = this.props.scatterID.accounts.find(x => x.blockchain === 'eos');
@@ -456,7 +455,7 @@ class App extends React.Component {
         })}
                
                 <OverlayTrigger placement="top" overlay={tooltip}><input key="from" id="from" placeholder="From" value={this.props.from} onChange={this.changeInput} onMouseOver={this.toolTip}></input></OverlayTrigger>
-                <OverlayTrigger placement="top" overlay={tooltip}><input key="privateKey" id="privateKey" type="password" placeholder="Enter your private key" value={this.props.privateKey} onChange={this.changeInput} onMouseOver={this.toolTip}></input></OverlayTrigger>
+                {/* <OverlayTrigger placement="top" overlay={tooltip}><input key="privateKey" id="privateKey" type="password" placeholder="Enter your private key" value={this.props.privateKey} onChange={this.changeInput} onMouseOver={this.toolTip}></input></OverlayTrigger> */}
                 <OverlayTrigger placement="top" overlay={tooltip}><input key="to" id="to" placeholder="To" onChange={this.changeInput} onMouseOver={this.toolTip}></input></OverlayTrigger>
                 <OverlayTrigger placement="top" overlay={tooltip}><input key="amount" id="amount" placeholder="Amount" value={this.props.amRend} onChange={this.changeInput} onBlur={this.unFocus} onMouseOver={this.toolTip}></input></OverlayTrigger>
                 <select key="coin" id="coin" placeholder="Coin" onChange={this.changeInput}>
@@ -473,7 +472,7 @@ class App extends React.Component {
                     <option id="XTZ" disabled>XTZ</option>                    
                 </select>
                 <OverlayTrigger placement="top" overlay={tooltip}><input key="memo" id="memo" placeholder="Memo" onChange={this.changeInput} onMouseOver={this.toolTip}></input></OverlayTrigger>
-                <button id="send" key="send" onClick={this.props.scatter ? this.scatterSend : this.send}>Send</button>
+                <button id="send" key="send" onClick={this.scatterSend}>Send</button>
                 <label className="Scatter"><input type="checkbox" id="scatter" onChange={this.scatterPair}></input><span className="checkmark"></span><OverlayTrigger placement="top" overlay={tooltip}><p id="scatterBox" onMouseOver={this.toolTip}>Pair with Scatter</p></OverlayTrigger>
                </label>
         </div>        

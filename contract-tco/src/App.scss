@@ -4,6 +4,7 @@ body {
     width: 100%;
     background-color:white;
     font-family: Courier;
+    background-color: #1F384A;
 }
 
 // canvas {
@@ -24,6 +25,7 @@ body {
     top: 0px;
     height: 100%;
     width: 100%;
+    
 }
 
 img {
@@ -36,7 +38,7 @@ img {
 
 .typedContainer{
     position: absolute;
-    color: #193549;
+    color:white;
     font-size: 50px;
     right: 5%;
     margin-top: 35px;
@@ -367,7 +369,7 @@ a {
 
 .formPage {
     width: 640px;
-    height: 876px;
+    height: 1046px;
 }
 
 #send {
