@@ -1,6 +1,6 @@
-# EOS-Stripe-Wallet
-- EOS-Stripe-Wallet (skinny wallet)
-Simple, intuitive, secure and "stripe" like embeddable widget for an universal crypto wallet built on the Byzantine API Gateway.  This fee-less wallet lowers the barriers for small businesses in accepting EOS and other crypto currencies.
+# EOS-Payment-Terminal
+- EOS-Payment-Terminal
+Simple, intuitive and secure embeddable widget for an universal crypto wallet built on the Byzantine API Gateway. This fee-less wallet lowers the barriers for small businesses in accepting EOS and other crypto currencies.
 
 #Synopsis
 - Uses the Byzantine API Gateway, to abstract away on-chain integrations. Currently supports EOS and support for TRON, ADA, LISK, ETH, XLM and more DPOS ecosystems is in the works.
@@ -11,7 +11,7 @@ Simple, intuitive, secure and "stripe" like embeddable widget for an universal c
 - Prevents the following attacks which were in recent news:
 
 # Build
-- EOS Stripe Wallet
+- EOS-Payment-Terminal
 ```sh
 //Codes
 git clone https://github.com/Byzantine-Works/EOS-Stripe-Wallet
@@ -22,7 +22,7 @@ curl -o https://github.com/Byzantine-Works/EOS-Stripe-Wallet/walletembed.js?
 ```
 
 # Design
-- EOS Stripe Wallet
+- EOS-Payment-Terminal
 Discuss the design and add screenshots of the UI
 
 
