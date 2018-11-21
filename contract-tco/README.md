@@ -2,16 +2,9 @@
 Comprehensive contract estimator to assess the design and runtime cost of a smart contract on the EOS chain.
 
 # Technical Synopsis
-- Uses the Byzantine API Gateway, to abstract away on-chain integrations. Currently supports EOS and support for TRON, ADA, LISK, ETH, XLM and more DPOS ecosystems is in the works.
-- Provides an abstraction from token contracts, validation of tokens with their respective contract hashes and ensures transaction integrity and security.
-- The API gateway runs its own mainnet and also load balances across 21 block producers when the local mainnet blocks are delayed by >500ms.
-- Security is enabled through a combination of nonce, private salt, api-security-key and a cipher used by both the client and server for capturing user signature. This prevents both the replay attack as well as a secure exchange of keys for on-chain calls.
-- Cryptographic nonce eliminates transaction replay and sybil attacks.
-- Prevents the following attacks which were in recent news:
-
-- - [EosBetDice hacked using eosio.token transfer exploit](https://www.zdnet.com/article/blockchain-betting-app-mocks-competitor-for-getting-hacked-gets-hacked-four-days-later/)
-
-- - [EosDex hacked with fake EOS tokens](https://thenextweb.com/hardfork/2018/09/18/eos-hackers-exchange-fake/)
+- Deploy on the Byzantine testnet abi and wasm files and retrieve the response payload to assess the design cost of the smart contract.
+- Test each action on the testnet and estimate independantly their EOS cost for CPU, RAM and NET.
+- Generate a downloadable contract bill of the contract showing the cost is ms, bytes and their equivalent in EOS. 
 
 # Install
 if Unix:
@@ -26,18 +19,14 @@ sudo npm install -g npm
 npm run build
 ```
 
-# Run
+# Run dev mode
 ```sh
 npm start
 ```
 
 # Demo
-Find the wasm and abi files of a smart contract in ./contract-tco/src/contract to test the tool.
+Find the wasm and abi files of smart contracts in ./contract-tco/src/contract to test the tool.
 
 
 # Design
 - EOS Contract TCO
-
-
-### Todos
- - Add Synopsis, design aspects esp security, self-service api-key, the inner workings, etc for maintainability & supportability

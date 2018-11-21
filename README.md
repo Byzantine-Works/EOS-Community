@@ -28,7 +28,7 @@ git clone https://github.com/Byzantine-Works/EOS-Community.git
 ```sh
 cd EOS-Payment-Terminal
 ```
-To run it look at the Readme inside ./EOS-Payment-Terminal.
+To run it look at the Readme inside ./eos-payment-terminal.
 
 - EOS Contract Estimator
 ```sh
