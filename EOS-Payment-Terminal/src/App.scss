@@ -1,0 +1,306 @@
+
+
+#thin-wallet {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(360deg, #38aecc 10%, #347fb9 90%);
+    border: 1px rgb(148, 148, 148) solid;
+    border-radius: 8px;
+    padding: 50px;
+    display: grid;
+    // grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: 
+    "a a a"
+    "b b b"
+    "c c c"
+    "d e f"
+    "g g h"
+    "i i i"
+    "j j k"
+    "n l p"
+    "o o m"
+    "q q q";
+    // background: linear-gradient(360deg, #949494 10%, #efefef 90%);
+    // background: #efefef;
+    // justify-content: center;
+    gap: 30px;
+    // transform: translateY(20%);
+    // margin: 0 auto;
+    grid-auto-columns: 30%;
+    box-shadow: 2px 3px #aaaaaa;
+    z-index:-1;
+}
+
+#thin-wallet input {
+    width: 100%;
+    color: black;
+    border-radius: 15px;
+    &:focus {
+        outline: none;
+    }
+    &:active {
+        border: none;
+    }
+}
+
+select, option {
+    border-radius: 15px;
+    background-color: #14466C;
+    color: white;
+    font-weight: 500;
+    border: none;
+}
+
+
+
+#from {
+    grid-area: a;
+}
+
+#to { 
+    grid-area: b;
+}
+
+#privateKey {
+    grid-area: c;
+}
+#amount {
+    grid-area: d;
+}
+#token {
+    grid-area: e;
+}
+
+#coin {
+    grid-area: f;
+}
+
+#fiat {
+    grid-area: g;
+}
+
+#usdeur {
+    grid-area: h; 
+}
+
+#memo {
+    grid-area: i;
+
+}
+
+#balance {
+    margin-left: 70px;
+    font-size: 13px;
+    font-weight: 800;
+    position: relative;
+    top: -7px;
+    grid-area: k;
+}
+
+#send {
+    grid-area: l;
+}
+
+#transacs {
+    grid-area: q;
+    text-align: left;
+}
+
+#transactionId {
+    list-style-type: none;
+    // display: inline-block;
+}
+
+#transacLink {
+    display: inline-block;
+}
+
+#transactionId a {
+    color: white;
+    display: inline-block;
+    &:focus {
+        text-decoration: none;
+        color: white;
+    }
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+// #transactionID input, p 
+// }
+
+
+span #scatter {
+    position: relative;
+    opacity: 40;
+    background-color: white;
+}
+
+
+button {
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 17px;
+    width: 100%;
+    height: 40px;
+    background-color: #14466C;
+    border: none;
+    margin: 0;
+    &:focus {
+        outline: none;
+    }
+    &:active {
+        border: none;
+        background-color: #38aecc;
+    }
+}
+
+input {
+    border: none;
+    height: 20px;
+    padding: 5px;
+}
+
+.Scatter {
+    position: relative;
+    height: 32px;
+    width: 135px;
+    padding-left: 30px;
+    padding-top: 20px;
+    padding-right: 0px;
+    margin-bottom: 12px;
+    color: white;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: rgba(245, 245, 245, 0.425);
+    border-radius: 7px;
+    grid-area: m;
+    &:active {
+        background:rgba(245, 245, 245, 0.692);
+    }
+}
+
+/* Hide the browser's default checkbox */
+.Scatter input {
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.Scatter:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.Scatter input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.Scatter input {
+    display: none;
+
+}
+
+/* Show the checkmark when checked */
+.Scatter input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.Scatter .checkmark:after {
+    left: 9px;
+    top: 11px;
+    width: 5px;
+    height: 10px;
+    border: solid white;.footer.content > img,
+    .footer.content > address {
+        display: inline-block;
+    }
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.Scatter img {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 20%;
+}
+
+.Scatter p {
+    position: relative;
+    top: -11px;
+    font: 13px Roboto,sans-serif;
+}
+
+.Wallet.Scatter > img,
+.Wallet.Scatter > p {
+    display: inline-block;
+}
+
+#dialog {
+    position: relative;
+    margin: 0 auto;
+    transform: translateY(-200%);
+    border-color:  #14466C;
+    border-width: 2px;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    font: 18px arial;
+    letter-spacing: 1px;
+    line-height: 200%;
+    font-weight: 200;
+    top: 470px;
+    width: 700px;
+    height: 500px;
+    z-index: 20;
+}
+
+#dialog button {
+    font-size: 15px;
+    margin-bottom: 20px;
+    width: 20%;
+    color: #14466C;
+    background-color: white;
+    border: solid;
+    border-color: #14466C;
+    border-width: 2px;
+}
+
+#success button {
+    display: inline-block;
+    margin: 15px;
+    color: white;
+    border: solid;
+    border-color: #14466C;
+    background-color:  #14466C;
+    &:focus {
+        color: white;
+    }
+    &:active {
+        color: white;
+    }
+
+}
