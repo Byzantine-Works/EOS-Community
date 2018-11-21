@@ -1,9 +1,9 @@
 # EOS-Wallet-Integrations
-- EOS-Stripe-Wallet (skinny wallet)
-Simple, intuitive, secure and "stripe" like embeddable widget for an universal crypto wallet built on the Byzantine API Gateway.  This fee-less wallet lowers the barriers for small businesses in accepting EOS and other crypto currencies.
-- EOS-Full-Wallet (fat wallet)
-Comprehensive EOS full wallet to enable all EOS related on-chain functionality such as account creation, voting, delegating, undelegating, buy/sell RAM, transfer and staking.
-- EOS-Airdrop-Utility (wallet++)
+- EOS-Payment-Terminal
+Simple, intuitive and secure embeddable widget for an universal crypto payment terminal built on the Byzantine API Gateway. This fee-less terminal lowers the barriers for small businesses in accepting EOS and other crypto currencies.
+- Contract Estimator
+Comprehensive EOS Contract Estimator to enable the cost estimation of C++ EOS smart contracts using the wasm and abi files to deploy, test the actions and assess their cost of RAM, CPU and NET.
+- EOS-Airdrop-Utility
 Utility tool to simplify the process of Airdrops for token launchers. Provides a CLI interface and a web-interface to wizardify a sequential set of Q&A to create token-contract, deploy, issue tokens and airdrops. This utility also estimates RAM and stake requirement based on the tokenomics for EOS vs Token ratios.
 
 # Technical Synopsis
@@ -19,34 +19,32 @@ Utility tool to simplify the process of Airdrops for token launchers. Provides a
 - - [EosDex hacked with fake EOS tokens](https://thenextweb.com/hardfork/2018/09/18/eos-hackers-exchange-fake/)
 
 # Build
-- EOS Stripe Wallet
-```sh
-//Codes
-git clone https://github.com/Byzantine-Works/EOS-Stripe-Wallet
-npm install
 
-//Embeddable widget
-curl -o https://github.com/Byzantine-Works/EOS-Stripe-Wallet/walletembed.js?
+```sh
+git clone https://github.com/Byzantine-Works/EOS-Community.git
 ```
 
-- EOS Full Wallet
+- EOS Payment Terminal
 ```sh
-cd full-wallet
+cd EOS-Payment-Terminal
 ```
-To run it look at the Readme inside ./full-wallet.
+To run it look at the Readme inside ./EOS-Payment-Terminal.
+
+- EOS Contract Estimator
+```sh
+cd contract-tco
+```
+To run it look at the Readme inside ./contract-tco.
 
 
 # Design
-- EOS Stripe Wallet
+- EOS Payment Terminal
 The high-level design shown below provides an unified interface for all on-chain EOS operations. 
  - The key components are the API itself, which encapsulates the EOS-chain methods and nuances using eosjs and ecc. 
  - It uses a cryptographic nonce to secure customers from replay attacks. 
 
 ![Alt text](https://github.com/Byzantine-Works/EOS-API-Gateway/blob/master/images/byzapi.png?raw=true "Byzantine API Gateway")
 
- - Below is a screen shot of the EOS 'Stripe' User Interface
-![Alt text](https://github.com/Byzantine-Works/EOS-API-Gateway/blob/master/images/eosstripe.png?raw=true "EOS Stripe Wallet")
+ - Below is a screen shot of the EOS terminal User Interface
+![Alt text](https://github.com/Byzantine-Works/EOS-API-Gateway/blob/master/images/eosstripe.png?raw=true "EOS Payment Terminal")
 
-
-### Todos
- - Add Synopsis, design aspects esp security, self-service api-key, the inner workings, etc for maintainability & supportability
