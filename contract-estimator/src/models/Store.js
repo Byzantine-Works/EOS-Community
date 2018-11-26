@@ -9,6 +9,7 @@ export default class State {
         this.indexString = 0;
         this.loading = false;
         this.csvData = false;
+        this.message = false;
         // this.bill =
         // this.csvData = [
         //     {

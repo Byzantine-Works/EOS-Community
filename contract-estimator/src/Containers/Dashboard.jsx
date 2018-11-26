@@ -68,7 +68,8 @@ const mapStateToProps = store => ({
     ramPrice: store.ramPrice,
     progress: store.progress,
     wasmName: store.wasmName,
-    abiName: store.abiName
+    abiName: store.abiName,
+    message: store.message
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -107,16 +108,20 @@ class Dashboard extends Component {
         this.props.updateState(["progress", 29]);
         let wasm = this.props.wasm;
         let abi = this.props.abi;
-        let wasmResp = await eos.setcode(account, 0, 0, wasm);
-        this.props.updateState(["progress", 32]);
-        let abiResp = await eos.setabi(account, abi);
-        this.props.updateState(["progress", 36]);
-        await console.log("WASM resp: ", wasmResp);
-        await console.log("ABI resp: ", abiResp);
-        this.props.updateState(["deploymentRam", this.props.contractSize * 10.045]);
-        await this.props.updateState(["deploymentCpu", wasmResp.processed.receipt.cpu_usage_us + abiResp.processed.receipt.cpu_usage_us]);
-        await this.props.updateState(["deploymentNet", (wasmResp.processed.receipt.net_usage_words + abiResp.processed.receipt.net_usage_words) * 8]);
-        this.props.updateState(["progress", 39]);
+        try {
+            let wasmResp = await eos.setcode(account, 0, 0, wasm);
+            this.props.updateState(["progress", 32]);
+            let abiResp = await eos.setabi(account, abi);
+            this.props.updateState(["progress", 36]);
+            await console.log("WASM resp: ", wasmResp);
+            await console.log("ABI resp: ", abiResp);
+            this.props.updateState(["deploymentRam", this.props.contractSize * 10.045]);
+            await this.props.updateState(["deploymentCpu", wasmResp.processed.receipt.cpu_usage_us + abiResp.processed.receipt.cpu_usage_us]);
+            await this.props.updateState(["deploymentNet", (wasmResp.processed.receipt.net_usage_words + abiResp.processed.receipt.net_usage_words) * 8]);
+            this.props.updateState(["progress", 39]);
+        } catch (err) {
+            this.props.updateState(["message", "An error has occured, please check if your files are not corrupted."])
+        } 
 
     }
 
@@ -297,6 +302,8 @@ class Dashboard extends Component {
                         <button id="estimate" onClick={this.estimate}>Estimate</button>
                         {progressCir}<br/><br/>
                         {!this.props.csvData && this.props.progress === 100 ? <span>We are sorry, we were not able to estimate your contract.</span> : null}
+                        {this.props.message ? this.props.message : null}
+
                     </div>
 
                     {this.props.account && this.props.loading ? <div className="AccountResources"><h4>Account resources</h4>{resources}</div> : null}

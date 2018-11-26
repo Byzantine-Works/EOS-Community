@@ -113,7 +113,6 @@ img {
 .ActionsCost {
     position: relative;
     padding: 15px;
-    margin-top: 15px;
     background-color: #152c3d;
     border-radius: 10px;
     color: white;
@@ -122,7 +121,7 @@ img {
     margin-left: 5%;
     right: 5%;
     width: 65%;
-    height: 485px;
+    height: 450px;
 }
 
 .CpuCostContainer {
@@ -150,12 +149,13 @@ img {
 // Contract Bill
 
 .ContractBill{
-    position: relative;
+    position: absolute;
     float: left;
     color: white;
-    top: 15px;
     left: 3%;
+    top: 500px;
     margin-right: 3%;
+    margin-top: auto;
     padding: 25px;
     background-color: #152c3d;
     border-radius: 10px;
@@ -186,9 +186,10 @@ img {
     color: white;
     font-family: Courier;
     font-size: 1vw;
+    top: -40px;
     margin-right: 3%;
     width: 22%;
-    height: 400px;
+    height: 470px;
     left: 3%;
     border-radius: 10px;
     text-align: center;
