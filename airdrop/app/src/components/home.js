@@ -4,6 +4,7 @@ import Footer from './footer';
 import loader from './loading.gif';
 import $ from "jquery";
 import axios from 'axios';
+// import { CSVLink, CSVDownload } from "react-csv"
 
 // function handleClick(e) {
 //     e.preventDefault();
@@ -74,7 +75,7 @@ import axios from 'axios';
     
 // }
 
-function downloadButton(e) {
+function downloadSh(e) {
     console.log('downloadButton clicked')
     // var userParams = {
     //     'ACCOUNT_NAME': '',
@@ -87,6 +88,40 @@ function downloadButton(e) {
     //     'AIRDROP_RATIO': '',
     //     'AIRDROP_FLAT': '',
     // }      
+    // var file = new Blob([document.getElementById('myInput').value], { type: 'text/plain' });
+    // var airdropSh = 'airdropSh';
+    // var airdropCsv = 'airdropCsv';
+    var elementsh = document.createElement("a");
+    var filea = new Blob(['File1'], { type: 'text/plain' });
+    elementsh.href = URL.createObjectURL(filea);
+    elementsh.download = "SHELL.txt";
+    elementsh.click();
+
+    // var elementcsv = document.createElement("a");
+    // var fileb = new Blob(['File2'], { type: 'text/plain' });
+    // elementcsv.href = URL.createObjectURL(fileb);
+    // elementcsv.download = "CSV.txt";
+    
+    // elementcsv.click();
+    // downloadCsv();
+
+}
+function downloadCsv(e) {
+    console.log('downloadCSV clicked')
+
+    // var elementsh = document.createElement("a");
+    // var filea = new Blob(['File1'], { type: 'text/plain' });
+    // elementsh.href = URL.createObjectURL(filea);
+    // elementsh.download = "SHELL.txt";
+    // elementsh.click();
+
+    var elementcsv = document.createElement("a");
+    var fileb = new Blob(['File2'], { type: 'text/plain' });
+    elementcsv.href = URL.createObjectURL(fileb);
+    elementcsv.download = "CSV.txt";
+    
+    elementcsv.click();
+
 }
 
 class Home extends Component{
@@ -294,9 +329,15 @@ class Home extends Component{
                             </ul>
                             <p>The estimated cost of the airdrop with these settings will be ${this.state.priceEstimate.priceEstimate_Usd} USD</p>
 
-                            <button onClick={downloadButton}>
-                                Download Airdrop Scripts
-                            </button>
+                            <div>
+                                {/* <input id="myInput" /> */}
+                                <button onClick={downloadCsv}>
+                                    Download Airdrop Csv
+                                </button>
+                                <button onClick={downloadSh}>
+                                    Download Airdrop Script
+                                </button>
+                            </div>
                             <div className="clearfix"></div>
                         </div>
 
