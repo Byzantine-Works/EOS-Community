@@ -466,7 +466,7 @@ const generateAirdropCsv = (formatted) => {
   try {
     fs.writeFileSync('airdrop.csv', formatted);
     console.log('Step 5)) airdrop.csv file has been saved!');
-    return true
+    return formatted
   } catch(err) {
     console.log(err)
     return false
@@ -539,7 +539,7 @@ const generateAirdropSh = (airdropParams) => {
     fs.writeFileSync('airdrop.sh', fullAirdropStr)
     console.log('Step 6)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
     shell.exec('chmod 755 airdrop.sh');
-    return true
+    return fullAirdropStr
   } catch (err) {
     console.log(err);
     return false

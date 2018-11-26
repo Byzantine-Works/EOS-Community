@@ -75,54 +75,8 @@ import axios from 'axios';
     
 // }
 
-function downloadSh(e) {
-    console.log('downloadButton clicked')
-    // var userParams = {
-    //     'ACCOUNT_NAME': '',
-    //     'TOKEN_NAME': '',
-    //     'MAX_TOKEN_SUPPLY': '',
-    //     'SNAPSHOT_MONTH': '',
-    //     'MIN_EOS_HELD': '',
-    //     'MAX_EOS_HELD': '',
-    //     'RATIO_OR_FLAT': '',
-    //     'AIRDROP_RATIO': '',
-    //     'AIRDROP_FLAT': '',
-    // }      
-    // var file = new Blob([document.getElementById('myInput').value], { type: 'text/plain' });
-    // var airdropSh = 'airdropSh';
-    // var airdropCsv = 'airdropCsv';
-    var elementsh = document.createElement("a");
-    var filea = new Blob(['File1'], { type: 'text/plain' });
-    elementsh.href = URL.createObjectURL(filea);
-    elementsh.download = "SHELL.txt";
-    elementsh.click();
 
-    // var elementcsv = document.createElement("a");
-    // var fileb = new Blob(['File2'], { type: 'text/plain' });
-    // elementcsv.href = URL.createObjectURL(fileb);
-    // elementcsv.download = "CSV.txt";
-    
-    // elementcsv.click();
-    // downloadCsv();
 
-}
-function downloadCsv(e) {
-    console.log('downloadCSV clicked')
-
-    // var elementsh = document.createElement("a");
-    // var filea = new Blob(['File1'], { type: 'text/plain' });
-    // elementsh.href = URL.createObjectURL(filea);
-    // elementsh.download = "SHELL.txt";
-    // elementsh.click();
-
-    var elementcsv = document.createElement("a");
-    var fileb = new Blob(['File2'], { type: 'text/plain' });
-    elementcsv.href = URL.createObjectURL(fileb);
-    elementcsv.download = "CSV.txt";
-    
-    elementcsv.click();
-
-}
 
 class Home extends Component{
     constructor(props) {
@@ -232,7 +186,51 @@ class Home extends Component{
         
         console.log('HANDLECLICK this.state', this)
     }
-    
+
+    async downloadCsv(e) {
+    console.log('downloadCSV clicked')
+
+    // var userParams = {
+    //     'ACCOUNT_NAME': '',
+    //     'TOKEN_NAME': '',
+    //     'MAX_TOKEN_SUPPLY': '',
+    //     'SNAPSHOT_MONTH': '',
+    //     'MIN_EOS_HELD': '',
+    //     'MAX_EOS_HELD': '',
+    //     'RATIO_OR_FLAT': '',
+    //     'AIRDROP_RATIO': '',
+    //     'AIRDROP_FLAT': '',
+    // }      
+
+    // var elementsh = document.createElement("a");
+    // var filea = new Blob(['File1'], { type: 'text/plain' });
+    // elementsh.href = URL.createObjectURL(filea);
+    // elementsh.download = "SHELL.txt";
+    // elementsh.click();
+
+    var elementcsv = document.createElement("a");
+    var fileb = new Blob(['File2'], { type: 'text/plain' });
+    elementcsv.href = URL.createObjectURL(fileb);
+    elementcsv.download = "CSV.txt";
+
+    elementcsv.click();
+
+    }
+    async downloadSh(e) {
+        console.log('downloadButton clicked')
+
+        // var file = new Blob([document.getElementById('myInput').value], { type: 'text/plain' });
+        // var airdropSh = 'airdropSh';
+        // var airdropCsv = 'airdropCsv';
+        var elementsh = document.createElement("a");
+        var filea = new Blob(['File1'], { type: 'text/plain' });
+        elementsh.href = URL.createObjectURL(filea);
+        elementsh.download = "SHELL.txt";
+        elementsh.click();
+
+
+    }
+        
 
     render(){
         // console.log("state MAX_TOKEN_SUPPLY", this.state.MAX_TOKEN_SUPPLY)
@@ -330,12 +328,12 @@ class Home extends Component{
                             <p>The estimated cost of the airdrop with these settings will be ${this.state.priceEstimate.priceEstimate_Usd} USD</p>
 
                             <div>
-                                {/* <input id="myInput" /> */}
-                                <button onClick={downloadCsv}>
-                                    Download Airdrop Csv
-                                </button>
-                                <button onClick={downloadSh}>
+                                {/* <input id="myInput" /> */}                                
+                                <button onClick={this.downloadSh}>
                                     Download Airdrop Script
+                                </button>
+                                <button onClick={this.downloadCsv}>
+                                    Download Airdrop Csv
                                 </button>
                             </div>
                             <div className="clearfix"></div>
