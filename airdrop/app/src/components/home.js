@@ -100,8 +100,8 @@ class Home extends Component{
         'MIN_EOS_HELD': '',
         'MAX_EOS_HELD': '',
         'RATIO_OR_FLAT': '',
-        'AIRDROP_RATIO': '',
-        'AIRDROP_FLAT': '',
+        'AIRDROP_RATIO': '1.0',
+        'AIRDROP_FLAT': '0',
         }
         this.state = {
             'userParams': defaultParams,
@@ -109,6 +109,8 @@ class Home extends Component{
         }
         
         this.handleChangeMaxTokenSupply = this.handleChangeMaxTokenSupply.bind(this);
+        this.handleChangeAirdropRatio = this.handleChangeAirdropRatio.bind(this);
+        this.handleChangeAirdropFlat = this.handleChangeAirdropFlat.bind(this);
         this.handleClick = this.handleClick.bind(this);
     }
 
@@ -121,8 +123,24 @@ class Home extends Component{
         
         // this.state.userParams.MAX_TOKEN_SUPPLY = e.target.value; // Does not work, use react method
         this.setState({userParams: newUserParams})
-
-
+    }
+    handleChangeAirdropRatio (e) {
+        console.log('Event', e)
+        let newUserParams = {...this.state.userParams};
+        // console.log('newUserParams', newUserParams)
+        console.log('this.state', this.state)
+        newUserParams.AIRDROP_RATIO = e.target.value;
+        
+        this.setState({userParams: newUserParams})
+    }
+    handleChangeAirdropFlat(e) {
+        console.log('Event', e)
+        let newUserParams = {...this.state.userParams};
+        // console.log('newUserParams', newUserParams)
+        console.log('this.state', this.state)
+        newUserParams.AIRDROP_FLAT = e.target.value;
+        
+        this.setState({userParams: newUserParams})
     }
     
     async handleClick (e) {
@@ -189,31 +207,60 @@ class Home extends Component{
 
     async downloadCsv(e) {
     console.log('downloadCSV clicked')
+        console.log(e.target)
+        e.preventDefault();
+        $('.formInner').css('display', 'block');
+        $('.loader').fadeIn();
+        $('.detailInner').fadeIn('5000');
+        $('.loader').fadeOut();
+        console.log('submit button clicked')
 
-    // var userParams = {
-    //     'ACCOUNT_NAME': '',
-    //     'TOKEN_NAME': '',
-    //     'MAX_TOKEN_SUPPLY': '',
-    //     'SNAPSHOT_MONTH': '',
-    //     'MIN_EOS_HELD': '',
-    //     'MAX_EOS_HELD': '',
-    //     'RATIO_OR_FLAT': '',
-    //     'AIRDROP_RATIO': '',
-    //     'AIRDROP_FLAT': '',
-    // }      
+        var accountName = $('#accountName').val();
+        var tokenName = $('#tokenName').val();
+        var tokenSupply = $('#tokenSupply').val();
+        var snapshot = $('#snapshot').val();
+        var minEOS = $('#minEOS').val();
+        var maxEOS = $('#maxEOS').val();
+        var option = $("input[name='option']:checked").val()
+        var ratio = $('#ratio').val();
+        var flat = $('#flat').val();
 
-    // var elementsh = document.createElement("a");
-    // var filea = new Blob(['File1'], { type: 'text/plain' });
-    // elementsh.href = URL.createObjectURL(filea);
-    // elementsh.download = "SHELL.txt";
-    // elementsh.click();
+        var userParams = {
+            // Need this to populate from React Front End forms (sample dummy data below)
+            'ACCOUNT_NAME': accountName,
+            'TOKEN_NAME': tokenName,
+            'MAX_TOKEN_SUPPLY': tokenSupply,
+            'SNAPSHOT_MONTH': snapshot,
+            'MIN_EOS_HELD': minEOS,
+            'MAX_EOS_HELD': maxEOS,
+            'RATIO_OR_FLAT': 'Airdrop ' + option + ' Amount',
+            'AIRDROP_RATIO': ratio,
+            'AIRDROP_FLAT': flat,
+        }
+        console.log('userParams: ', userParams);
 
-    var elementcsv = document.createElement("a");
-    var fileb = new Blob(['File2'], { type: 'text/plain' });
-    elementcsv.href = URL.createObjectURL(fileb);
-    elementcsv.download = "CSV.txt";
+        axios.post('http://localhost:9001/downloadcsv', userParams)
+            .then((res) => {
+                // console.log('Client POST Res :', res);
+                var stringcsv = res.data
+                console.log('In DownloadCsv Post Response', stringcsv)
 
-    elementcsv.click();
+                var elementcsv = document.createElement("a");
+                var fileb = new Blob([stringcsv], { type: 'text/plain' });
+                elementcsv.href = URL.createObjectURL(fileb);
+                elementcsv.download = "airdrop.csv";
+            
+                elementcsv.click();
+            })
+            .catch((err) => {
+                console.log('axios POST err: ', err);
+            })
+
+
+
+
+
+
 
     }
     async downloadSh(e) {
@@ -233,8 +280,7 @@ class Home extends Component{
         
 
     render(){
-        // console.log("state MAX_TOKEN_SUPPLY", this.state.MAX_TOKEN_SUPPLY)
-        console.log("state MAX_TOKEN_SUPPLY", this.state.userParams.MAX_TOKEN_SUPPLY)
+        // console.log("state MAX_TOKEN_SUPPLY", this.state.userParams.MAX_TOKEN_SUPPLY)
        
         return(
             <div className="HomePage">
@@ -295,9 +341,9 @@ class Home extends Component{
                                         <label><input type="radio" value="Flat" name="option" /> <span>Flat</span></label>
                                     </p>
                                     <label>Airdrop ratio</label>
-                                    <input type="number" id="ratio" />
+                                    <input type="number" id="ratio" value={this.state.userParams.AIRDROP_RATIO} onChange={this.handleChangeAirdropRatio}/>
                                     <label>Airdrop flat</label>
-                                    <input type="number" className="fields" id="flat" />
+                                    <input type="number" className="fields" id="flat" value={this.state.userParams.AIRDROP_FLAT} onChange={this.handleChangeAirdropFlat}/>
                                     {/* <input type="submit" className="submitButton actives" onClick={handleClick} /> */}
                                     <input type="submit" className="submitButton actives" onClick={this.handleClick} />
                                     {/* <input type="submit" className="submitButton actives" onClick={(e)=> {this.handleClick} /> */}

@@ -36,32 +36,95 @@ router.post('/get_estimate', (req, res) => {
   runPost_getPriceEstimate()
 })
 
-router.get('/download', (req, res) => {
-  var airdropParams = req.body.AIRDROP_PARAMS
+// router.get('/download', (req, res) => {
+//   var airdropParams = req.body.AIRDROP_PARAMS
 
   
-  const NODE_URL = 'http://mainnet.libertyblock.io:8888/';
-  var AIRDROP_PARAMS = {
-    'accountName': airdropParams.ACCOUNT_NAME,
-    'tokenName': airdropParams.TOKEN_NAME,
-    'maxTokenSupply': airdropParams.MAX_TOKEN_SUPPLY,
-    'precision': '4',
-    'snapshotMonth': airdropParams.SNAPSHOT_MONTH,
-    'ratioOrFlat': airdropParams.RATIO_OR_FLAT,
-    'airdropRatio': airdropParams.AIRDROP_RATIO,
-    'airdropFlat': airdropParams.AIRDROP_FLAT,
-    'initialTokenSupply': airdropParams.MAX_TOKEN_SUPPLY,
-    'numberOfAccounts':filteredSnapshotData.length,
-    'nodeUrl': NODE_URL, // Jungle CryptoLions.io
-    // 'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
-    // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/", // Bitfinex Testnet
-    'contractDir': "./eosio.token",
+//   const NODE_URL = 'http://mainnet.libertyblock.io:8888/';
+//   var AIRDROP_PARAMS = {
+//     'accountName': airdropParams.ACCOUNT_NAME,
+//     'tokenName': airdropParams.TOKEN_NAME,
+//     'maxTokenSupply': airdropParams.MAX_TOKEN_SUPPLY,
+//     'precision': '4',
+//     'snapshotMonth': airdropParams.SNAPSHOT_MONTH,
+//     'ratioOrFlat': airdropParams.RATIO_OR_FLAT,
+//     'airdropRatio': airdropParams.AIRDROP_RATIO,
+//     'airdropFlat': airdropParams.AIRDROP_FLAT,
+//     'initialTokenSupply': airdropParams.MAX_TOKEN_SUPPLY,
+//     'numberOfAccounts':filteredSnapshotData.length,
+//     'nodeUrl': NODE_URL, // Jungle CryptoLions.io
+//     // 'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
+//     // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/", // Bitfinex Testnet
+//     'contractDir': "./eosio.token",
+//   }
+
+//   const isCsvGenerated = cli.generateAirdropCsv(formattedSnapshotData);
+//   const isShGenerated = cli.generateAirdropSh(AIRDROP_PARAMS);
+
+// })
+
+router.post('/downloadcsv', (req, res) => {
+  console.log('Server: POST request to /downloadcsv received -- req.body', req.body);
+  var userParams = req.body
+
+  const runPost_downloadcsv = async () => {
+    
+    const snapshotJson = await cli.snapshotCsvToJson(userParams.SNAPSHOT_MONTH) // Csv to Json
+    const filteredSnapshotData = await cli.snapshotFilter(snapshotJson, userParams.MIN_EOS_HELD, userParams.MAX_EOS_HELD); // Filtering Accounts by user params
+    const PRICE_ESTIMATE = await cli.getPriceEstimate(filteredSnapshotData.length) // Price Estimate Calculations
+    cli.successPrice(PRICE_ESTIMATE);
+
+    // res.send('Server: POST request to /get_estimate received');
+    // console.log(PRICE_ESTIMATE)
+
+
+
+
+    var airdropParams = userParams
+
+
+    // const NODE_URL = await nodeSelector(airdropParams.SNAPSHOT_MONTH) || 'http://mainnet.libertyblock.io:8888/';
+    const NODE_URL = 'http://mainnet.libertyblock.io:8888/';
+    var INITIAL_TOKEN_SUPPLY = airdropParams.MAX_TOKEN_SUPPLY;
+    var PRECISION = 4;
+    var AIRDROP_PARAMS = {
+      'accountName': airdropParams.ACCOUNT_NAME,
+      'tokenName': airdropParams.TOKEN_NAME,
+      'maxTokenSupply': airdropParams.MAX_TOKEN_SUPPLY,
+      'snapshotMonth': airdropParams.SNAPSHOT_MONTH,
+      'ratioOrFlat': airdropParams.RATIO_OR_FLAT,
+      'airdropRatio': airdropParams.AIRDROP_RATIO,
+      'airdropFlat': airdropParams.AIRDROP_FLAT,
+      'precision': PRECISION,
+      'initialTokenSupply': INITIAL_TOKEN_SUPPLY,
+      'numberOfAccounts': filteredSnapshotData.length,
+      'nodeUrl': NODE_URL, // Jungle CryptoLions.io
+      // 'nodeUrl': "http://193.93.219.219:8888/", // Jungle CryptoLions.io
+      // 'nodeUrl': "http://eos-bp.bitfinex.com:8888/", // Bitfinex Testnet
+      'contractDir': "./eosio.token",
+    }
+    // console.log('AIRDROP_PARAMS', AIRDROP_PARAMS)
+    const formattedSnapshotData = await cli.formatOutput(filteredSnapshotData, AIRDROP_PARAMS);
+    const isCsvGenerated = cli.generateAirdropCsv(formattedSnapshotData);
+    // const isShGenerated = cli.generateAirdropSh(AIRDROP_PARAMS);
+    console.log('Sending back Csv')
+    res.send(isCsvGenerated);
   }
 
-  const isCsvGenerated = cli.generateAirdropCsv(formattedSnapshotData);
-  const isShGenerated = cli.generateAirdropSh(AIRDROP_PARAMS);
+  console.log('initiating async run in POST')
+  runPost_downloadcsv()
+
+  
+  
+
+
+
+
 
 })
+
+
+
 
 /* CLI Exports available */
 // module.exports = {init, askQuestions, snapshotCsvToJson, snapshotFilter, getRamPrice, getPriceEstimate, successPrice, nodeChecker, nodeSelector, formatOutput, generateAirdropCsv, generateAirdropSh, successFinal, runShell, run}
