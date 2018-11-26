@@ -32,9 +32,9 @@ To run it look at the Readme inside ./eos-payment-terminal.
 
 - EOS Contract Estimator
 ```sh
-cd contract-tco
+cd contract-estimator
 ```
-To run it look at the Readme inside ./contract-tco.
+To run it look at the Readme inside ./contract-estimator.
 
 
 # Design
