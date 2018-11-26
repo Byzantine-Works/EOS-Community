@@ -259,16 +259,16 @@ export const estimateContract = (account) => {
                     let obj = {};
                     obj.action = action;
     
-                    obj.cpu = props.bill[action].cpu;
-                    cpuT.push(obj.cpu);
+                    obj.cpu_us = props.bill[action].cpu;
+                    cpuT.push(obj.cpu_us);
     
-                    obj.ram = props.bill[action].ram;
-                    ramT.push(obj.ram);
+                    obj.ram_bytes = props.bill[action].ram;
+                    ramT.push(obj.ram_bytes);
     
-                    obj.net = props.bill[action].net;
-                    netT.push(obj.net);
+                    obj.net_bytes = props.bill[action].net;
+                    netT.push(obj.net_bytes);
                    
-                    obj.total_EOS = ((obj.cpu * getState().cpuRate) + (obj.net * getState().netRate) + (obj.ram * getState().ramPrice)).toFixed(4)
+                    obj.total_EOS = ((obj.cpu_us * getState().cpuRate) + (obj.net_bytes * getState().netRate) + (obj.ram_bytes * getState().ramPrice)).toFixed(4)
                     eosT.push(Number(obj.total_EOS));
     
                     data.push(obj);
@@ -281,9 +281,9 @@ export const estimateContract = (account) => {
                 let rT = ramT.reduce((a, b) => { a = a + b; return a; });
                 let nT = netT.reduce((a, b) => { a = a + b; return a; });
                 let eT = eosT.reduce((a, b) => { a = a + b; return a; });
-                data.push({ action: 'Total runtime cost', cpu: cT, ram: rT, net: nT, total_EOS: eT });
-                data.push({ action: 'EOS Equivalent', ram: (rT*getState().ramPrice).toFixed(4), cpu: (cT*getState().cpuRate).toFixed(4), net: (nT*getState().netRate).toFixed(4)})
-                data.push({ action: 'Total design cost', ram: props.deploymentRam, cpu: props.deploymentCpu, net: props.deploymentNet, total_EOS: (props.totalDeployment).toFixed(4) });
+                data.push({ action: 'Total runtime cost', cpu_us: cT, ram_bytes: rT, net_bytes: nT, total_EOS: eT });
+                data.push({ action: 'EOS Equivalent', ram_bytes: (rT*getState().ramPrice).toFixed(4), cpu_us: (cT*getState().cpuRate).toFixed(4), net_bytes: (nT*getState().netRate).toFixed(4)})
+                data.push({ action: 'Total design cost', ram_bytes: props.deploymentRam, cpu_us: props.deploymentCpu, net_bytes: props.deploymentNet, total_EOS: (props.totalDeployment).toFixed(4) });
                 data.push({ action: 'Overall cost (EOS)', total_EOS: (((cT+props.deploymentCpu) * getState().cpuRate) + ((rT+props.deploymentRam) * getState().ramPrice) + ((nT+props.deploymentNet) * getState().netRate)).toFixed(4)});
                 
                 dispatch(updateState(["cpuTotal", cT]));

@@ -6,7 +6,7 @@ import lodash from 'lodash';
 const ContractBill = props => {
     let entries = props.csvData.map(action => {
         if (action.action === "Total design cost" || action.action === "Overall cost (EOS)" || action.action === "EOS Equivalent" || action.action === "Total runtime cost")  return null;
-        else return <span key={action.action} style={{display:"inline-block", width: "100%", textAlign: "right", marginTop: "15px"}}>{action.action}: {((action.cpu*props.cpuRate)+(action.net*props.netRate)+(action.ram*props.ramPrice)).toFixed(4)} EOS</span>
+        else return <span key={action.action} style={{display:"inline-block", width: "100%", textAlign: "right", marginTop: "15px"}}>{action.action}: {((action.cpu_us*props.cpuRate)+(action.net_bytes*props.netRate)+(action.ram_bytes*props.ramPrice)).toFixed(4)} EOS</span>
     })
     let runTimeA = props.csvData.map(action => {
         if (action.action === "Total design cost" || action.action === "Overall cost (EOS)" || action.action === "EOS Equivalent" || action.action === "Total runtime cost")  return null;
