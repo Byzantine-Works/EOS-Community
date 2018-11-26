@@ -83,8 +83,8 @@ export const getResourcesPrice = () => {
 
         let balance = await eosMain.getAccount('vicisnotvern');
         console.log("balance vicisnotvern: ", balance);
-        await dispatch(updateState(["cpuRate", (balance.cpu_weight / balance.cpu_limit.max) / 10000]));
-        await dispatch(updateState(["netRate", (balance.net_weight / balance.net_limit.max) / 1000]));
+        await dispatch(updateState(["cpuRate", ((balance.cpu_weight / balance.cpu_limit.max) / 10000)/3]));
+        await dispatch(updateState(["netRate", ((balance.net_weight / balance.net_limit.max) / 10000)/3]));
         let price = await axios(process.env.API_URL+'/getRamPrice?api_key='+process.env.API_KEY);
         await dispatch(updateState(["ramPrice", (price.data.price_per_kb_eos) / 1000]));
 
@@ -119,6 +119,7 @@ export const loadDataAccount = e => {
                 available: balance.data.ram_quota - balance.data.ram_usage,
                 max: balance.data.ram_quota
             }
+            
             await dispatch(updateState(["ram", ram]));
             await dispatch(updateState(["staking", staking]));
             console.log(balance)
