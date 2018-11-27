@@ -168,7 +168,7 @@ const runQuestionAssertions = async (answers) => {
   }
   
   var errors = [];
-  assert(answers.ACCOUNT_NAME.length === 12, 'Account name must be 12 characters')
+  assert(answers.ACCOUNT_NAME.length <= 12, 'Account name must be 12 characters or less')
   assert(answers.TOKEN_NAME.length <= 7, 'Token Name must be 7 characters or less')
   assert(!isNaN(parseFloat(answers.MAX_TOKEN_SUPPLY)), 'Max Token Supply should be a number')
   assert(parseFloat(answers.MAX_TOKEN_SUPPLY) > 0, 'Max Token Supply should be > 0')

@@ -19,20 +19,18 @@ router.get('/get_price', (req, res) => {
 router.post('/get_estimate', (req, res) => {
   console.log('Server: POST request to /get_estimate received -- req.body', req.body);
   var userParams = req.body
-  // console.log('server: userParams', userParams)
+
 
   const runPost_getPriceEstimate = async () => {
     const snapshotJson = await cli.snapshotCsvToJson(userParams.SNAPSHOT_MONTH) // Csv to Json
     const filteredSnapshotData = await cli.snapshotFilter(snapshotJson, userParams.MIN_EOS_HELD, userParams.MAX_EOS_HELD); // Filtering Accounts by user params
     const PRICE_ESTIMATE = await cli.getPriceEstimate(filteredSnapshotData.length) // Price Estimate Calculations
-    cli.successPrice(PRICE_ESTIMATE);
+    // cli.successPrice(PRICE_ESTIMATE);
     
-    // res.send('Server: POST request to /get_estimate received');
     console.log(PRICE_ESTIMATE)
     res.send(PRICE_ESTIMATE);
   }
 
-  console.log('initiating async run in POST')
   runPost_getPriceEstimate()
 })
 
@@ -114,10 +112,9 @@ router.post('/downloadsh', (req, res) => {
     res.send(ShGeneratedStr);
   }
 
-  console.log('initiating async run in POST')
+  // console.log('initiating async downloadSh in POST')
   runPost_downloadsh()
 })
-
 
 
 
