@@ -291,7 +291,7 @@ class Home extends Component{
         'AIRDROP_FLAT': flat,
     }
 
-    axios.post('http://localhost:9001/downloadsh', userParams)
+    axios.post('/downloadsh', userParams)
         .then((res) => {
             // console.log('Client POST Res :', res);
             var stringsh = res.data
