@@ -4,7 +4,7 @@
 
 
 - EOS-Airdrop-Utility (wallet++)
-Utility tool to simplify the process of Airdrops for token launchers. Provides a CLI interface and a web-interface to wizardify a sequential set of Q&A to create token-contract, deploy, issue tokens and airdrops. This utility also estimates RAM and stake requirement based on the tokenomics for EOS vs Token ratios.
+EOS-Airdrop Utility tool to simplify the process of Airdrops for token launchers. Provides a CLI and Q&A to estimate RAM and stake requirement based on the amount of airdrop receivers. This utility then provides a script to create token-contract, deploy, issue tokens and airdrops. 
 
 # Technical Synopsis
 - Uses the Byzantine API Gateway, to abstract away on-chain integrations. Currently supports EOS and support for TRON, ADA, LISK, ETH, XLM and more DPOS ecosystems is in the works.

@@ -168,7 +168,7 @@ const runQuestionAssertions = async (answers) => {
   }
   
   var errors = [];
-  assert(answers.ACCOUNT_NAME.length === 12, 'Account name must be 12 characters')
+  assert(answers.ACCOUNT_NAME.length <= 12, 'Account name must be 12 characters or less')
   assert(answers.TOKEN_NAME.length <= 7, 'Token Name must be 7 characters or less')
   assert(!isNaN(parseFloat(answers.MAX_TOKEN_SUPPLY)), 'Max Token Supply should be a number')
   assert(parseFloat(answers.MAX_TOKEN_SUPPLY) > 0, 'Max Token Supply should be > 0')
@@ -466,7 +466,7 @@ const generateAirdropCsv = (formatted) => {
   try {
     fs.writeFileSync('airdrop.csv', formatted);
     console.log('Step 5)) airdrop.csv file has been saved!');
-    return true
+    return formatted
   } catch(err) {
     console.log(err)
     return false
@@ -539,7 +539,7 @@ const generateAirdropSh = (airdropParams) => {
     fs.writeFileSync('airdrop.sh', fullAirdropStr)
     console.log('Step 6)) airdrop.sh file has been saved! When ready to airdrop, you may run this file in a cleos enabled terminal');
     shell.exec('chmod 755 airdrop.sh');
-    return true
+    return fullAirdropStr
   } catch (err) {
     console.log(err);
     return false
