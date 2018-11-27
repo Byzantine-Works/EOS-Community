@@ -7,6 +7,7 @@ Comprehensive contract estimator to assess the design and runtime cost of a smar
 - Test each action on the testnet and estimate independantly their EOS cost for CPU, RAM and NET.
 - Generate a downloadable contract bill of the contract showing the cost is ms, bytes and their equivalent in EOS.
 ![Actions Costs](./images/actionsCosts.png)
+![Contract Bill](./images/contractBill.png)
 
 # Install
 if Unix:
