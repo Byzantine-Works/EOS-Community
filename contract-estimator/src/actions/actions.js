@@ -83,8 +83,8 @@ export const getResourcesPrice = () => {
 
         let balance = await eosMain.getAccount('vicisnotvern');
         console.log("balance vicisnotvern: ", balance);
-        await dispatch(updateState(["cpuRate", (balance.cpu_weight / balance.cpu_limit.max) / 10000]));
-        await dispatch(updateState(["netRate", (balance.net_weight / balance.net_limit.max) / 1000]));
+        await dispatch(updateState(["cpuRate", ((balance.cpu_weight / balance.cpu_limit.max) / 10000)/3]));
+        await dispatch(updateState(["netRate", ((balance.net_weight / balance.net_limit.max) / 10000)/3]));
         let price = await axios(process.env.API_URL+'/getRamPrice?api_key='+process.env.API_KEY);
         await dispatch(updateState(["ramPrice", (price.data.price_per_kb_eos) / 1000]));
 
@@ -119,6 +119,7 @@ export const loadDataAccount = e => {
                 available: balance.data.ram_quota - balance.data.ram_usage,
                 max: balance.data.ram_quota
             }
+            
             await dispatch(updateState(["ram", ram]));
             await dispatch(updateState(["staking", staking]));
             console.log(balance)
@@ -259,16 +260,16 @@ export const estimateContract = (account) => {
                     let obj = {};
                     obj.action = action;
     
-                    obj.cpu = props.bill[action].cpu;
-                    cpuT.push(obj.cpu);
+                    obj.cpu_us = props.bill[action].cpu;
+                    cpuT.push(obj.cpu_us);
     
-                    obj.ram = props.bill[action].ram;
-                    ramT.push(obj.ram);
+                    obj.ram_bytes = props.bill[action].ram;
+                    ramT.push(obj.ram_bytes);
     
-                    obj.net = props.bill[action].net;
-                    netT.push(obj.net);
+                    obj.net_bytes = props.bill[action].net;
+                    netT.push(obj.net_bytes);
                    
-                    obj.total_EOS = ((obj.cpu * getState().cpuRate) + (obj.net * getState().netRate) + (obj.ram * getState().ramPrice)).toFixed(4)
+                    obj.total_EOS = ((obj.cpu_us * getState().cpuRate) + (obj.net_bytes * getState().netRate) + (obj.ram_bytes * getState().ramPrice)).toFixed(4)
                     eosT.push(Number(obj.total_EOS));
     
                     data.push(obj);
@@ -281,9 +282,9 @@ export const estimateContract = (account) => {
                 let rT = ramT.reduce((a, b) => { a = a + b; return a; });
                 let nT = netT.reduce((a, b) => { a = a + b; return a; });
                 let eT = eosT.reduce((a, b) => { a = a + b; return a; });
-                data.push({ action: 'Total runtime cost', cpu: cT, ram: rT, net: nT, total_EOS: eT });
-                data.push({ action: 'EOS Equivalent', ram: (rT*getState().ramPrice).toFixed(4), cpu: (cT*getState().cpuRate).toFixed(4), net: (nT*getState().netRate).toFixed(4)})
-                data.push({ action: 'Total design cost', ram: props.deploymentRam, cpu: props.deploymentCpu, net: props.deploymentNet, total_EOS: (props.totalDeployment).toFixed(4) });
+                data.push({ action: 'Total runtime cost', cpu_us: cT, ram_bytes: rT, net_bytes: nT, total_EOS: eT });
+                data.push({ action: 'EOS Equivalent', ram_bytes: (rT*getState().ramPrice).toFixed(4), cpu_us: (cT*getState().cpuRate).toFixed(4), net_bytes: (nT*getState().netRate).toFixed(4)})
+                data.push({ action: 'Total design cost', ram_bytes: props.deploymentRam, cpu_us: props.deploymentCpu, net_bytes: props.deploymentNet, total_EOS: (props.totalDeployment).toFixed(4) });
                 data.push({ action: 'Overall cost (EOS)', total_EOS: (((cT+props.deploymentCpu) * getState().cpuRate) + ((rT+props.deploymentRam) * getState().ramPrice) + ((nT+props.deploymentNet) * getState().netRate)).toFixed(4)});
                 
                 dispatch(updateState(["cpuTotal", cT]));
