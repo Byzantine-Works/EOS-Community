@@ -6,7 +6,7 @@ Comprehensive contract estimator to assess the design and runtime cost of a smar
 - Deploy on the Byzantine testnet abi and wasm files and retrieve the response payload to assess the design cost of the smart contract.
 - Test each action on the testnet and estimate independantly their EOS cost for CPU, RAM and NET.
 - Generate a downloadable contract bill of the contract showing the cost is ms, bytes and their equivalent in EOS.
-![Actions Costs](/images/actionsCosts.png)
+![Actions Costs](./images/actionsCosts.png)
 
 # Install
 if Unix:
