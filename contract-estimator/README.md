@@ -33,5 +33,5 @@ npm start
 ```
 
 ## Demo
-Find the wasm and abi files of smart contracts in ./contract-estimator/src/contract to test the tool.
+Find the wasm and abi files of smart contracts in *./contract-estimator/src/contract* to test the tool.
 
