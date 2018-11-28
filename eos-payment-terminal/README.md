@@ -1,8 +1,15 @@
-#Synopsis
+# EOS Payment Terminal
+
+## Synopsis
+
 Simple, intuitive and secure embeddable widget for an universal crypto terminal built on the Byzantine API Gateway. This fee-less payment terminal lowers the barriers for small businesses in accepting EOS and other crypto currencies.
 
+### Terminal Interface
+![Terminal Iterface](./image/terminal.png)
 
-#Install and run dev mode
+
+## Install and run dev mode
+
 ```sh
 git clone https://github.com/Byzantine-Works/EOS-Community.git
 cd eos-payment-terminal
@@ -10,8 +17,8 @@ npm install
 npm start
 ```
 
-# Build
-- EOS-Payment-Terminal
+## Build
+
 ```sh
 //Codes
 git clone https://github.com/Byzantine-Works/EOS-Community.git
@@ -20,7 +27,7 @@ npm install
 npm run build
 ```
 
-# Embed
+## Embed
 
 ```sh
 //To embed payment interface on your web site to accept any EOS/Derivative assets copy this snippet

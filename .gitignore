@@ -66,3 +66,6 @@ airdrop.csv
 Airdrop.csv
 airdrop/airdrop.sh
 airdrop/airdrop.csv
+
+# package-lock
+package-lock.json
