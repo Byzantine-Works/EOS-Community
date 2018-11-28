@@ -266,7 +266,6 @@ class Home extends Component{
     $('.loader').fadeIn();
     $('.detailInner').fadeIn('5000');
     $('.loader').fadeOut();
-    console.log('submit button clicked')
 
     var accountName = $('#accountName').val();
     var tokenName = $('#tokenName').val();
@@ -295,7 +294,7 @@ class Home extends Component{
         .then((res) => {
             // console.log('Client POST Res :', res);
             var stringsh = res.data
-            console.log('In DownloadSh Post Response', stringsh)
+            console.log('Client - In DownloadSh Post Response', stringsh)
 
             var elementsh = document.createElement("a");
             var filea = new Blob([stringsh], { type: 'text/plain' });
