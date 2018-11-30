@@ -1,7 +1,7 @@
 const axios = require('axios');
 const router = require('express').Router();
 const cli = require('../../cli.js');
-console.log('CLI Functions', cli);
+// console.log('CLI Functions', cli);
 
 // router.post('/get_price_estimate', cli.getPriceEstimate.post);
 // router.get('/download_csv', cli.generateAirdropCsv.get);
