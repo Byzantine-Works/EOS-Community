@@ -12,7 +12,7 @@ npm install
 npm start
 ```
 
-# Build
+## Build
 
 ```sh
 //Codes
@@ -22,7 +22,7 @@ npm install
 npm run build
 ```
 
-# Embed
+## Embed
 
 ```sh
 //To embed payment interface on your web site to accept any EOS/Derivative assets copy this snippet
