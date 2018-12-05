@@ -13,7 +13,7 @@ import Loader from 'react-spinners/BounceLoader';
 import Dialog from './Dialog.jsx';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-const socket = openSocket(process.env.SOCKET);
+const socket = openSocket('http://api.byzanti.ne:9090/');
 
 let scatter = ScatterJS.scatter;
 console.log("Eos: ", EosApi);
@@ -24,8 +24,8 @@ import * as actions from './actions/actions';
 const network = {
     blockchain: 'eos',
     protocol: 'https',
-    host: process.env.HOST,
-    port: Number(process.env.PORT),
+    host: 'proxy.eosnode.tools',
+    port: Number(443),
     chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 }
 
@@ -182,8 +182,8 @@ class App extends React.Component {
                 this.props.updateState(["message", "transacSuccess"]);
                 this.props.updateState(["transactionID", trx.transaction_id])
                 let that = this;
-                socket.emit(process.env.WS_SOCKET_CHANNEL_TRANSAC_STATUS, trx.transaction_id);
-                socket.on(process.env.WS_SOCKET_CHANNEL_TRANSAC_STATUS, function(data) {
+                socket.emit('isIrreversible', trx.transaction_id);
+                socket.on('isIrreversible', function(data) {
                     console.log("is irrevers socket: ", data);
                     that.props.updateState(['transacIrrevers', [data[0], data[1]]]);
                         })
@@ -224,7 +224,7 @@ class App extends React.Component {
     async changeCoin() {
         let response;
         this.props.updateState(["loading", true]);
-        response = await axios(process.env.TOKENS + this.props.from + '?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
+        response = await axios('https://api.byzanti.ne/tokensByAccount/' + this.props.from + '?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N');
         console.log(response)
         if (!response.data.length) {
             this.props.updateState(["token", null])
@@ -264,12 +264,12 @@ class App extends React.Component {
         let rateUSD;
 
         if (this.props.token === 'EOS') {
-            let reqCrypComp = await axios(process.env.EOS_PRICE)
+            let reqCrypComp = await axios('https://min-api.cryptocompare.com/data/price?fsym=EOS&tsyms=USD,EUR')
             rateUSD = reqCrypComp.data.USD;
         } else {
             try {
             let symbol = symbolObj.symbol;
-            let a = await axios(process.env.TOKENS_PRICE, { params: { symbol: symbol } });
+            let a = await axios('https://cors-anywhere.herokuapp.com/https://api.newdex.io/v1/ticker/price', { params: { symbol: symbol } });
             rateUSD = a.data.data.price;
             } catch(err) {
                 this.props.updateState(["USD", false])
@@ -278,7 +278,7 @@ class App extends React.Component {
     
         }
         if (this.props.rateEURUSD === null) {
-            let respEur = await axios(process.env.USD_EUR);
+            let respEur = await axios('http://free.currencyconverterapi.com/api/v5/convert?q=EUR_USD&compact=y');
             this.props.updateState(["rateEURUSD", respEur.data.EUR_USD.val]);
         }
 
@@ -444,13 +444,14 @@ class App extends React.Component {
                             return <ul id="transacs">{transactions.map((t, i) => {
                                 let transacLink = `https://eosflare.io/tx/${t}`
                                 let styleT = {color: '#14466C'}
-                                return <span><li id="transactionId">{i+1}.  <a key="transactionId"  id="transacLink" href={transacLink} target="_blank" onMouseOver={this.toolTip}><p style={this.props.transacIrrevers[t] ? styleT : null}>{t}</p></a>{this.props.transacIrrevers[t] ? <p style={{position: 'relative', float: 'right'}}>&#10003;</p> : null}<div className='sweet-loading'>
+                                return <span><li id="transactionId">{i+1}.  <a key="transactionId"  id="transacLink" href={transacLink} target="_blank" onMouseOver={this.toolTip}><p style={this.props.transacIrrevers[t] ? styleT : null}>{t}</p></a>{this.props.transacIrrevers[t] ? <p style={{position: 'relative', float: 'right'}}>&#10003;</p> : null}
+                                {/* <div className='sweet-loading'>
                                 <Loader
                                     className={css`position: relative; float: right; top: -27px;`}
                                     sizeUnit={"px"}
                                     size={16}
                                     color={'white'}
-                                    loading={!this.props.transacIrrevers[t]} /></div>
+                                    loading={!this.props.transacIrrevers[t]} /></div> */}
                                     </li></span>
                             })}</ul>
                         }
