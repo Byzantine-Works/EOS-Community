@@ -1,7 +1,6 @@
 require('dotenv').config();
 import React from 'react';
 import { connect } from 'react-redux';
-import openSocket from 'socket.io-client';
 import ScatterJS from 'scatter-js/dist/scatter.esm';
 import Eos from 'eosjs';
 import EosApi from 'eosjs-api';
@@ -13,7 +12,6 @@ import Loader from 'react-spinners/BounceLoader';
 import Dialog from './Dialog.jsx';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-const socket = openSocket('http://api.byzanti.ne:9090/');
 
 let scatter = ScatterJS.scatter;
 console.log("Eos: ", EosApi);
@@ -182,11 +180,17 @@ class App extends React.Component {
                 this.props.updateState(["message", "transacSuccess"]);
                 this.props.updateState(["transactionID", trx.transaction_id])
                 let that = this;
-                socket.emit('isIrreversible', trx.transaction_id);
-                socket.on('isIrreversible', function(data) {
-                    console.log("is irrevers socket: ", data);
-                    that.props.updateState(['transacIrrevers', [data[0], data[1]]]);
-                        })
+                let intReq = setInterval(req, 5000)
+                async function req() {
+                    that.props.updateState(['transacIrrevers', [trx.transaction_id, false]])
+                    let resp = await axios(`https://api.byzanti.ne/transaction/${trx.transaction_id}?api_key=FQK0SYR-W4H4NP2-HXZ2PKH-3J8797N`)
+                    console.log(resp);
+                    if(resp.data.block_num < resp.data.last_irreversible_block) {
+                        clearInterval(intReq);
+                        that.props.updateState(['transacIrrevers', [trx.transaction_id, true]]);
+                    }
+                }
+
                 // .catch(error => {
                 //     console.log("error scatter send: ", JSON.parse(error));
                 //     this.props.updateState(["message", "transacRefused"]);
@@ -445,13 +449,13 @@ class App extends React.Component {
                                 let transacLink = `https://eosflare.io/tx/${t}`
                                 let styleT = {color: '#14466C'}
                                 return <span><li id="transactionId">{i+1}.  <a key="transactionId"  id="transacLink" href={transacLink} target="_blank" onMouseOver={this.toolTip}><p style={this.props.transacIrrevers[t] ? styleT : null}>{t}</p></a>{this.props.transacIrrevers[t] ? <p style={{position: 'relative', float: 'right'}}>&#10003;</p> : null}
-                                {/* <div className='sweet-loading'>
+                                <div className='sweet-loading'>
                                 <Loader
                                     className={css`position: relative; float: right; top: -27px;`}
                                     sizeUnit={"px"}
                                     size={16}
                                     color={'white'}
-                                    loading={!this.props.transacIrrevers[t]} /></div> */}
+                                    loading={!this.props.transacIrrevers[t]} /></div>
                                     </li></span>
                             })}</ul>
                         }
