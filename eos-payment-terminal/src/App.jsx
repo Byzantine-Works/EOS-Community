@@ -431,8 +431,14 @@ class App extends React.Component {
 
         return (
             <span>
-                <div id="thin-wallet">
+                <div id="container">
 
+                    <div id="poweredBy">
+                        <h2>EOS Payment Terminal</h2>
+                        <a href="https://libertyblock.io/"><img id="poweredBy" src="./src/Byzantine LB.svg" alt="Powered by Byzantine and LibertyBlock"></img></a>
+                    </div>
+                    
+                    <div id="thin-wallet">
                     {inputs.map(el => {
                         if (el.key === "from" || el.key === "privateKey") {
                             if (!scatter) return <OverlayTrigger placement="top" overlay={tooltip}>{el}</OverlayTrigger>;
@@ -487,6 +493,7 @@ class App extends React.Component {
                         color={'#14466C'}
                         loading={this.props.loading} />
 
+                </div>
                 </div>
                 {dialogBox}
             </span>

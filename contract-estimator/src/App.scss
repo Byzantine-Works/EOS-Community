@@ -28,6 +28,42 @@ body {
     
 }
 
+#header {
+        position: relative;
+        min-height: 8%;
+}
+
+h1 {
+    color: white;
+    vertical-align: bottom;
+    text-align: center;
+    display: inline-block;
+    min-width: 200px;
+    width: 65%;
+    bottom: 0;
+    position: absolute;
+}
+
+#byzantine {
+    float: left;
+    width: 190px;
+    display: inline;
+    justify-content: space-between;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#libertyblock {
+    float: right;
+    padding-top: 1%;
+    margin-right: 5%;
+    width: 190px;
+    display: inline;
+    justify-content: space-between;
+    margin-top: 0;
+    margin-bottom: 0;  
+}
+
 img {
     position: relative;
     margin-left: 5%;
@@ -56,7 +92,7 @@ img {
 
 .Dashboard {
     position: absolute;
-    top: 0px;
+    top: 80px;
     height: 100%;
     width: 100%;
 }

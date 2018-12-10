@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
-    "start": "webpack; webpack-dev-server --color --open --watch --hot --inline && node wsServer/server.js",
+    "start": "webpack; webpack-dev-server --color --open --watch --hot --inline --port 8080 && node wsServer/server.js",
     "transpile": "babel src -d dist --copy-files",
     "prepublishOnly": "npm run transpile"
   },
@@ -24,6 +24,7 @@
     "fetch": "^1.1.0",
     "file-loader": "^2.0.0",
     "fs": "0.0.1-security",
+    "http-server": "^0.11.1",
     "https": "^1.0.0",
     "lodash": "^4.17.11",
     "node-sass": "^4.9.3",

@@ -2,12 +2,24 @@ body {
     background-color: #1F384A;
 }
 
-#thin-wallet {
-    font-family: Arial, Helvetica, sans-serif;
+h2 {
+    color: white;
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 20px;
+}
+
+#container {
     background: linear-gradient(360deg, #38aecc 10%, #347fb9 90%);
     border: 1px rgb(148, 148, 148) solid;
     border-radius: 8px;
     padding: 50px;
+}
+
+#thin-wallet {
+    font-family: Arial, Helvetica, sans-serif;
     display: grid;
     // grid-template-columns: repeat(3, 1fr);
     grid-template-areas: 
@@ -19,7 +31,7 @@ body {
     "i i i"
     "j j k"
     "n l p"
-    "o o m"
+    "o m r"
     "q q q";
     // background: linear-gradient(360deg, #949494 10%, #efefef 90%);
     // background: #efefef;
@@ -28,14 +40,16 @@ body {
     // transform: translateY(20%);
     // margin: 0 auto;
     grid-auto-columns: 30%;
-    box-shadow: 2px 3px #aaaaaa;
+    //box-shadow: 2px 3px #aaaaaa;
     z-index:-1;
+    padding: 50px;
 }
 
 #thin-wallet input {
     width: 100%;
     color: black;
-    border-radius: 15px;
+    border-radius: Bear227
+    35px;
     &:focus {
         outline: none;
     }
@@ -45,14 +59,25 @@ body {
 }
 
 select, option {
-    border-radius: 15px;
+    border-radius: 5px;
     background-color: #14466C;
     color: white;
     font-weight: 500;
     border: none;
 }
 
+#poweredBy div {
+    padding: 50px;
+    justify-content: center;
+}
 
+#poweredBy img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+    padding-bottom: 20px;
+}
 
 #from {
     grid-area: a;
@@ -172,7 +197,7 @@ input {
     padding-left: 30px;
     padding-top: 20px;
     padding-right: 0px;
-    margin-bottom: 12px;
+    margin: auto;
     color: white;
     cursor: pointer;
     -webkit-user-select: none;
@@ -252,7 +277,8 @@ input {
 
 .Scatter p {
     position: relative;
-    top: -11px;
+    vertical-align: middle;
+    top: -13px;
     font: 13px Roboto,sans-serif;
 }
 
@@ -305,4 +331,5 @@ input {
         color: white;
     }
 
-}
+}         
+

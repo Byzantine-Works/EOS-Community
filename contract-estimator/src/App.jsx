@@ -25,6 +25,11 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
+                <div id="header">
+                    <img id="byzantine" src="../images/Byzantine White.svg"></img>
+                    <img id="libertyblock" src="../images/Powered by LibertyBlock.svg"></img>
+                    <h1>Contract Estimator</h1>
+                </div>
                 <Dashboard updateState={this.props.updateState} ></Dashboard>
             </div>
 
