@@ -4,6 +4,11 @@ import Footer from './footer';
 import loader from './loading.gif';
 import $ from "jquery";
 import axios from 'axios';
+import ScatterJS from 'scatterjs-core';
+import ScatterEOS from 'scatterjs-plugin-eosjs';
+ScatterJS.plugins( new ScatterEOS() );
+
+
 // import { CSVLink, CSVDownload } from "react-csv"
 
 // function handleClick(e) {
@@ -92,6 +97,19 @@ class Home extends Component{
         // 'AIRDROP_RATIO': '',
         // 'AIRDROP_FLAT': '',
         // }
+        var chain = {
+            main: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906', // main network
+            jungle: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca', // jungle testnet
+            sys: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f' // local developer
+        }
+
+        // eos = Eos({
+        //     keyProvider: '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3',// private key
+        //     httpEndpoint: 'http://127.0.0.1:8888',
+        //     chainId: chain.sys,
+        // });
+
+
         var defaultParams = {
         'ACCOUNT_NAME': '',
         'TOKEN_NAME': '',
@@ -112,6 +130,7 @@ class Home extends Component{
         this.handleChangeAirdropRatio = this.handleChangeAirdropRatio.bind(this);
         this.handleChangeAirdropFlat = this.handleChangeAirdropFlat.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        console.log('TEST CONSOLE')
     }
 
     handleChangeMaxTokenSupply (e) {
