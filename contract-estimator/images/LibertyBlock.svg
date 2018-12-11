@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="389px" height="219px" viewBox="0 0 389 219" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>Powered by LibertyBlock</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Powered-by-LibertyBlock" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-2" transform="translate(36.000000, 34.000000)">
+            <g id="Group" transform="translate(127.000000, 0.000000)" fill-rule="nonzero">
+                <g id="Group-Copy" fill="#FFFFFF">
+                    <path d="M2.3444443,73.9404173 L31.2488496,91.248141 L61.4249078,73.9247555 L52.1165804,30.6422876 L31.249116,3.55502211 L12.1818537,28.9932565 L2.3444443,73.9404173 Z M10.2558225,28.1089446 L31.2265388,0.131252402 L54.0419598,29.7470865 L63.7675805,74.9699124 L31.2268052,93.650828 L0.00297353765,74.9542505 L10.2558225,28.1089446 Z" id="Path-18"></path>
+                    <polygon id="Path-20" points="51.8951437 29.6365643 53.8443841 30.3355451 31.2775993 93.4563207 10.2545008 28.8966784 12.2228901 28.2537701 31.3690252 87.0494626"></polygon>
+                </g>
+                <polygon id="Path-21" fill="#58BB73" points="4 73.5033244 11.6320364 38 28 88"></polygon>
+                <polygon id="Path-22" fill="#FBB234" points="14 28.8309948 31.3541145 6 50 30.3415065 31.570326 83"></polygon>
+                <polygon id="Path-23" fill="#62C9EA" points="34 88 51.6968153 38 59 73.2126095"></polygon>
+            </g>
+            <text id="LIBERTYBLOCK-Copy-4" font-family="Avenir-Heavy, Avenir" font-size="44" font-weight="600" fill="#FFFFFF">
+                <tspan x="0" y="142">LIBERTY</tspan>
+                <tspan x="171.16" y="142" font-family="Avenir-Book, Avenir" font-weight="normal">BLOCK</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
