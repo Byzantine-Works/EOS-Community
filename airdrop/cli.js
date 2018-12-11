@@ -19,16 +19,26 @@ const init = () => {
             })
         )
     );
-    console.log(
-        chalk.red.bold(
-            // figlet.textSync("Powered By LibertyBlock", {
-            //     font: "Standard",
-            //     horizontalLayout: "default",
-            //     verticalLayout: "default"
-            // })
-            ' Powered By LibertyBlock.\n'
-        )
-    );
+    console.log(chalk.red.bold(' Powered By LibertyBlock.\n'));
+//     console.log(
+//         chalk.red.bold(`
+//           _/\_
+//         _/    \_
+//       _/        \_
+//      /            \
+//     /|            |\
+//    |  |          |  |
+//   /   |          |   \
+//   |    |        |    |
+//  /     |        |     \
+//  \_     |      |     _/
+//    \_   |      |   _/
+//      \__ |    | __/   Powered By LibertyBlock.
+//         \_|  |_/
+//            \/        
+//         `
+//         )
+//     );
 
   // console.log('Airdrop Price Calculator initialzed...\n')
 };
