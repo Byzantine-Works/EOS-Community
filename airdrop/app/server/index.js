@@ -31,9 +31,6 @@ app.get('/chartli.js', (req, res) => {
 app.use(express.static(path.resolve(__dirname, '../public')));
 app.use(router);
 
-//
-
-
 app.listen(port, () => {
   console.log(`Airdrop Toolkit is running on Port: ${port}`);
 });
