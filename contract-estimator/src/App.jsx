@@ -26,10 +26,11 @@ class App extends React.Component {
         return (
             <div className="App">
                 <div id="header">
-                    <img id="byzantine" src="../images/Byzantine White.svg"></img>
-                    <img id="libertyblock" src="../images/Powered by LibertyBlock.svg"></img>
-                    <h1>Contract Estimator</h1>
+                    <img id="libertyblock" src="./images/LibertyBlock.svg"></img>
+                    <img id="byzantine" src="./images/Byzantine White.svg"></img>
+                    <div id="CEtitle"><h1>Contract Estimator</h1></div>
                 </div>
+                <div id="mobilenote"><p>Not designed for mobile use.</p></div>
                 <Dashboard updateState={this.props.updateState} ></Dashboard>
             </div>
 

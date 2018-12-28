@@ -435,7 +435,11 @@ class App extends React.Component {
 
                     <div id="poweredBy">
                         <h2>EOS Payment Terminal</h2>
+<<<<<<< HEAD
                         <a href="https://libertyblock.io/"><img id="poweredBy" src="../src/Byzantine LB.svg" alt="Powered by Byzantine and LibertyBlock"></img></a>
+=======
+                        <a href="https://libertyblock.io/"><img id="poweredBy" src="./images/Byzantine LB.svg" alt="Powered by Byzantine and LibertyBlock"></img></a>
+>>>>>>> 3658c7c6d5975a731f1d820ad74fc3f76a70e957
                     </div>
                     
                     <div id="thin-wallet">

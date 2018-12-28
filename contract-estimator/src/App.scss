@@ -30,37 +30,48 @@ body {
 
 #header {
         position: relative;
-        min-height: 120px;
+        height: 10%;
+        width: 100%;
+}
+
+#CEtitle {
+    position: absolute;
+    display:    block;
+    margin: auto;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
 }
 
 h1 {
     color: white;
-    vertical-align: bottom;
+   // vertical-align: bottom;
     text-align: center;
-    display: inline-block;
-    min-width: 200px;
-    width: 65%;
+    // display: inline-block;
+    // min-width: 200px;
+    // width: 50%;
     bottom: 0;
-    position: absolute;
 }
 
 #byzantine {
-    float: left;
-    width: 190px;
+    float: right;
+    padding-top:1%;
+    height: 99%;
     display: inline;
     justify-content: space-between;
     margin-top: 0;
     margin-bottom: 0;
+    padding-right: 5%;
 }
 
 #libertyblock {
-    float: right;
+    float: left;
     padding-top: 1%;
     margin-right: 5%;
-    width: 190px;
+    height: 99%;
     display: inline;
     justify-content: space-between;
-    margin-top: 0;
+    margin-top: 0; 
     margin-bottom: 0;  
 }
 
@@ -68,14 +79,17 @@ img {
     position: relative;
     margin-left: 5%;
     margin-top: -24%;
-    width: 100%;
     
+}
+
+#mobilenote {
+    display: none;
 }
 
 .typedContainer{
     position: absolute;
     color:white;
-    font-size: 50px;
+    font-size: 1.8em;
     right: 5%;
     margin-top: 35px;
     width: 36%;
@@ -91,9 +105,9 @@ img {
 
 
 .Dashboard {
-    position: absolute;
-    top: 120px;
-    height: 100%;
+    position: relative;
+    top: 2%;
+    height: 88%;
     width: 100%;
 }
 
@@ -448,3 +462,60 @@ a {
     height: 100%;
 }
 
+@media only screen and (max-width: 600px) {
+    #header {
+        height: 20%;
+    }
+    #CEtitle {
+        top: 50%;
+        height: 50%;
+    }
+    #libertyblock {
+        top: 0;
+        height: 50%;
+        max-width: 40%;
+    }
+    #byzantine {
+        top: 0;
+        height: 50%;
+        max-width: 40%;
+    }
+    #mobilenote {
+        display: block;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        text-align: center;
+        font-size: 1em;
+        color: red;
+    }
+
+    .Params {
+        display: inline-block;
+        width: 94%;
+        padding: 1%;
+        font-size: 1em;
+        margin: 1%;
+        left: 0;
+        height: auto;
+        top: 32%;
+    }
+    .Abi {
+        margin: 2%;
+    }
+    .Wasm {
+        margin: 2%;
+    }
+
+    #estimate {
+        margin-top: 5%;
+    }
+    .typedContainer{
+        position: absolute;
+        display: inline-block;
+        font-size: 1em;
+        right: 0%;
+        margin-top: 0;
+        width: 100%;
+    }
+
+}

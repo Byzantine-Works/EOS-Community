@@ -1,3 +1,7 @@
+# IDE files
+.idea
+.DS_Store
+
 # Logs
 logs
 *.log
@@ -69,3 +73,4 @@ airdrop/airdrop.csv
 
 # package-lock
 package-lock.json
+.DS_Store
